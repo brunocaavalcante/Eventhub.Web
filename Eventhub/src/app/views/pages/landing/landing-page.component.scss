@@ -1,0 +1,341 @@
+$main-pink: #ff4fa0;
+$main-bg: #fff;
+$main-light: #fdebf4;
+$main-dark: #222;
+$main-gray: #444;
+$radius: 18px;
+$shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
+
+.landing-container {
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: $main-bg;
+    color: $main-dark;
+    animation: fadeIn 1.2s ease;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 1.3rem;
+    color: $main-pink;
+    animation: slideDown 1s cubic-bezier(.77, 0, .18, 1);
+}
+
+.hero {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 420px;
+    background: none;
+    overflow: hidden;
+    animation: fadeInUp 1.2s cubic-bezier(.77, 0, .18, 1);
+}
+
+.hero-bg-carousel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.carousel-bg-img {
+    width: 100vw;
+    height: 100%;
+    min-height: 420px;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+    padding: 15px;
+    animation: slideUp 1.1s cubic-bezier(.77, 0, .18, 1);
+}
+
+.hero-overlay h1 {
+    font-size: 2.3rem;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+    color: $main-dark;
+    animation: fadeIn 1.5s cubic-bezier(.77, 0, .18, 1);
+}
+
+.hero-overlay p {
+    font-size: 1.1rem;
+    color: $main-gray;
+    margin-bottom: 1.5rem;
+    animation: fadeIn 1.7s cubic-bezier(.77, 0, .18, 1);
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    z-index: 3;
+    animation: fadeInUp 1.8s cubic-bezier(.77, 0, .18, 1);
+}
+
+.hero-actions .primary,
+.cta-btn {
+    background: $main-pink;
+    color: $main-bg;
+    border: none;
+    font-weight: 600;
+    padding: 0.7rem 1.7rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: $shadow;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.hero-actions .primary:hover,
+.cta-btn:hover {
+    background: darken($main-pink, 10%);
+    box-shadow: 0 4px 16px rgba(255, 79, 160, 0.18);
+}
+
+.hero-actions .secondary {
+    background: $main-bg;
+    color: $main-pink;
+    border: 2px solid $main-pink;
+    font-weight: 600;
+    padding: 0.7rem 1.7rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: $shadow;
+}
+
+.hero-actions .secondary:hover {
+    background: $main-light;
+    transform: scale(1.07) rotate(2deg);
+    box-shadow: 0 4px 16px rgba(255, 79, 160, 0.18);
+}
+
+.features,
+.cta,
+.landing-footer {
+    background: $main-bg;
+    text-align: center;
+    padding: 2.5rem 1rem 2rem 1rem;
+}
+
+.features-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.feature-item {
+    background: none;
+    border-radius: $radius;
+    width: 220px;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.feature-icon {
+    background: $main-light;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.7rem;
+}
+
+.feature-icon mat-icon {
+    font-size: 24px;
+    color: $main-pink;
+}
+
+.feature-item h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: $main-dark;
+    text-align: center;
+}
+
+.feature-item p {
+    font-size: 0.95rem;
+    color: $main-gray;
+    text-align: center;
+    margin: 0;
+}
+
+.cta {
+    background: $main-light;
+}
+
+.cta-btn {
+    padding: 0.7rem 2.2rem;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.95rem;
+
+    &:hover {
+        color: $main-pink;
+    }
+}
+
+.footer-copy {
+    font-size: 0.9rem;
+    color: #bbb;
+}
+
+.carousel-container {
+    position: relative;
+    z-index: 1;
+    margin-top: 120px;
+    width: 100%;
+    max-width: 700px;
+    min-height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+    border-radius: $radius;
+    background: $main-bg;
+    overflow: hidden;
+}
+
+.carousel-img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: $radius;
+    display: block;
+    margin: 0 auto;
+}
+
+// Media queries simplificados
+@media (max-width: 900px) {
+    .hero {
+        min-height: 260px;
+        flex-direction: column;
+    }
+
+    .carousel-bg-img {
+        min-height: 220px;
+    }
+
+    .hero-overlay {
+        max-width: 95vw;
+    }
+
+    .features-list {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .feature-item {
+        width: 90vw;
+        max-width: 320px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero {
+        min-height: 120px;
+        padding: 16px 0 12px 0;
+    }
+
+    .carousel-bg-img {
+        min-height: 140px;
+    }
+
+    .hero-overlay {
+        width: 85vw;
+        padding: 15px 25px;
+
+        h1 {
+            font-size: 1.5rem;
+        }
+
+        p {
+            font-size: 1rem;
+        }
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        gap: 0.7rem;
+    }
+
+    .feature-item {
+        padding: 1rem 0.7rem;
+    }
+}
+
+// Animações
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,75 @@
+<div class="landing-container">
+    <section class="hero">
+
+        <owl-carousel-o [options]="carouselOptions" class="hero-bg-carousel">
+            <ng-template carouselSlide>
+                <picture>
+                    <source media="(max-width: 600px)" srcset="assets/imagens/carrosel.png">
+                    <img src="assets/imagens/carrosel2.png" alt="Evento" />
+                </picture>
+            </ng-template>
+        </owl-carousel-o>
+        <div class="hero-overlay">
+            <h1>Celebre Momentos Inesquecíveis</h1>
+            <p>Organize seu chá de casa nova, casamento ou outro evento especial com facilidade e sem custos. Gerencie
+                convidados, presentes, gastos e muito mais.</p>
+            <div class="hero-actions">
+                <button class="primary">Criar Meu Evento Grátis</button>
+                <button class="secondary">Saiba Mais</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>Uma plataforma, tudo que você precisa</h2>
+        <p>Descubra como a Celebra pode transformar o planejamento do seu evento em uma experiência agradável e sem
+            complicações.</p>
+        <div class="features-list">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <mat-icon color="primary" fontIcon="card_giftcard">card_giftcard</mat-icon>
+                </div>
+                <h3><b>Gestão de Presentes Pix</b></h3>
+                <p>Receba presentes em dinheiro de forma segura e organizada, diretamente na sua conta, sem taxas.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <mat-icon color="primary" fontIcon="checklist">checklist</mat-icon>
+                </div>
+                <h3><b>RSVP Simplificado</b></h3>
+                <p>Acompanhe a confirmação de presença dos seus convidados de forma online e automática.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <mat-icon color="primary" fontIcon="photo_camera">photo_camera</mat-icon>
+                </div>
+                <h3><b>Gestão de Gastos</b></h3>
+                <p>Controle o orçamento do seu evento com nossa ferramenta de gestão de gastos, tudo em um só lugar.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <mat-icon color="primary" fontIcon="auto_awesome">auto_awesome</mat-icon>
+                </div>
+                <h3><b>Fácil de Usar</b></h3>
+                <p>Crie e personalize o site do seu evento em minutos, com uma interface intuitiva e moderna.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Pronto para Começar a Celebrar?</h2>
+        <p>Crie seu evento grátis agora mesmo e comece a planejar a celebração dos seus sonhos com a melhor ferramenta.
+        </p>
+        <button class="cta-btn">Começar Agora</button>
+    </section>
+
+    <footer class="landing-footer">
+        <div class="footer-links">
+            <a href="#">Sobre Nós</a>
+            <a href="#">Contato</a>
+            <a href="#">Termos de Uso</a>
+            <a href="#">Política de Privacidade</a>
+        </div>
+        <div class="footer-copy">© 2024 Celebra. Todos os direitos reservados.</div>
+    </footer>
+</div>
