@@ -1,18 +1,20 @@
 <mat-toolbar color="primary" class="header-toolbar">
     <div class="header-left">
-        <button mat-icon-button class="menu-btn" (click)="onMenuClick()">
+        <button mat-icon-button class="menu-btn" (click)="toggleMenu()">
             <mat-icon>menu</mat-icon>
         </button>
-        <mat-icon class="header-icon">diamond</mat-icon>
-        <span class="header-title">EventHub</span>
+        <div class="header-logo" routerLink='/'>
+            <mat-icon class="header-icon">diamond</mat-icon>
+            <span class="header-title">EventHub</span>
+        </div>
     </div>
-    <div class="header-menu">
+    <div class="header-menu" *ngIf="!isMobile">
         <a mat-button routerLink="/sobre-nos">Sobre Nós</a>
         <a mat-button routerLink="/como-funciona">Como Funciona</a>
         <a mat-button routerLink="/contato">Contato</a>
     </div>
-    <div class="header-actions">
-        <a mat-button class="login-link" routerLink="/login">Login</a>
+    <div class="header-actions" *ngIf="!isMobile">
+        <a mat-button class="login-link" (click)="login()">Login</a>
         <button mat-raised-button color="accent" class="criar-evento-btn" routerLink="/criar-evento">Criar
             Evento</button>
     </div>

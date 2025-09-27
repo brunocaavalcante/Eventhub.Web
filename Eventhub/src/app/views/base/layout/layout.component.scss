@@ -1,0 +1,12 @@
+.header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 64px;
+}
+
+.content {
+    margin-top: 64px;
+    min-height: calc(100vh - 64px);
+}
