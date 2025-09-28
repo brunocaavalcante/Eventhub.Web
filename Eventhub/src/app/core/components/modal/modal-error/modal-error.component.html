@@ -1,0 +1,12 @@
+<div class="modal-error-card">
+    <div class="modal-error-icon">
+        <mat-icon>error_outline</mat-icon>
+    </div>
+
+    <h2 class="modal-error-title">{{ title }}</h2>
+    <p class="modal-error-message">{{ message }}</p>
+
+    <div class="modal-error-actions">
+        <button mat-raised-button color="warn" class="ok-btn" (click)="close()">{{ okLabel }}</button>
+    </div>
+</div>
