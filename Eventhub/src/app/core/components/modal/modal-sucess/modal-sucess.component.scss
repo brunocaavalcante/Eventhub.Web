@@ -1,0 +1,49 @@
+.host {
+    display: block;
+}
+
+.modal-success-card {
+    width: 360px;
+    padding: 28px 28px 20px;
+    text-align: center;
+}
+
+.modal-success-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px auto;
+    border-radius: 50%;
+    background: rgba(76, 175, 80, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-success-icon mat-icon {
+    color: #22c55e;
+    font-size: 28px;
+}
+
+.modal-success-title {
+    margin: 0 0 8px 0;
+    font-weight: 600;
+}
+
+.modal-success-message {
+    margin: 0 0 18px 0;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+}
+
+.modal-success-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.ok-btn {
+    background: #22c55e !important;
+    color: white;
+    min-width: 120px;
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem !important;
+}
