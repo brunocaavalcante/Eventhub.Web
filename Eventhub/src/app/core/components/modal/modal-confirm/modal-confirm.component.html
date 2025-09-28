@@ -1,0 +1,13 @@
+<div class="modal-confirm-card">
+    <div class="modal-confirm-icon">
+        <mat-icon>help_outline</mat-icon>
+    </div>
+
+    <h2 class="modal-confirm-title">{{ title }}</h2>
+    <p class="modal-confirm-message">{{ message }}</p>
+
+    <div class="modal-confirm-actions">
+        <button mat-button class="cancel-btn" (click)="cancel()">{{ cancelLabel }}</button>
+        <button mat-raised-button color="primary" class="confirm-btn" (click)="confirm()">{{ confirmLabel }}</button>
+    </div>
+</div>

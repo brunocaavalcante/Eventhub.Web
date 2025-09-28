@@ -1,0 +1,54 @@
+.host {
+    display: block;
+}
+
+.modal-confirm-card {
+    width: 380px;
+    padding: 22px 24px;
+    text-align: left;
+    border-radius: 8px;
+}
+
+.modal-confirm-icon {
+    width: 46px;
+    height: 46px;
+    margin: 0 auto 12px auto;
+    border-radius: 50%;
+    background: rgba(236, 72, 153, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-confirm-icon mat-icon {
+    color: #ec4899;
+    font-size: 22px;
+}
+
+.modal-confirm-title {
+    margin: 0 0 8px 0;
+    font-weight: 600;
+}
+
+.modal-confirm-message {
+    margin: 0 0 18px 0;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+}
+
+.modal-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.cancel-btn {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.confirm-btn {
+    background: #ec4899 !important;
+    color: white;
+    border-radius: 8px;
+    padding: 0.4rem 1rem !important;
+}
