@@ -2,15 +2,32 @@
     <div class="login-left">
         <h2 class="login-welcome">Bem-vindo(a) de volta!</h2>
         <p class="login-desc">Faça login para continuar organizando seus eventos.</p>
-        <form class="login-form">
-            <label for="email">Email ou nome de usuário</label>
-            <input id="email" type="text" placeholder="seuemail@exemplo.com" />
-            <label for="senha">Senha <a class="forgot-link" href="#">Esqueceu sua senha?</a></label>
-            <input id="senha" type="password" placeholder="********" />
-            <button type="submit" class="login-btn">Entrar</button>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email</mat-label>
+                <input matInput id="email" type="email" formControlName="email" placeholder="seuemail@exemplo.com" />
+                <mat-error *ngIf="displayMessage['email']">
+                    <mat-icon>error</mat-icon> {{displayMessage['email']}}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Senha</mat-label>
+                <input matInput id="senha" type="password" formControlName="senha" placeholder="********" />
+                <mat-error *ngIf="displayMessage['senha']">
+                    <mat-icon>error</mat-icon> {{displayMessage['senha']}}
+                </mat-error>
+            </mat-form-field>
+
+            <button mat-flat-button color="primary" type="submit" class="login-btn"
+                [disabled]="loading || form.invalid">
+                <mat-progress-spinner *ngIf="loading" diameter="20" mode="indeterminate"></mat-progress-spinner>
+                <span *ngIf="!loading">Entrar</span>
+                <span *ngIf="loading">Entrando...</span>
+            </button>
         </form>
         <div class="login-register">
-            Não tem uma conta? <a class="register-link" href="#">Cadastre-se</a>
+            Não tem uma conta? <a class="register-link" routerLink="/usuarios/cadastro">Cadastre-se</a>
         </div>
     </div>
     <div class="login-right">

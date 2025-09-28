@@ -48,13 +48,8 @@
 }
 
 .login-form input {
-    padding: 0.7rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #eee;
     font-size: 1rem;
     margin-bottom: 0.7rem;
-    outline: none;
-    background: #f3f6fb;
     text-align: left;
 }
 
@@ -173,7 +168,6 @@
 
     .login-form input {
         font-size: 0.95rem;
-        padding: 0.6rem 0.7rem;
     }
 
     .login-btn {
@@ -207,6 +201,10 @@
     .login-register {
         font-size: 0.95rem;
         text-align: center;
+
+        a {
+            cursor: pointer;
+        }
     }
 
     .forgot-link {
