@@ -1,21 +1,57 @@
-<mat-toolbar color="primary" class="header-toolbar">
-    <div class="header-left">
-        <button mat-icon-button class="menu-btn" (click)="toggleMenu()">
-            <mat-icon>menu</mat-icon>
-        </button>
-        <div class="header-logo" routerLink='/'>
-            <mat-icon class="header-icon">diamond</mat-icon>
-            <span class="header-title">EventHub</span>
-        </div>
-    </div>
-    <div class="header-menu" *ngIf="!isMobile">
-        <a mat-button routerLink="/sobre-nos">Sobre Nós</a>
-        <a mat-button routerLink="/como-funciona">Como Funciona</a>
-        <a mat-button routerLink="/contato">Contato</a>
-    </div>
-    <div class="header-actions" *ngIf="!isMobile">
-        <a mat-button class="login-link" (click)="login()">Login</a>
-        <button mat-raised-button color="accent" class="criar-evento-btn" routerLink="/criar-evento">Criar
-            Evento</button>
+<mat-toolbar class="app-toolbar">
+    <!-- Hamburguer (mobile) -->
+    <button mat-icon-button (click)="toggleMenu()" *ngIf="isMobile()">
+        <mat-icon>menu</mat-icon>
+    </button>
+
+    <!-- Logo -->
+    <button mat-button [routerLink]="['/']" class="brand">
+        <mat-icon color="primary">diamond</mat-icon>
+        <span>Evently</span>
+    </button>
+
+    <span class="spacer"></span>
+
+    <!-- Desktop -->
+    <div class="actions" *ngIf="!isMobile()">
+        <nav class="nav">
+            <ng-container *ngFor="let item of menuItems()">
+                <a *ngIf="!item.isButton" mat-button [routerLink]="[item.route]"
+                    (click)="$event.preventDefault(); navigate(item.route)">
+                    {{ item.label }}
+                </a>
+
+                <button *ngIf="item.isButton" mat-flat-button color="primary" (click)="navigate(item.route)">
+                    {{ item.label }}
+                </button>
+            </ng-container>
+        </nav>
+
+        <!-- mostrar notificações e avatar apenas quando logado -->
+        <ng-container *ngIf="isLoggedIn()">
+            <button mat-icon-button class="icon-btn" matTooltip="Notificações">
+                <mat-icon>notifications_none</mat-icon>
+            </button>
+
+            <button mat-button class="avatar-btn" [matMenuTriggerFor]="profileMenu" aria-label="Menu do usuário">
+                <ng-container *ngIf="avatarUrl(); else fallbackAvatar">
+                    <img [src]="avatarUrl()" alt="Avatar do usuário" />
+                </ng-container>
+                <ng-template #fallbackAvatar>
+                    <mat-icon>account_circle</mat-icon>
+                </ng-template>
+            </button>
+
+            <mat-menu #profileMenu="matMenu">
+                <button mat-menu-item [routerLink]="['/perfil']">
+                    <mat-icon>person</mat-icon>
+                    <span>Perfil</span>
+                </button>
+                <button mat-menu-item (click)="logout()">
+                    <mat-icon>logout</mat-icon>
+                    <span>Sair</span>
+                </button>
+            </mat-menu>
+        </ng-container>
     </div>
 </mat-toolbar>

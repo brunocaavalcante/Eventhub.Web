@@ -1,31 +1,91 @@
 .header-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
     background: #fff;
-    color: #222;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 32px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    border-radius: 12px 12px 0 0;
-    min-height: 64px;
+    border-bottom: 1px solid #f3e7ed;
 }
 
 .header-logo {
     cursor: pointer;
     display: flex;
     align-items: center;
+    color: #ff4fa0;
 
     :hover {
         opacity: 0.9;
     }
 }
 
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: #ff4fa0;
+}
+
+/* Ocupa espaço restante entre logo e ações (empurra ações para a direita) */
+.spacer {
+    flex: 1 1 auto;
+}
+
+.actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Navegação (links) */
+.nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav a {
+    color: #444;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    line-height: 1;
+    min-width: auto;
+}
+
+/* Botões de ícone (sino etc.) */
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+}
+
+/* Avatar circular com borda rosa */
+.avatar-btn {
+    padding: 0;
+    min-width: 0;
+    font-size: 40px;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-btn img {
+    width: 36px;
+    height: 36px;
+    border: solid 2px #ff4fa0;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Responsivo: no mobile o HTML já esconde .actions via *ngIf, aqui apenas ajustamos altura/padding */
 @media (max-width: 900px) {
     .header-toolbar {
         flex-direction: column;
         align-items: stretch;
-        padding: 0 12px;
-        min-height: 56px;
+        padding: 0 10px;
+        height: 56px;
         border-radius: 0;
     }
 
@@ -54,14 +114,18 @@
         font-size: 0.95rem;
         padding: 0.5rem 1.2rem;
     }
+
+    .brand {
+        gap: 6px;
+    }
 }
 
 @media (max-width: 600px) {
     .header-toolbar {
         flex-direction: column;
         align-items: stretch;
-        padding: 0 6px;
-        min-height: 48px;
+        padding: 0 8px;
+        height: 52px;
         border-radius: 0;
     }
 
@@ -95,55 +159,4 @@
     .menu-btn {
         margin-right: 12px;
     }
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
-.header-icon {
-    color: #e91e63;
-    margin-right: 8px;
-}
-
-.header-title {
-    font-weight: 600;
-    font-size: 1.4rem;
-    letter-spacing: 0.5px;
-}
-
-.header-menu {
-    display: flex;
-    gap: 32px;
-}
-
-.header-menu a {
-    color: #555;
-    font-weight: 500;
-    font-size: 1rem;
-    text-decoration: none;
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.login-link {
-    color: #e91e63 !important;
-    font-weight: 500;
-}
-
-.criar-evento-btn {
-    background: linear-gradient(90deg, #e91e63 0%, #ff4081 100%);
-    color: #fff !important;
-    font-weight: 600;
-    border-radius: 24px;
-    box-shadow: 0 2px 8px rgba(233, 30, 99, 0.12);
-}
-
-.menu-btn {
-    margin-right: 24px;
 }

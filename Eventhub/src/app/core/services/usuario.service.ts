@@ -151,4 +151,10 @@ export class UsuarioService extends BaseService {
             this.handleError(err, 'Erro ao fazer logout.');
         }
     }
+
+    async obterUsuarioLogado(): Promise<Usuario | null> {
+        const user = this.auth.currentUser;
+        if (!user) return null;
+        return this.obterPorId(user.uid);
+    }
 }
