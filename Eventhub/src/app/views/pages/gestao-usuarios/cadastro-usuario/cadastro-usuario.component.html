@@ -1,0 +1,63 @@
+<div class="cadastro-container">
+    <mat-card class="cadastro-card">
+        <div class="cadastro-content">
+            <mat-icon class="header-icon">diamond</mat-icon>
+            <h2 class="cadastro-heading">Crie sua conta</h2>
+            <p class="cadastro-desc">Comece a planejar seus eventos agora mesmo.</p>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="cadastro-form" autocomplete="off">
+                <mat-form-field appearance="outline" class="cadastro-field">
+                    <mat-label>Nome</mat-label>
+                    <input matInput placeholder="Seu nome completo" type="text" formControlName="nome" />
+                    <mat-error *ngIf="displayMessage['nome']">
+                        <mat-icon>error</mat-icon> {{displayMessage['nome']}}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="cadastro-field">
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="seu@email.com" type="email" formControlName="email" />
+                    <mat-error *ngIf="displayMessage['email']">
+                        <mat-icon>error</mat-icon> {{displayMessage['email']}}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="cadastro-field">
+                    <mat-label>Senha</mat-label>
+                    <input matInput placeholder="Sua senha" type="password" formControlName="senha" />
+                    <mat-error *ngIf="displayMessage['senha']">
+                        <mat-icon>error</mat-icon> {{displayMessage['senha']}}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="cadastro-field">
+                    <mat-label>Confirmar Senha</mat-label>
+                    <input matInput placeholder="Confirme sua senha" type="password" formControlName="confirmarSenha" />
+                    <mat-error
+                        *ngIf="displayMessage['confirmarSenha'] || (form?.errors?.['passwordMismatch'] && (confirmarSenha?.touched || confirmarSenha?.dirty))">
+                        <mat-icon>error</mat-icon>
+                        <span *ngIf="displayMessage['confirmarSenha']">{{displayMessage['confirmarSenha']}}</span>
+                        <span *ngIf="!displayMessage['confirmarSenha'] && form?.errors?.['passwordMismatch']">As senhas
+                            não coincidem</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="cadastro-field">
+                    <mat-label>Telefone</mat-label>
+                    <input matInput placeholder="(99) 99999-9999" mask="(00) 00000-0000" type="tel"
+                        formControlName="telefone" />
+                    <mat-error *ngIf="displayMessage['telefone']">
+                        <mat-icon>error</mat-icon> {{displayMessage['telefone']}}
+                    </mat-error>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" class="cadastro-btn" type="submit" [disabled]="loading">
+                    {{ loading ? 'Cadastrando...' : 'Cadastrar' }}
+                </button>
+            </form>
+            <p class="cadastro-login">
+                Já tem uma conta?
+                <a routerLink="/usuarios/login" class="cadastro-login-link">Faça login</a>
+            </p>
+        </div>
+    </mat-card>
+</div>

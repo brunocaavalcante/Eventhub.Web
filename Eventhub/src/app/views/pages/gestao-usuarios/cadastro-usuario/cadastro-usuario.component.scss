@@ -1,0 +1,135 @@
+.cadastro-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fcf8fa;
+}
+
+.cadastro-card {
+    width: 100%;
+    max-width: 550px;
+    margin-top: 50px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(240, 66, 153, 0.04);
+    padding: 32px 20px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cadastro-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cadastro-desc {
+    font-size: 1rem;
+    color: #6e5f67;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.cadastro-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    margin-bottom: 1.2rem;
+}
+
+.cadastro-field {
+    width: 100%;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: #e7cfdb;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: #f04299;
+}
+
+.mat-form-field-label {
+    color: #1b0d14 !important;
+    font-size: 0.98rem;
+    font-weight: 500;
+}
+
+.mat-input-element {
+    color: #1b0d14;
+    font-size: 1rem;
+    border-radius: 8px;
+    background: transparent;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-start,
+.mat-form-field-appearance-outline .mat-form-field-outline-end {
+    border-radius: 8px;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    border-radius: 8px;
+}
+
+.cadastro-btn {
+    width: 100%;
+    background: #f04299 !important;
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 8px;
+    padding: 0.9rem 0;
+    margin-top: 0.5rem;
+    box-shadow: none;
+    transition: opacity 0.2s;
+}
+
+.cadastro-btn:hover {
+    opacity: 0.85;
+}
+
+.cadastro-login {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #6e5f67;
+    margin-top: 0.7rem;
+}
+
+.cadastro-login-link {
+    color: #f04299;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 2px;
+}
+
+.cadastro-login-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .cadastro-card {
+        max-width: 98vw;
+        padding: 18px 6px 12px 6px;
+        border-radius: 10px;
+    }
+
+    .cadastro-heading {
+        font-size: 1.2rem;
+    }
+
+    .cadastro-desc {
+        font-size: 0.95rem;
+    }
+
+    .cadastro-btn {
+        font-size: 0.95rem;
+        padding: 0.7rem 0;
+    }
+}
