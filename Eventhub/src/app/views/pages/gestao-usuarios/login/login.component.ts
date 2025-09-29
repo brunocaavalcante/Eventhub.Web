@@ -3,7 +3,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../../../../core/components/base.component';
@@ -18,7 +17,6 @@ import { UsuarioService } from '../../../../core/services/usuario.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
     RouterModule,
     ReactiveFormsModule
   ],
@@ -75,7 +73,7 @@ export class LoginComponent extends BaseComponent implements OnInit, AfterViewIn
       const email = this.email?.value;
       const senha = this.senha?.value;
       const result = await this.usuarioService.login(email, senha);
-      await this.router.navigate(['/home']);
+      await this.router.navigate(['/']);
       return result as any;
     }
     catch (err) {

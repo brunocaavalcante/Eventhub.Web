@@ -57,7 +57,7 @@ export class HeaderComponent {
 
   private readonly loggedInMenu: MenuItem[] = [
     { label: 'Início', route: '/' },
-    { label: 'Meus Eventos', route: '/eventos' },
+    { label: 'Meus Eventos', route: '/eventos/meus-eventos' },
     { label: 'Perfil', route: '/perfil' }
   ];
 
