@@ -8,7 +8,7 @@ export const routes = [
         path: '', component: LayoutComponent,
         children: [
             { path: 'meus-eventos', component: MeusEventosComponent },
-            { path: 'cadastrar', component: CadastrarEventoComponent },
+            { path: 'cadastrar/:tipo', component: CadastrarEventoComponent },
             { path: 'tipo-evento', component: TipoEventoComponent }
         ]
     }
