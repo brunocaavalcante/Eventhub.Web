@@ -1,0 +1,14 @@
+<div class="event-type-container">
+    <h2 class="event-type-title">Qual tipo de evento você está planejando?</h2>
+    <div class="event-type-grid">
+        <div class="event-type-card" *ngFor="let tipo of eventTypes">
+            <div class="event-type-icon">
+                <mat-icon>{{ tipo.icon }}</mat-icon>
+            </div>
+            <div class="event-type-info">
+                <div class="event-type-name">{{ tipo.name }}</div>
+                <div class="event-type-desc">{{ tipo.desc }}</div>
+            </div>
+        </div>
+    </div>
+</div>
