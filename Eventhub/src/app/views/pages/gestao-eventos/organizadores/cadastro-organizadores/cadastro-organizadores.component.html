@@ -1,0 +1,121 @@
+<mat-card class="cadastro-evento-card">
+
+    <!-- Estado vazio -->
+    <div *ngIf="organizadores.length === 0 && !exibirForm" class="organizador-empty-card">
+        <div class="organizador-empty-icon">
+            <mat-icon>person_add</mat-icon>
+        </div>
+        <div class="organizador-empty-title">Nenhum Organizador Adicionado</div>
+        <div class="organizador-empty-desc">
+            Para começar, adicione os organizadores do seu evento.
+        </div>
+        <button mat-flat-button color="primary" class="organizador-empty-btn" (click)="exibirForm = true">
+            Adicionar Organizador
+        </button>
+    </div>
+
+    <!-- Formulário de cadastro -->
+    <form *ngIf="exibirForm" [formGroup]="form" (ngSubmit)="adicionarOrganizador()" class="organizador-form">
+        <div class="organizador-row">
+            <mat-form-field appearance="outline" class="organizador-field w-100">
+                <mat-label>Tipo de Organizador</mat-label>
+                <mat-select formControlName="tipo">
+                    <mat-option value="Pessoa Física">Pessoa Física</mat-option>
+                    <mat-option value="Pessoa Jurídica">Pessoa Jurídica</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="organizador-field w-100">
+            <mat-label>{{ form.value.tipo === 'Pessoa Jurídica' ? 'Razão Social' : 'Nome Completo' }}</mat-label>
+            <input matInput formControlName="nome"
+                [placeholder]="form.value.tipo === 'Pessoa Jurídica' ? 'Insira a razão social' : 'Insira o nome completo'"
+                (blur)="validarCampo()" />
+            <mat-error *ngIf="displayMessage['nome']">
+                <mat-icon>error</mat-icon> {{displayMessage['nome']}}
+            </mat-error>
+        </mat-form-field>
+
+        <div class="organizador-row">
+            <mat-form-field appearance="outline" class="organizador-field w-100">
+                <mat-label>E-mail de Contato</mat-label>
+                <input matInput formControlName="email" (blur)="validarCampo()" placeholder="email@exemplo.com" />
+                <mat-error *ngIf="displayMessage['email']">
+                    <mat-icon>error</mat-icon> {{displayMessage['email']}}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="organizador-field w-100">
+                <mat-label>Telefone de Contato</mat-label>
+                <input matInput formControlName="telefone" (blur)="validarCampo()" placeholder="(XX) XXXXX-XXXX"
+                    mask="(00) 00000-0000" />
+                <mat-error *ngIf="displayMessage['telefone']">
+                    <mat-icon>error</mat-icon> {{displayMessage['telefone']}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="organizador-upload-row">
+            <label class="organizador-upload-label" matTooltip="Foto do organizador">
+                <input type="file" accept="image/png, image/jpeg, image/gif" hidden (change)="onFotoSelect($event)" />
+                <mat-icon>add_a_photo</mat-icon>
+                <span>Carregar foto do organizador (Opcional)</span>
+                <small>PNG, JPG, GIF até 10MB</small>
+            </label>
+            <div *ngIf="form.value.foto" class="organizador-upload-preview">
+                <div class="organizador-preview-img-wrapper">
+                    <img [src]="form.value.foto" alt="Pré-visualização da foto do organizador" />
+                    <mat-icon class="organizador-remove-foto-btn" (click)="removerFoto()">close</mat-icon>
+                </div>
+                <span class="foto-legenda">Pré-visualização</span>
+            </div>
+        </div>
+
+        <div class="organizador-form-actions">
+            <button mat-stroked-button type="button" (click)="exibirForm = false">
+                Cancelar
+            </button>
+            <button mat-stroked-button color="primary" type="submit">
+                <mat-icon>add</mat-icon>
+                Adicionar Organizador
+            </button>
+        </div>
+    </form>
+
+    <!-- Lista de organizadores como cards -->
+    <div *ngIf="organizadores.length > 0 && !exibirForm" class="organizadores-cards-list">
+        <div class="organizador-card w-100" *ngFor="let org of organizadores; let i = index">
+            <div class="organizador-card-avatar">
+                <ng-container *ngIf="org.foto; else defaultAvatar">
+                    <img [src]="org.foto" alt="Foto do organizador" />
+                </ng-container>
+                <ng-template #defaultAvatar>
+                    <mat-icon>account_circle</mat-icon>
+                </ng-template>
+            </div>
+            <div class="organizador-card-info">
+                <div class="organizador-card-nome">{{ org.nome }}</div>
+                <div class="organizador-card-tipo">{{ org.tipo }}</div>
+                <div class="organizador-card-email"><mat-icon>mail</mat-icon> {{ org.email }}</div>
+                <div class="organizador-card-telefone"><mat-icon>call</mat-icon> {{ org.telefone }}</div>
+                <div class="organizador-card-msg" *ngIf="org.mensagem"><mat-icon>chat</mat-icon> {{
+                    org.mensagem }}</div>
+            </div>
+            <button mat-icon-button [matMenuTriggerFor]="menuOrg" class="organizador-card-menu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menuOrg="matMenu">
+                <button mat-menu-item (click)="removerOrganizador(i)">
+                    <mat-icon color="warn">delete</mat-icon>
+                    <span>Excluir</span>
+                </button>
+                <button mat-menu-item (click)="editarOrganizador(i)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Editar</span>
+                </button>
+            </mat-menu>
+        </div>
+        <button mat-flat-button color="primary" class="organizador-empty-btn" (click)="exibirForm = true"
+            style="margin-top: 18px;">
+            Adicionar Organizador
+        </button>
+    </div>
+</mat-card>
