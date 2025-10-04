@@ -1,6 +1,4 @@
 @use '@angular/material' as mat;
-@import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
-@import 'ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
 
 html {
   @include mat.theme((color: (primary: mat.$rose-palette,
@@ -38,4 +36,20 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.w-50 {
+  width: 50% !important;
+}
+
+.w-30 {
+  width: 30% !important;
+}
+
+.w-10 {
+  width: 10% !important;
 }

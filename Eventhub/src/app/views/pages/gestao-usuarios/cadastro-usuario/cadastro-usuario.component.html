@@ -31,11 +31,9 @@
 
                 <mat-form-field appearance="outline" class="cadastro-field">
                     <mat-label>Confirmar Senha</mat-label>
-                    <input matInput placeholder="Confirme sua senha" type="password" formControlName="confirmarSenha"
-                        (focusout)="validarSenha()" />
+                    <input matInput placeholder="Confirme sua senha" type="password" formControlName="confirmarSenha" />
                     <mat-error *ngIf="displayMessage['confirmarSenha']">
-                        <mat-icon>error</mat-icon>
-                        <span>{{displayMessage['confirmarSenha']}}</span>
+                        <mat-icon>error</mat-icon>{{displayMessage['confirmarSenha']}}
                     </mat-error>
                 </mat-form-field>
 

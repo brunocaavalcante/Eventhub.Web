@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChildren, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -62,7 +62,8 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
         minlength: 'A Senha deve ter pelo menos 6 caracteres'
       },
       confirmarSenha: {
-        required: 'Confirme a Senha'
+        required: 'Confirme a Senha',
+        senhasDiferentes: 'As senhas não coincidem'
       },
       telefone: {
         required: 'Informe o Telefone',
@@ -82,21 +83,23 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
   }
 
   ngOnInit(): void {
-    this.confirmarSenha?.valueChanges.subscribe(() => {
-      this.form.updateValueAndValidity();
-    });
+    this.confirmarSenha?.valueChanges.subscribe(() => this.validarSenhaSignal());
+    this.senha?.valueChanges.subscribe(() => this.validarSenhaSignal());
   }
 
   ngAfterViewInit(): void {
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
   }
 
-  validarSenha() {
+  validarSenhaSignal(): void {
     const s = this.form.value.senha;
     const c = this.form.value.confirmarSenha;
 
-    if (s && c && s === c) return;
-    this.displayMessage['confirmarSenha'] = 'As senhas não coincidem';
+    if (s && c && s !== c) {
+      this.confirmarSenha?.setErrors({ senhasDiferentes: true });
+    } else {
+      this.confirmarSenha?.setErrors(null);
+    }
   }
 
   async onSubmit(): Promise<void> {
