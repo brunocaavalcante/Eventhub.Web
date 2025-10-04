@@ -31,13 +31,11 @@
 
                 <mat-form-field appearance="outline" class="cadastro-field">
                     <mat-label>Confirmar Senha</mat-label>
-                    <input matInput placeholder="Confirme sua senha" type="password" formControlName="confirmarSenha" />
-                    <mat-error
-                        *ngIf="displayMessage['confirmarSenha'] || (form?.errors?.['passwordMismatch'] && (confirmarSenha?.touched || confirmarSenha?.dirty))">
+                    <input matInput placeholder="Confirme sua senha" type="password" formControlName="confirmarSenha"
+                        (focusout)="validarSenha()" />
+                    <mat-error *ngIf="displayMessage['confirmarSenha']">
                         <mat-icon>error</mat-icon>
-                        <span *ngIf="displayMessage['confirmarSenha']">{{displayMessage['confirmarSenha']}}</span>
-                        <span *ngIf="!displayMessage['confirmarSenha'] && form?.errors?.['passwordMismatch']">As senhas
-                            não coincidem</span>
+                        <span>{{displayMessage['confirmarSenha']}}</span>
                     </mat-error>
                 </mat-form-field>
 

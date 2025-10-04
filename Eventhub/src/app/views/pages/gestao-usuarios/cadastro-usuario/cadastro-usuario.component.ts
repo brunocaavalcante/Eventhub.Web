@@ -78,19 +78,25 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
       senha: ['', [Validators.required, Validators.minLength(6)]],
       confirmarSenha: ['', [Validators.required]],
       telefone: ['', [Validators.required]]
-    }, { validators: this.passwordsMatch });
+    });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.confirmarSenha?.valueChanges.subscribe(() => {
+      this.form.updateValueAndValidity();
+    });
+  }
 
   ngAfterViewInit(): void {
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
   }
 
-  passwordsMatch(group: FormGroup) {
-    const s = group.get('senha')?.value;
-    const c = group.get('confirmarSenha')?.value;
-    return s && c && s === c ? null : { passwordMismatch: true };
+  validarSenha() {
+    const s = this.form.value.senha;
+    const c = this.form.value.confirmarSenha;
+
+    if (s && c && s === c) return;
+    this.displayMessage['confirmarSenha'] = 'As senhas não coincidem';
   }
 
   async onSubmit(): Promise<void> {
