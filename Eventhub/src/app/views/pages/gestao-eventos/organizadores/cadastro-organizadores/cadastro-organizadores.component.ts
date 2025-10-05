@@ -1,6 +1,6 @@
 import { Organizador } from '../../../../../core/models/organizador.model';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, OnInit, Output, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl, ReactiveFormsModule, FormsModule, FormControlName } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -41,7 +41,7 @@ export class CadastroOrganizadoresComponent extends BaseComponent implements OnI
   private readonly fb = inject(FormBuilder);
 
   form!: FormGroup;
-  organizadores: Organizador[] = [];
+  @Input() organizadores: Organizador[] = [];
   editandoIndex: number | null = null;
   exibirForm = false;
 

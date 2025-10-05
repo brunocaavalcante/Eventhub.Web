@@ -233,4 +233,8 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
   removerImagem(index: number) {
     this.imagens.splice(index, 1);
   }
+
+  changeOrganizadores(event: Organizador[]) {
+    this.organizadores = event;
+  }
 }

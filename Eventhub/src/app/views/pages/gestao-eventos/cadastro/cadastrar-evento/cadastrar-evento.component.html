@@ -152,7 +152,8 @@
                 <p class="cadastro-evento-section-desc">
                     Adicione informações sobre os organizadores do evento.
                 </p>
-                <app-cadastro-organizadores (organizadoresChange)="organizadores = $event"></app-cadastro-organizadores>
+                <app-cadastro-organizadores [organizadores]="organizadores"
+                    (organizadoresChange)="changeOrganizadores($event)"></app-cadastro-organizadores>
             </section>
         </form>
     </mat-card>
