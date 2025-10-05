@@ -1,0 +1,170 @@
+<div class="cadastro-evento-container">
+    <h2 class="cadastro-evento-title">Configuração do Evento</h2>
+    <p class="cadastro-evento-desc">
+        Vamos configurar os detalhes do seu evento para garantir que tudo saia perfeito.
+    </p>
+
+    <mat-card class="cadastro-evento-card">
+        <div class="cadastro-evento-progress">
+            <span>Progresso da Configuração</span>
+            <span class="cadastro-evento-step">Passo {{ etapa + 1 }} de 3</span>
+            <mat-progress-bar color="primary" mode="determinate" [value]="(etapa + 1) * 34"></mat-progress-bar>
+        </div>
+        <form [formGroup]="form">
+            <!-- Etapa 1 -->
+            <section *ngIf="etapa === 0" class="cadastro-evento-section" formGroupName="step1">
+                <div class="cadastro-evento-section-title">
+                    <span class="cadastro-evento-section-number">1</span>
+                    <span>Definir Nome do Evento</span>
+                </div>
+                <mat-form-field appearance="outline" class="cadastro-evento-field w-100">
+                    <mat-label>Nome do Evento</mat-label>
+                    <input matInput placeholder="Ex: Chá de Casa Nova da Ana e do Bruno" formControlName="nome" />
+                    <mat-error *ngIf="displayMessage['nome']">
+                        <mat-icon>error</mat-icon> {{displayMessage['nome']}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="cadastro-evento-field w-100">
+                    <mat-label>Descrição do Evento</mat-label>
+                    <textarea matInput placeholder="Descreva seu evento (máx. 500 caracteres)"
+                        formControlName="descricao" maxlength="500" rows="4"></textarea>
+                    <mat-hint align="end">{{ form.get('step1.descricao')?.value?.length || 0 }}/500</mat-hint>
+                </mat-form-field>
+            </section>
+
+            <!-- Etapa 2 -->
+            <section *ngIf="etapa === 1" class="cadastro-evento-section" formGroupName="step2">
+                <div class="cadastro-evento-section-title">
+                    <span class="cadastro-evento-section-number">2</span>
+                    <span>Escolher Data e Local</span>
+                </div><br>
+                <div class="cadastro-evento-tipo-data">
+                    <span>Duração do Evento:</span><br>
+                    <mat-radio-group formControlName="tipoData" class="cadastro-evento-radio-group">
+                        <mat-radio-button value="unica" color="primary">Data Única</mat-radio-button>
+                        <mat-radio-button value="periodo" color="primary">Período</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+
+                <div class="cadastro-evento-row">
+                    <!-- Data Única -->
+                    <mat-form-field appearance="outline" class="cadastro-evento-field"
+                        *ngIf="form.get('step2.tipoData')?.value === 'unica'">
+                        <mat-label>Data do Evento</mat-label>
+                        <input matInput [matDatepicker]="picker" placeholder="dd/MM/yyyy" formControlName="data"
+                            (blur)="validarFormulario(form)" name="dataUnica" />
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error *ngIf="displayMessage['data']">
+                            <mat-icon>error</mat-icon> {{displayMessage['data']}}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Período (Range) -->
+                    <mat-form-field appearance="outline" class="cadastro-evento-field"
+                        *ngIf="form.get('step2.tipoData')?.value === 'periodo'">
+                        <mat-label>Período do Evento</mat-label>
+                        <mat-date-range-input [rangePicker]="rangePicker" formGroupName="periodo">
+                            <input matStartDate placeholder="Data Inicial" formControlName="start" name="dataInicio"
+                                (blur)="validarFormulario(form)" />
+                            <input matEndDate placeholder="Data Final" formControlName="end" name="dataFim"
+                                (blur)="validarFormulario(form)" />
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #rangePicker></mat-date-range-picker>
+                        <mat-error *ngIf="displayMessage['start']">
+                            <mat-icon>error</mat-icon> {{displayMessage['start']}}
+                        </mat-error>
+                        <mat-error *ngIf="displayMessage['end']">
+                            <mat-icon>error</mat-icon> {{displayMessage['end']}}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="cadastro-evento-row">
+                    <mat-form-field appearance="outline" class="cadastro-evento-field">
+                        <mat-label>CEP</mat-label>
+                        <input matInput placeholder="Digite o CEP" mask="00000-000" formControlName="cep"
+                            (blur)="buscarCep()" maxlength="9" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="cadastro-evento-field">
+                        <mat-label>Cidade</mat-label>
+                        <input matInput placeholder="Cidade" formControlName="cidade"
+                            (blur)="validarFormulario(form)" />
+                        <mat-error *ngIf="displayMessage['cidade']">
+                            <mat-icon>error</mat-icon> {{displayMessage['cidade']}}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="cadastro-evento-row">
+                    <mat-form-field appearance="outline" class="cadastro-evento-field w-100">
+                        <mat-label>Rua</mat-label>
+                        <input matInput placeholder="Rua" formControlName="rua" (blur)="validarFormulario(form)" />
+                        <mat-error *ngIf="displayMessage['rua']">
+                            <mat-icon>error</mat-icon> {{displayMessage['rua']}}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="cadastro-evento-row">
+                    <mat-form-field appearance="outline" class="cadastro-evento-field">
+                        <mat-label>Número</mat-label>
+                        <input matInput placeholder="Número" formControlName="numero"
+                            (blur)="validarFormulario(form)" />
+                        <mat-error *ngIf="displayMessage['numero']">
+                            <mat-icon>error</mat-icon> {{displayMessage['numero']}}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="cadastro-evento-field">
+                        <mat-label>Ponto de Referência</mat-label>
+                        <input matInput placeholder="Ponto de Referência" formControlName="pontoReferencia" />
+                    </mat-form-field>
+                </div>
+
+                <div class="cadastro-evento-dropzone-row">
+                    <div class="cadastro-evento-dropzone" (dragover)="onDragOver($event)" (drop)="onDrop($event)"
+                        (click)="fileInput.click()">
+                        <input #fileInput type="file" accept="image/*" multiple hidden (change)="onFileSelect($event)"
+                            [attr.max]="10" />
+
+                        <div *ngIf="imagens.length >= 10" class="cadastro-evento-limit-msg">
+                            Limite de 10 imagens atingido.
+                        </div>
+
+                        <mat-icon>cloud_upload</mat-icon>
+                        <span>Arraste e solte imagens do local aqui ou clique para selecionar</span>
+                    </div>
+                    <div class="cadastro-evento-preview-col" *ngIf="imagens?.length">
+                        <div class="cadastro-evento-preview-list">
+                            <div class="cadastro-evento-preview-img-wrapper" *ngFor="let img of imagens; let i = index">
+                                <img [src]="img" alt="Prévia imagem" class="cadastro-evento-preview-img" />
+                                <mat-icon class="cadastro-evento-remove-btn" (click)="removerImagem(i)">close</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ...etapa 3... -->
+            <section *ngIf="etapa === 2" class="cadastro-evento-section">
+                <div class="cadastro-evento-section-title">
+                    <span class="cadastro-evento-section-number">3</span>
+                    <span>Detalhes do Organizador</span>
+                </div>
+                <p class="cadastro-evento-section-desc">
+                    Adicione informações sobre os organizadores do evento.
+                </p>
+                <app-cadastro-organizadores (organizadoresChange)="organizadores = $event"></app-cadastro-organizadores>
+            </section>
+        </form>
+    </mat-card>
+
+    <div class="cadastro-evento-actions">
+        <button mat-stroked-button color="primary" class="cadastro-evento-prev-btn" (click)="voltar()"
+            [disabled]="etapa === 0" style="margin-right: 12px;">
+            <mat-icon>arrow_back</mat-icon> Anterior
+        </button>
+        <button mat-flat-button color="primary" class="cadastro-evento-next-btn" (click)="proximo()"
+            [disabled]="habilitarBotaoProximo() === false">
+            {{ etapa < 2 ? 'Próximo' : 'Salvar' }} <mat-icon>arrow_forward</mat-icon>
+        </button>
+    </div>
+</div>

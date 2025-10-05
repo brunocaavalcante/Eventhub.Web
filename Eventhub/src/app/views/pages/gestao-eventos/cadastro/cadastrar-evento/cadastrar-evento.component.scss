@@ -1,0 +1,224 @@
+.cadastro-evento-container {
+    max-width: 700px;
+    margin: 32px auto;
+    padding: 0 12px;
+    text-align: center;
+}
+
+.cadastro-evento-title {
+    text-align: start;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.cadastro-evento-desc {
+    color: #f04299;
+    font-size: 1rem;
+    margin-bottom: 24px;
+    text-align: start;
+}
+
+.cadastro-evento-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px 0 rgba(240, 66, 153, 0.04);
+    padding: 28px 24px 18px 24px;
+    text-align: left;
+}
+
+.cadastro-evento-progress {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 18px;
+
+    .cadastro-evento-step {
+        float: right;
+        font-weight: 400;
+        font-size: 0.98rem;
+        color: #a77;
+    }
+
+    mat-progress-bar {
+        margin-top: 6px;
+        height: 5px;
+        border-radius: 3px;
+        background: #fde6f2;
+    }
+}
+
+.cadastro-evento-section {
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f3e7ed;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.cadastro-evento-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.18rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #222;
+}
+
+.cadastro-evento-section-number {
+    background: #fde6f2;
+    color: #f04299;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.cadastro-evento-row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.cadastro-evento-field {
+    flex: 1 1 180px;
+    min-width: 160px;
+}
+
+.cadastro-evento-section-desc {
+    color: #6e5f67;
+    font-size: 1rem;
+    margin-bottom: 18px;
+}
+
+.cadastro-evento-actions {
+    margin-top: 32px;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.cadastro-evento-dropzone-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 32px;
+    align-items: flex-start;
+}
+
+.cadastro-evento-dropzone {
+    flex: 1 1 220px;
+    min-width: 180px;
+    border: 2px dashed #f04299;
+    border-radius: 12px;
+    padding: 28px 12px;
+    text-align: center;
+    color: #f04299;
+    background: #fff6fa;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    mat-icon {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+
+    span {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+}
+
+.cadastro-evento-dropzone:hover {
+    border-color: #d81b60;
+}
+
+.cadastro-evento-preview-col {
+    flex: 1 1 220px;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cadastro-evento-preview-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-start;
+}
+
+.cadastro-evento-preview-img-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cadastro-evento-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .cadastro-evento-card {
+        padding: 16px 4px 10px 4px;
+    }
+
+    .cadastro-evento-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .cadastro-evento-actions {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 12px;
+    }
+
+    .cadastro-evento-next-btn {
+        width: 100%;
+        padding: 12px 0;
+    }
+
+    .cadastro-evento-field {
+        flex: 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .cadastro-evento-dropzone-row {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .cadastro-evento-dropzone,
+    .cadastro-evento-preview-col {
+        min-width: 0;
+        flex: 0;
+    }
+
+    .cadastro-evento-preview-list {
+        justify-content: flex-start;
+    }
+}
