@@ -1,13 +1,15 @@
-import { ElementRef } from "@angular/core";
+import { ElementRef, inject } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Observable, fromEvent, merge } from "rxjs";
 import { DisplayMessage, ValidadorGenerico, ValidationMessages } from "../utils/validations/generic-form.validator";
+import { MatDialog } from "@angular/material/dialog";
 
 export abstract class BaseComponent {
 
     displayMessage: DisplayMessage = {};
     genericValidator!: ValidadorGenerico;
     validationMessages!: ValidationMessages;
+    protected dialog = inject(MatDialog);
 
     protected configurarMensagensValidacaoBase(validationMessages: ValidationMessages) {
         this.genericValidator = new ValidadorGenerico(validationMessages);
