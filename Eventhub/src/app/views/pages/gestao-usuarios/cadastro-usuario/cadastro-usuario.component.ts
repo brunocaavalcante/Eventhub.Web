@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChildren, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -51,7 +51,8 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
 
     this.validationMessages = {
       nome: {
-        required: 'Informe o Nome'
+        required: 'Informe o Nome',
+        minlength: 'O Nome deve ter pelo menos 3 caracteres'
       },
       email: {
         required: 'Informe o E-mail',
@@ -74,7 +75,7 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
     this.configurarMensagensValidacaoBase(this.validationMessages);
 
     this.form = this.fb.group({
-      nome: ['', [Validators.required]],
+      nome: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
       confirmarSenha: ['', [Validators.required]],
