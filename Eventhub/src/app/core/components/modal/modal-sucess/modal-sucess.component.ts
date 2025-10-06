@@ -20,11 +20,8 @@ export interface ModalSucessData {
   styleUrls: ['./modal-sucess.component.scss']
 })
 export class ModalSucessComponent {
-  /**
-   * Fallback when component is used without MatDialog (programatic open is recommended)
-   */
   @Input() title = 'Operação Concluída com Sucesso!';
-  @Input() message = 'Sua ação foi realizada com sucesso. Continue explorando e planejando seus eventos!';
+  @Input() message = 'Sua ação foi realizada com sucesso!';
   @Input() okLabel = 'OK';
 
   constructor(

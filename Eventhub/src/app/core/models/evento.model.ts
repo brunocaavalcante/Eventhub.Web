@@ -5,11 +5,8 @@ export interface Evento {
     nome: string;
     descricao?: string;
     tipoData: 'unica' | 'periodo';
-    data?: Date | null;
-    periodo?: {
-        start: Date | null;
-        end: Date | null;
-    };
+    dataInicio?: Date | null;
+    dataFim?: Date | null;
     cep?: string;
     rua?: string;
     cidade?: string;
@@ -17,7 +14,8 @@ export interface Evento {
     pontoReferencia?: string;
     imagens?: string[];
     organizadores?: Organizador[];
-    status?: 'rascunho' | 'publicado' | 'finalizado';
+    status?: 'rascunho' | 'ativo' | 'cancelado' | 'publicado' | 'encerrado';
     criadoEm?: Date;
     atualizadoEm?: Date;
+    IdUsuario?: string;
 }

@@ -15,6 +15,14 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { CadastroOrganizadoresComponent } from '../../organizadores/cadastro-organizadores/cadastro-organizadores.component';
 import { BaseComponent } from '../../../../../core/components/base.component';
 import { Organizador } from '../../../../../core/models/organizador.model';
+import { UsuarioService } from '../../../../../core/services/usuario.service';
+import { Usuario } from '../../../../../core/models/usuario.model';
+import { Evento } from '../../../../../core/models/evento.model';
+import { SpinnerService } from '../../../../../core/services/spinner.service';
+import { EventoService } from '../../../../../core/services/evento.service';
+import { ModalSucessComponent } from '../../../../../core/components/modal/modal-sucess/modal-sucess.component';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cadastrar-evento',
@@ -42,6 +50,12 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements!: ElementRef[];
 
   private readonly fb = inject(FormBuilder);
+  private readonly userService = inject(UsuarioService);
+  private readonly service = inject(EventoService);
+  private readonly spinner = inject(SpinnerService);
+  private readonly router = inject(Router);
+
+  usuarioLogado: Usuario | null = null;
   form!: FormGroup;
   imagens: string[] = [];
   organizadores: Organizador[] = [];
@@ -87,9 +101,11 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
 
   ngAfterViewInit(): void {
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
+    this.spinner.hide();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.spinner.show();
     this.form = this.fb.group({
       step1: this.fb.group({
         nome: ['', [Validators.required, Validators.minLength(3)]],
@@ -111,6 +127,7 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
     });
 
     this.configuraValidacaoDatas();
+    this.usuarioLogado = await this.userService.obterUsuarioLogado();
   }
 
   configuraValidacaoDatas() {
@@ -148,9 +165,53 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
       this.etapa++;
     }
     else if (this.etapa === 2 && this.form.valid) {
-      // Salvar evento
-      // ... lógica de envio
+      this.salvarEvento();
+    } else {
+      this.form.markAllAsTouched();
     }
+  }
+
+  salvarEvento() {
+    this.spinner.show();
+    const evento: Evento = {
+      nome: this.form.get('step1.nome')?.value,
+      descricao: this.form.get('step1.descricao')?.value,
+      tipoData: this.form.get('step2.tipoData')?.value,
+      cep: this.form.get('step2.cep')?.value,
+      rua: this.form.get('step2.rua')?.value,
+      cidade: this.form.get('step2.cidade')?.value,
+      numero: this.form.get('step2.numero')?.value,
+      pontoReferencia: this.form.get('step2.pontoReferencia')?.value,
+      // imagens: this.imagens,
+      organizadores: this.organizadores,
+      status: 'ativo',
+      criadoEm: new Date(),
+      atualizadoEm: new Date()
+    };
+
+    if (this.usuarioLogado?.uid) {
+      evento.IdUsuario = this.usuarioLogado.uid;
+    }
+
+    if (evento.tipoData === 'unica') {
+      evento.dataInicio = this.form.get('step2.data')?.value;
+      evento.dataFim = null;
+    }
+    else {
+      evento.dataInicio = this.form.get('step2.periodo.start')?.value ?? null;
+      evento.dataFim = this.form.get('step2.periodo.end')?.value ?? null;
+    }
+    this.service.cadastro(evento)
+      .then(() => {
+        this.spinner.hide();
+        this.openSuccessModal().afterClosed().subscribe(() => {
+          this.router.navigate(['/eventos/meus-eventos']);
+        });
+      })
+      .catch((e) => {
+        this.spinner.hide();
+        console.error('Erro ao cadastrar evento:', e);
+      });
   }
 
   habilitarBotaoProximo(): boolean {
@@ -182,20 +243,6 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
         this.form.get('step2')?.patchValue({ rua: '', cidade: '' });
       }
     }
-  }
-
-  abrirNoGoogleMaps() {
-    /*const endereco = [
-      this.evento.rua,
-      this.evento.numero,
-      this.evento.cidade,
-      this.evento.cep,
-      this.evento.pontoReferencia
-    ]
-      .filter(Boolean)
-      .join(', ');
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(endereco)}`;
-    window.open(url, '_blank');*/
   }
 
   onDragOver(event: DragEvent) {
@@ -236,5 +283,15 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
 
   changeOrganizadores(event: Organizador[]) {
     this.organizadores = event;
+  }
+
+  private openSuccessModal(): MatDialogRef<ModalSucessComponent> {
+    return this.dialog.open(ModalSucessComponent, {
+      data: {
+        title: 'Evento criado',
+        message: 'Seu evento foi cadastrado com sucesso!',
+        okLabel: 'Fechar'
+      }
+    });
   }
 }
