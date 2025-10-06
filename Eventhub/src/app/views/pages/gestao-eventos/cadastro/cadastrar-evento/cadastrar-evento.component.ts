@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, inject, OnInit, ViewChildren } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,6 +23,8 @@ import { EventoService } from '../../../../../core/services/evento.service';
 import { ModalSucessComponent } from '../../../../../core/components/modal/modal-sucess/modal-sucess.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ModalConfirmComponent } from '../../../../../core/components/modal/modal-confirm/modal-confirm.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-cadastrar-evento',
@@ -60,6 +62,7 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
   imagens: string[] = [];
   organizadores: Organizador[] = [];
   etapa = 0;
+  private salvou = false;
 
   constructor() {
     super();
@@ -203,6 +206,7 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
     }
     this.service.cadastro(evento)
       .then(() => {
+        this.salvou = true;
         this.spinner.hide();
         this.openSuccessModal().afterClosed().subscribe(() => {
           this.router.navigate(['/eventos/meus-eventos']);
@@ -293,5 +297,33 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
         okLabel: 'Fechar'
       }
     });
+  }
+
+  // Protege contra saída acidental com alterações não salvas
+  @HostListener('window:beforeunload', ['$event'])
+  handleBeforeUnload(event: BeforeUnloadEvent) {
+    if (this.hasUnsavedChanges()) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  }
+
+  // Usado pelo guard de navegação entre rotas
+  canDeactivate(): boolean | Observable<boolean> {
+    if (!this.hasUnsavedChanges()) return true;
+    return this.dialog.open(ModalConfirmComponent, {
+      data: {
+        title: 'Sair sem salvar?',
+        message: 'Você tem alterações não salvas. Deseja realmente sair e perder as mudanças?',
+        cancelLabel: 'Continuar editando',
+        confirmLabel: 'Sair'
+      }
+    }).afterClosed();
+  }
+
+  private hasUnsavedChanges(): boolean {
+    const formDirty = this.form?.dirty;
+    const hasOtherChanges = (this.imagens?.length ?? 0) > 0 || (this.organizadores?.length ?? 0) > 0;
+    return !this.salvou && (!!formDirty || hasOtherChanges);
   }
 }
