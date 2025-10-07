@@ -1,3 +1,5 @@
+@import 'variables';
+
 .cadastro-evento-container {
     max-width: 700px;
     margin: 32px auto;
@@ -7,51 +9,54 @@
 
 .cadastro-evento-title {
     text-align: start;
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: $font-titulo;
+    font-weight: $font-peso-bold;
     margin-bottom: 8px;
-    color: #222;
+    color: $cor-preto;
 }
 
 .cadastro-evento-desc {
-    color: #f04299;
-    font-size: 1rem;
+    color: $cor-primaria;
+    font-size: $font-desc;
     margin-bottom: 24px;
     text-align: start;
 }
 
 .cadastro-evento-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 16px 0 rgba(240, 66, 153, 0.04);
+    background: $cor-branco;
+    border-radius: $radius-card;
+    box-shadow: $sombra-card;
     padding: 28px 24px 18px 24px;
     text-align: left;
 }
 
+
 .cadastro-evento-progress {
     font-weight: 600;
-    font-size: 1rem;
+    font-size: $font-desc;
     margin-bottom: 18px;
+
 
     .cadastro-evento-step {
         float: right;
         font-weight: 400;
         font-size: 0.98rem;
-        color: #a77;
+        color: $cor-cinza-medio;
     }
 
     mat-progress-bar {
         margin-top: 6px;
         height: 5px;
         border-radius: 3px;
-        background: #fde6f2;
+        background: $cor-primaria-clara;
     }
 }
+
 
 .cadastro-evento-section {
     margin-bottom: 18px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #f3e7ed;
+    border-bottom: 1px solid $cor-cinza-borda;
 
     &:last-child {
         border-bottom: none;
@@ -63,15 +68,15 @@
     align-items: center;
     gap: 12px;
     font-size: 1.18rem;
-    font-weight: 700;
+    font-weight: $font-peso-bold;
     margin-bottom: 12px;
-    color: #222;
+    color: $cor-preto;
 }
 
 .cadastro-evento-section-number {
-    background: #fde6f2;
-    color: #f04299;
-    font-weight: 700;
+    background: $cor-primaria-clara;
+    color: $cor-primaria;
+    font-weight: $font-peso-bold;
     border-radius: 50%;
     width: 32px;
     height: 32px;
@@ -83,7 +88,7 @@
 
 .cadastro-evento-row {
     display: flex;
-    gap: 18px;
+    gap: $gap;
     flex-wrap: wrap;
 }
 
@@ -93,8 +98,8 @@
 }
 
 .cadastro-evento-section-desc {
-    color: #6e5f67;
-    font-size: 1rem;
+    color: $cor-cinza-medio;
+    font-size: $font-desc;
     margin-bottom: 18px;
 }
 
@@ -103,7 +108,7 @@
     text-align: right;
     display: flex;
     justify-content: space-between;
-    gap: 16px;
+    gap: $gap-card;
 }
 
 .cadastro-evento-dropzone-row {
@@ -116,12 +121,12 @@
 .cadastro-evento-dropzone {
     flex: 1 1 220px;
     min-width: 180px;
-    border: 2px dashed #f04299;
-    border-radius: 12px;
+    border: 2px dashed $cor-primaria;
+    border-radius: $radius;
     padding: 28px 12px;
     text-align: center;
-    color: #f04299;
-    background: #fff6fa;
+    color: $cor-primaria;
+    background: $cor-primaria-clara;
     cursor: pointer;
     transition: border-color 0.2s;
     display: flex;
@@ -134,13 +139,13 @@
     }
 
     span {
-        font-size: 1rem;
+        font-size: $font-desc;
         margin-bottom: 10px;
     }
 }
 
 .cadastro-evento-dropzone:hover {
-    border-color: #d81b60;
+    border-color: $cor-primaria-escura;
 }
 
 .cadastro-evento-preview-col {

@@ -1,22 +1,16 @@
-$main-pink: #ff4fa0;
-$main-bg: #fff;
-$main-light: #fdebf4;
-$main-dark: #222;
-$main-gray: #444;
-$radius: 18px;
-$shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
+@import 'variables';
 
 .landing-container {
     font-family: 'Montserrat', Arial, sans-serif;
-    background: $main-bg;
-    color: $main-dark;
+    background: $cor-branco;
+    color: $cor-preto;
     animation: fadeIn 1.2s ease;
 }
 
 .logo {
     font-weight: bold;
     font-size: 1.3rem;
-    color: $main-pink;
+    color: $cor-secundaria;
     animation: slideDown 1s cubic-bezier(.77, 0, .18, 1);
 }
 
@@ -63,13 +57,13 @@ $shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
     font-size: 2.3rem;
     font-weight: 700;
     margin-bottom: 0.7rem;
-    color: $main-dark;
+    color: $cor-preto;
     animation: fadeIn 1.5s cubic-bezier(.77, 0, .18, 1);
 }
 
 .hero-overlay p {
     font-size: 1.1rem;
-    color: $main-gray;
+    color: $cor-cinza-escuro;
     margin-bottom: 1.5rem;
     animation: fadeIn 1.7s cubic-bezier(.77, 0, .18, 1);
 }
@@ -85,38 +79,38 @@ $shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
 
 .hero-actions .primary,
 .cta-btn {
-    background: $main-pink;
-    color: $main-bg;
+    background: $cor-secundaria;
+    color: $cor-branco;
     border: none;
     font-weight: 600;
     padding: 0.7rem 1.7rem;
     border-radius: 25px;
     cursor: pointer;
     font-size: 1rem;
-    box-shadow: $shadow;
+    box-shadow: $sombra-card-leve;
     transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .hero-actions .primary:hover,
 .cta-btn:hover {
-    background: darken($main-pink, 10%);
-    box-shadow: 0 4px 16px rgba(255, 79, 160, 0.18);
+    background: darken($cor-secundaria, 10%);
+    box-shadow: 0 4px 16px rgba($cor-secundaria, 0.18);
 }
 
 .hero-actions .secondary {
-    background: $main-bg;
-    color: $main-pink;
-    border: 2px solid $main-pink;
+    background: $cor-branco;
+    color: $cor-secundaria;
+    border: 2px solid $cor-secundaria;
     font-weight: 600;
     padding: 0.7rem 1.7rem;
     border-radius: 25px;
     cursor: pointer;
     font-size: 1rem;
-    box-shadow: $shadow;
+    box-shadow: $sombra-card-leve;
 }
 
 .hero-actions .secondary:hover {
-    background: $main-light;
+    background: $cor-primaria-clara-1;
     transform: scale(1.07) rotate(2deg);
     box-shadow: 0 4px 16px rgba(255, 79, 160, 0.18);
 }
@@ -124,7 +118,7 @@ $shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
 .features,
 .cta,
 .landing-footer {
-    background: $main-bg;
+    background: $cor-branco;
     text-align: center;
     padding: 2.5rem 1rem 2rem 1rem;
 }
@@ -139,7 +133,7 @@ $shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
 
 .feature-item {
     background: none;
-    border-radius: $radius;
+    border-radius: $radius-card;
     width: 220px;
     box-shadow: none;
     display: flex;
@@ -148,7 +142,7 @@ $shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
 }
 
 .feature-icon {
-    background: $main-light;
+    background: $cor-primaria-clara;
     border-radius: 50%;
     width: 56px;
     height: 56px;
@@ -160,26 +154,26 @@ $shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
 
 .feature-icon mat-icon {
     font-size: 24px;
-    color: $main-pink;
+    color: $cor-secundaria;
 }
 
 .feature-item h3 {
     font-size: 1.05rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
-    color: $main-dark;
+    color: $cor-preto;
     text-align: center;
 }
 
 .feature-item p {
     font-size: 0.95rem;
-    color: $main-gray;
+    color: $cor-cinza-escuro;
     text-align: center;
     margin: 0;
 }
 
 .cta {
-    background: $main-light;
+    background: $cor-primaria-clara;
 }
 
 .cta-btn {
@@ -194,18 +188,18 @@ $shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
 }
 
 .footer-links a {
-    color: #888;
+    color: $cor-cinza-medio;
     text-decoration: none;
     font-size: 0.95rem;
 
     &:hover {
-        color: $main-pink;
+        color: $cor-secundaria;
     }
 }
 
 .footer-copy {
     font-size: 0.9rem;
-    color: #bbb;
+    color: $cor-cinza-medio;
 }
 
 .carousel-container {
@@ -219,8 +213,8 @@ $shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
     justify-content: center;
     align-items: center;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
-    border-radius: $radius;
-    background: $main-bg;
+    border-radius: $radius-card;
+    background: $cor-branco;
     overflow: hidden;
 }
 
@@ -228,7 +222,7 @@ $shadow: 0 2px 8px rgba(255, 79, 160, 0.08);
     width: 100%;
     height: 320px;
     object-fit: cover;
-    border-radius: $radius;
+    border-radius: $radius-card;
     display: block;
     margin: 0 auto;
 }

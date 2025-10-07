@@ -1,29 +1,31 @@
+@import 'variables';
+
 .event-type-container {
-    background: #fcf8fa;
+    background: $cor-primaria-clara-1;
     padding: 32px 0;
     text-align: center;
 }
 
 .event-type-title {
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: $font-peso-bold;
     margin-bottom: 32px;
-    color: #222;
+    color: $cor-preto;
 }
 
 .event-type-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 24px;
+    gap: $gap-card;
     justify-content: center;
     max-width: 700px;
     margin: 0 auto;
 }
 
 .event-type-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px 0 rgba(240, 66, 153, 0.04);
+    background: $cor-branco;
+    border-radius: $radius-card;
+    box-shadow: 0 2px 12px 0 rgba($cor-primaria, 0.04);
     padding: 28px 18px 22px 18px;
     display: flex;
     flex-direction: column;
@@ -33,13 +35,13 @@
     border: 2px solid transparent;
 
     &:hover {
-        border-color: #f04299;
-        box-shadow: 0 4px 24px 0 rgba(240, 66, 153, 0.10);
+        border-color: $cor-primaria;
+        box-shadow: 0 4px 24px 0 rgba($cor-primaria, 0.10);
     }
 }
 
 .event-type-icon {
-    background: #fde6f2;
+    background: $cor-primaria-clara;
     border-radius: 50%;
     width: 56px;
     height: 56px;
@@ -49,40 +51,40 @@
     margin-bottom: 18px;
 
     mat-icon {
-        color: #f04299;
+        color: $cor-primaria;
         font-size: 1.5rem;
     }
 }
 
 .event-type-name {
     font-size: 1.1rem;
-    font-weight: 700;
-    color: #222;
+    font-weight: $font-peso-bold;
+    color: $cor-preto;
     margin-bottom: 6px;
 }
 
 .event-type-desc {
-    font-size: 0.98rem;
-    color: #6e5f67;
+    font-size: $font-padrao;
+    color: $cor-cinza-medio;
 }
 
 /* Responsivo para mobile */
-@media (max-width: 600px) {
+@media (max-width: $break-mobile) {
     .event-type-title {
-        font-size: 1.3rem;
+        font-size: $font-titulo-mobile;
         margin-bottom: 20px;
     }
 
     .event-type-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: $gap-mobile;
         max-width: 98vw;
         padding: 0 4px;
     }
 
     .event-type-card {
         padding: 20px 8px 16px 8px;
-        border-radius: 12px;
+        border-radius: $radius;
     }
 
     .event-type-icon {
