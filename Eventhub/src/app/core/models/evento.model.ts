@@ -1,10 +1,13 @@
+import { Convidado } from "./convidado.model";
 import { Organizador } from "./organizador.model";
+import { Presente } from "./presente.model";
 
 export interface Evento {
     id?: string;
     nome: string;
     descricao?: string;
     tipoData: 'unica' | 'periodo';
+    tipoEvento?: number;
     dataInicio?: Date | null;
     dataFim?: Date | null;
     cep?: string;
@@ -14,7 +17,9 @@ export interface Evento {
     pontoReferencia?: string;
     imagens?: string[];
     organizadores?: Organizador[];
-    status?: 'rascunho' | 'ativo' | 'cancelado' | 'publicado' | 'encerrado';
+    convidados?: Convidado[];
+    presentes?: Presente[];
+    status?: 'Rascunho' | 'Ativo' | 'Cancelado' | 'Publicado' | 'Encerrado';
     criadoEm?: Date;
     atualizadoEm?: Date;
     IdUsuario?: string;

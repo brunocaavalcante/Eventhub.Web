@@ -1,8 +1,70 @@
-<div class="empty-event-container" *ngIf="meusEventos.length === 0">
-    <img src="assets/imagens/empty-event.png" alt="Sem eventos" class="empty-event-img" />
-    <h2 class="empty-title">Olá! Parece que você ainda não<br>tem eventos criados.</h2>
-    <p class="empty-desc">Comece a organizar seu evento agora mesmo!</p>
-    <button mat-button class="empty-btn" routerLink="/eventos/tipo-evento">
-        Criar Meu Primeiro Evento
-    </button>
+<div class="meus-eventos-container">
+    <ng-container *ngIf="eventosOriginais() && eventosOriginais().length > 0; else emptyState">
+        <div class="meus-eventos-header">
+            <h1 class="meus-eventos-title">Meus Eventos</h1>
+            <button mat-flat-button color="primary" class="novo-evento-btn" routerLink="/eventos/tipo-evento">
+                <span class="material-icons">add</span> Criar Novo Evento
+            </button>
+        </div>
+        <div class="meus-eventos-search-bar">
+            <mat-form-field appearance="outline" class="w-70">
+                <mat-label>Buscar eventos por nome ou tipo...</mat-label>
+                <input matInput [value]="filtroBusca()" (input)="onInputBusca($event)" />
+                <button mat-icon-button matSuffix tabindex="-1">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="meus-eventos-status-field">
+                <mat-label>Status</mat-label>
+                <mat-select [value]="filtroStatus()"
+                    (selectionChange)="filtroStatus.set($event.value); onBuscarEventos()">
+                    <mat-option value="">Todos os Status</mat-option>
+                    <mat-option value="ativo">Ativo</mat-option>
+                    <mat-option value="rascunho">Rascunho</mat-option>
+                    <mat-option value="finalizado">Finalizado</mat-option>
+                    <mat-option value="cancelado">Cancelado</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="meus-eventos-grid">
+            <div *ngFor="let evento of meusEventos()" class="evento-card"
+                [ngClass]="'status-' + evento.status?.toLowerCase()">
+                <div class="evento-img-wrapper">
+                    <img [src]="getTipoEventoInfo(evento.tipoEvento).imagem" [alt]="evento.nome" class="evento-img" />
+                </div>
+                <div class="evento-info">
+                    <div class="evento-nome">{{evento.nome}}</div>
+                    <div class="evento-meta"><b>Tipo:</b> {{getTipoEventoInfo(evento.tipoEvento).descricao}}</div>
+                    <div class="evento-meta">
+                        <b>Data:</b>
+                        <ng-container *ngIf="evento.tipoData === 'periodo'; else unicaData">
+                            {{converterData(evento.dataInicio) | date:'dd/MM/yyyy'}} - {{converterData(evento.dataFim) |
+                            date:'dd/MM/yyyy'}}
+                        </ng-container>
+                        <ng-template #unicaData>
+                            {{converterData(evento.dataInicio) | date:'dd/MM/yyyy'}}
+                        </ng-template>
+                    </div>
+                    <div class="evento-status">
+                        <span class="material-icons">groups</span> {{obterConvidadosConfirmados(evento.id || '')}}
+                        confirmados
+                        <span class="material-icons">card_giftcard</span> {{obterPresentes(evento.id || '')}} presentes
+                        <span class="evento-status-badge"
+                            [ngClass]="'badge-' + (evento?.status ? evento.status?.toLowerCase() : '')">{{evento?.status}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #emptyState>
+        <div class="empty-event-container">
+            <img src="assets/imagens/empty-event.png" alt="Sem eventos" class="empty-event-img" />
+            <h2 class="empty-title">Olá! Parece que você ainda não<br>tem eventos criados.</h2>
+            <p class="empty-desc">Comece a organizar seu evento agora mesmo!</p>
+            <button mat-button class="empty-btn" routerLink="/eventos/tipo-evento">
+                Criar Meu Primeiro Evento
+            </button>
+        </div>
+    </ng-template>
 </div>
