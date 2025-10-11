@@ -1,0 +1,17 @@
+<div class="acesso-negado-container">
+    <div class="acesso-negado-icone">
+        <mat-icon>lock</mat-icon>
+    </div>
+    <h1 class="acesso-negado-titulo">Acesso Negado</h1>
+    <div class="acesso-negado-desc">
+        {{ descricao || 'Você não tem permissão para acessar esta página. Por favor, verifique suas credenciais ou entre
+        em contato com o administrador.' }}
+    </div>
+    <div class="acesso-negado-botoes">
+        <button mat-flat-button color="primary" routerLink="/">Retornar à Página Inicial</button>
+        <button *ngIf="!usuarioLogado()" mat-stroked-button color="primary" routerLink="/login">Fazer Login</button>
+    </div>
+    <div class="acesso-negado-suporte">
+        Se você acredita que isso é um erro, <a routerLink="/suporte">entre em contato com o suporte</a>.
+    </div>
+</div>
