@@ -28,7 +28,7 @@
         </div>
 
         <div class="meus-eventos-grid">
-            <div *ngFor="let evento of meusEventos()" class="evento-card"
+            <div *ngFor="let evento of meusEventos()" class="evento-card" [routerLink]="['/eventos/home', evento.id]"
                 [ngClass]="'status-' + evento.status?.toLowerCase()">
                 <div class="evento-img-wrapper">
                     <img [src]="getTipoEventoInfo(evento.tipoEvento).imagem" [alt]="evento.nome" class="evento-img" />

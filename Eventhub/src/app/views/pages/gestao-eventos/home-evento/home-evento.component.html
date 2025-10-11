@@ -1,0 +1,31 @@
+<div class="home-evento-container">
+    <div class="evento-banner">
+        <img class="evento-banner-img" src="assets/imagens/casa-nova.png" alt="Banner do Evento" />
+        <div class="evento-banner-info">
+            <h1 class="evento-titulo">Chá de Casa Nova da Ana e do Bruno</h1>
+            <div class="evento-detalhes">
+                <span class="evento-data"><mat-icon>calendar_today</mat-icon> 25 de Dezembro de 2024</span>
+                <span class="evento-hora"><mat-icon>schedule</mat-icon> 16:00</span>
+            </div>
+            <div class="evento-endereco">
+                <span class="evento-local"><mat-icon>location_on</mat-icon> Salão de Festas, Rua das Flores, 123</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="evento-confirmado-alert" *ngIf="isConvidado">
+        <mat-icon color="primary">check_circle</mat-icon>
+        <div>
+            <div class="alert-title">Sua presença está confirmada.</div>
+            <div class="alert-desc">Mal podemos esperar para celebrar com você!</div>
+        </div>
+    </div>
+
+    <div class="home-evento-cards">
+        <a class="evento-card-link" *ngFor="let card of cardsVisiveis()" [routerLink]="card.route(evento?.id || '')">
+            <mat-icon class="evento-card-icon">{{card.icon}}</mat-icon>
+            <div class="evento-card-title">{{card.title}}</div>
+            <div class="evento-card-desc">{{card.desc}}</div>
+        </a>
+    </div>
+</div>
