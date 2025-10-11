@@ -15,14 +15,13 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { CadastroOrganizadoresComponent } from '../../organizadores/cadastro-organizadores/cadastro-organizadores.component';
 import { BaseComponent } from '../../../../../core/components/base.component';
 import { Organizador } from '../../../../../core/models/organizador.model';
-import { UsuarioService } from '../../../../../core/services/usuario.service';
 import { Usuario } from '../../../../../core/models/usuario.model';
 import { Evento } from '../../../../../core/models/evento.model';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { EventoService } from '../../../../../core/services/evento.service';
 import { ModalSucessComponent } from '../../../../../core/components/modal/modal-sucess/modal-sucess.component';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ModalConfirmComponent } from '../../../../../core/components/modal/modal-confirm/modal-confirm.component';
 import { Observable } from 'rxjs';
 
@@ -52,10 +51,10 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements!: ElementRef[];
 
   private readonly fb = inject(FormBuilder);
-  private readonly userService = inject(UsuarioService);
   private readonly service = inject(EventoService);
   private readonly spinner = inject(SpinnerService);
   private readonly router = inject(Router);
+  private readonly acRoute = inject(ActivatedRoute);
 
   usuarioLogado: Usuario | null = null;
   form!: FormGroup;
@@ -187,9 +186,10 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
       pontoReferencia: this.form.get('step2.pontoReferencia')?.value,
       // imagens: this.imagens,
       organizadores: this.organizadores,
-      status: 'ativo',
+      status: 'Ativo',
       criadoEm: new Date(),
-      atualizadoEm: new Date()
+      atualizadoEm: new Date(),
+      tipoEvento: this.acRoute.snapshot.params['tipo'] || 8
     };
 
     if (this.usuarioLogado?.uid) {

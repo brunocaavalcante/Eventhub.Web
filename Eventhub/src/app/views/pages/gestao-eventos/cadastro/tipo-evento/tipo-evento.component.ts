@@ -11,13 +11,13 @@ import { RouterLink } from '@angular/router';
 })
 export class TipoEventoComponent {
   eventTypes = [
-    { id: 0, icon: 'home', name: 'Chá de Casa Nova', desc: 'Comemore seu novo lar.' },
-    { id: 1, icon: 'favorite', name: 'Casamento', desc: 'Celebre o amor e a união.' },
-    { id: 2, icon: 'cake', name: 'Aniversário', desc: 'Marque mais um ano de vida.' },
-    { id: 3, icon: 'child_friendly', name: 'Chá de Bebê', desc: 'Dê boas-vindas ao bebê.' },
-    { id: 4, icon: 'school', name: 'Formatura', desc: 'Homenageie uma conquista.' },
-    { id: 5, icon: 'groups', name: 'Networking', desc: 'Conecte-se com pessoas.' },
-    { id: 6, icon: 'business_center', name: 'Corporativo', desc: 'Celebre um marco profissional.' },
-    { id: 7, icon: 'apps', name: 'Outro', desc: 'Crie um evento personalizado.' }
+    { id: 1, icon: 'home', name: 'Chá de Casa Nova', desc: 'Comemore seu novo lar.' },
+    { id: 2, icon: 'favorite', name: 'Casamento', desc: 'Celebre o amor e a união.' },
+    { id: 3, icon: 'cake', name: 'Aniversário', desc: 'Marque mais um ano de vida.' },
+    { id: 4, icon: 'child_friendly', name: 'Chá de Bebê', desc: 'Dê boas-vindas ao bebê.' },
+    { id: 5, icon: 'school', name: 'Formatura', desc: 'Homenageie uma conquista.' },
+    { id: 6, icon: 'groups', name: 'Networking', desc: 'Conecte-se com pessoas.' },
+    { id: 7, icon: 'business_center', name: 'Corporativo', desc: 'Celebre um marco profissional.' },
+    { id: 8, icon: 'apps', name: 'Outro', desc: 'Crie um evento personalizado.' }
   ];
 }
