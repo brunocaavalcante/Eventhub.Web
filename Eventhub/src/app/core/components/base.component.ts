@@ -1,4 +1,7 @@
 import { ElementRef, inject } from "@angular/core";
+import { Usuario } from '../models/usuario.model';
+import { UsuarioService } from '../services/usuario.service';
+
 import { FormGroup } from "@angular/forms";
 import { Observable, fromEvent, merge } from "rxjs";
 import { DisplayMessage, ValidadorGenerico, ValidationMessages } from "../utils/validations/generic-form.validator";
@@ -10,6 +13,13 @@ export abstract class BaseComponent {
     genericValidator!: ValidadorGenerico;
     validationMessages!: ValidationMessages;
     protected dialog = inject(MatDialog);
+    protected readonly userService = inject(UsuarioService);
+    /**
+     * Busca o usuário logado usando UsuarioService
+     */
+    protected async obterUsuarioLogado(): Promise<Usuario | null> {
+        return await this.userService.obterUsuarioLogado();
+    }
 
     protected configurarMensagensValidacaoBase(validationMessages: ValidationMessages) {
         this.genericValidator = new ValidadorGenerico(validationMessages);

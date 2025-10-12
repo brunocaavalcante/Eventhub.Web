@@ -9,7 +9,8 @@
     </div>
     <div class="acesso-negado-botoes">
         <button mat-flat-button color="primary" routerLink="/">Retornar à Página Inicial</button>
-        <button *ngIf="!usuarioLogado()" mat-stroked-button color="primary" routerLink="/login">Fazer Login</button>
+        <button *ngIf="!usuarioLogado()" mat-stroked-button color="primary" routerLink="/usuarios/login">Fazer
+            Login</button>
     </div>
     <div class="acesso-negado-suporte">
         Se você acredita que isso é um erro, <a routerLink="/suporte">entre em contato com o suporte</a>.
