@@ -1,14 +1,29 @@
 <div class="home-evento-container">
     <div class="evento-banner">
-        <img class="evento-banner-img" src="assets/imagens/casa-nova.png" alt="Banner do Evento" />
+        <img [src]="getTipoEventoInfo(evento?.tipoEvento).imagem" alt="Banner do Evento" class="evento-banner-img" />
         <div class="evento-banner-info">
-            <h1 class="evento-titulo">Chá de Casa Nova da Ana e do Bruno</h1>
+            <h1 class="evento-titulo">{{ evento?.nome }}</h1>
             <div class="evento-detalhes">
-                <span class="evento-data"><mat-icon>calendar_today</mat-icon> 25 de Dezembro de 2024</span>
-                <span class="evento-hora"><mat-icon>schedule</mat-icon> 16:00</span>
+                <span class="evento-data" [class.periodo-mobile]="evento?.tipoData === 'periodo'">
+                    <ng-container *ngIf="evento?.tipoData === 'periodo'; else unicaData">
+                        <span class="data-inicio"><mat-icon>calendar_today</mat-icon>{{
+                            DateUtils.formatarDataExtenso(evento?.dataInicio) }} -</span>
+                        <span class="data-fim"><mat-icon>calendar_today</mat-icon>{{
+                            DateUtils.formatarDataExtenso(evento?.dataFim) }}</span>
+                    </ng-container>
+                    <ng-template #unicaData>
+                        <span class="data-inicio"><mat-icon>calendar_today</mat-icon>{{
+                            DateUtils.formatarDataExtenso(evento?.dataInicio) }}</span>
+                        <span class="evento-hora">
+                            <mat-icon>schedule</mat-icon>{{ DateUtils.formatarHora(evento?.dataInicio) }}
+                        </span>
+                    </ng-template>
+                </span>
+
             </div>
             <div class="evento-endereco">
-                <span class="evento-local"><mat-icon>location_on</mat-icon> Salão de Festas, Rua das Flores, 123</span>
+                <span class="evento-local"><mat-icon>location_on</mat-icon>{{evento?.rua}}, {{evento?.numero}} -
+                    {{evento?.pontoReferencia}}</span>
             </div>
         </div>
     </div>

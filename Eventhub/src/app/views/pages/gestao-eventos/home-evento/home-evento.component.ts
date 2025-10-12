@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { DateUtils } from '../../../../core/utils/date.utils';
 import { ActivatedRoute } from '@angular/router';
 import { Evento } from '../../../../core/models/evento.model';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,7 +10,7 @@ import { EventoService } from '../../../../core/services/evento.service';
 import { ConvidadoService } from '../../../../core/services/convidado.service';
 import { Usuario } from '../../../../core/models/usuario.model';
 import { SpinnerService } from '../../../../core/services/spinner.service';
-import { signal } from '@angular/core';
+import { getTipoEventoInfo } from '../../../../core/models/tipo-evento.model';
 
 @Component({
   selector: 'app-home-evento',
@@ -18,14 +19,14 @@ import { signal } from '@angular/core';
   styleUrl: './home-evento.component.scss'
 })
 export class HomeEventoComponent extends BaseComponent implements OnInit {
-  private readonly spinner = inject(SpinnerService);
 
   isOrganizador = false;
   isConvidado = false;
+  private readonly spinner = inject(SpinnerService);
   private readonly service = inject(EventoService);
   private readonly convidadoService = inject(ConvidadoService);
   private readonly route = inject(ActivatedRoute);
-
+  DateUtils: any = DateUtils;
   evento: Evento | null = null;
   usuario: Usuario | null = null;
 
@@ -128,6 +129,10 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
       }
       return true;
     });
+  }
+
+  getTipoEventoInfo(tipo: number | undefined) {
+    return getTipoEventoInfo(tipo ?? 0);
   }
 
 }
