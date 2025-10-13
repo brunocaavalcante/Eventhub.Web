@@ -3,10 +3,11 @@ export interface Convidado {
     nome: string;
     email?: string;
     telefone?: string;
-    confirmado?: boolean;
+    statusConfirmacao?: "Pendente" | "Confirmado" | "Recusado";
     acompanhante?: number;
     observacao?: string;
     criadoEm?: Date;
     atualizadoEm?: Date;
     idEvento?: string;
+    foto?: string;
 }

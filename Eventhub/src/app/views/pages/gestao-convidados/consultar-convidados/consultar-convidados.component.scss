@@ -1,0 +1,175 @@
+@import 'variables';
+
+.convidados-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px 0 16px;
+}
+
+
+.convidados-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.convidados-header-titles {
+    margin-bottom: 30px;
+}
+
+.convidados-title {
+    font-size: 2rem;
+    font-weight: $font-peso-bold;
+    color: $cor-preto;
+    margin-bottom: 10px;
+}
+
+.convidados-subtitle {
+    font-size: 1.05rem;
+    color: $cor-cinza-medio;
+    margin-top: 2px;
+}
+
+.convidados-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.convidados-search {
+    flex: 0 0 50%;
+    min-width: 0;
+}
+
+.convidados-select {
+    flex: 0 0 30%;
+    min-width: 0;
+}
+
+.convidados-search-btn {
+    flex: 0 0 20%;
+}
+
+.novo-convidado-btn {
+    background: $cor-secundaria;
+    color: $cor-branco;
+    font-size: $font-btn;
+    font-weight: $font-peso-bold;
+    border-radius: $radius-btn;
+    padding: 10px 26px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: $sombra-card-leve;
+    height: 52px;
+    align-self: start;
+}
+
+.convidados-lista {
+    display: flex;
+    gap: 32px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.convidados-col {
+    flex: 1 1 0;
+    min-width: 260px;
+}
+
+.convidados-col-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: $font-peso-bold;
+    margin-bottom: 10px;
+    gap: 6px;
+
+    &.confirmados {
+        color: #1a7a3c;
+    }
+
+    &.pendentes {
+        color: #e6a100;
+    }
+
+    &.ausentes {
+        color: #d32f2f;
+    }
+}
+
+.convidado-card {
+    background: $cor-branco;
+    border: 1.5px solid $cor-cinza-borda;
+    border-radius: $radius-card;
+    box-shadow: $sombra-card-leve;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    min-width: 220px;
+}
+
+.convidado-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: $cor-cinza-borda;
+}
+
+.convidado-info {
+    flex: 1;
+}
+
+.convidado-nome {
+    font-size: 1.08rem;
+    font-weight: $font-peso-bold;
+    color: $cor-preto;
+}
+
+.convidado-extra {
+    font-size: 0.98rem;
+    color: $cor-cinza-medio;
+}
+
+@media (max-width: $break-tablet) {
+    .convidados-lista {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .convidados-col {
+        min-width: 0;
+    }
+}
+
+@media (max-width: $break-mobile) {
+    .convidados-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .convidados-actions {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .convidados-search {
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .convidados-select,
+    .convidados-search-btn,
+    .novo-convidado-btn {
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 0;
+    }
+}

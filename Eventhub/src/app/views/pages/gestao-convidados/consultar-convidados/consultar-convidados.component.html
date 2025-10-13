@@ -1,0 +1,92 @@
+<div class="convidados-container">
+    <div class="convidados-header">
+        <div class="convidados-header-titles">
+            <h1 class="convidados-title">Lista de Convidados</h1>
+            <div class="convidados-subtitle">Acompanhe as respostas dos seus convidados.</div>
+        </div>
+        <div class="convidados-actions">
+            <mat-form-field appearance="outline" class="convidados-search">
+                <mat-label>Buscar convidados...</mat-label>
+                <input matInput name="buscar" [(ngModel)]="busca" />
+                <button mat-icon-button matSuffix class="convidados-search-btn" tabindex="-1">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="convidados-select">
+                <mat-label>Filtrar por status</mat-label>
+                <mat-select [(ngModel)]="filtroStatus">
+                    <mat-option value="">Todos</mat-option>
+                    <mat-option value="confirmado">Confirmados</mat-option>
+                    <mat-option value="pendente">Pendentes</mat-option>
+                    <mat-option value="ausente">Ausentes</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-flat-button color="accent" class="novo-convidado-btn">
+                <mat-icon>add</mat-icon> Adicionar Convidado
+            </button>
+        </div>
+    </div>
+
+    <div class="convidados-lista">
+        <div class="convidados-col">
+            <div class="convidados-col-title confirmados">
+                <mat-icon>check_circle</mat-icon> Confirmados
+            </div>
+            <div class="convidado-card" *ngFor="let convidado of confirmados()">
+                <ng-container *ngIf="convidado?.foto; else userIcon1">
+                    <img [src]="convidado?.foto" class="convidado-avatar">
+                </ng-container>
+                <ng-template #userIcon1>
+                    <mat-icon class="convidado-avatar">person</mat-icon>
+                </ng-template>
+                <div class="convidado-info">
+                    <div class="convidado-nome">{{convidado.nome}}</div>
+                    <div class="convidado-extra" *ngIf="convidado.acompanhante">+{{convidado.acompanhante}}
+                        acompanhante{{convidado.acompanhante > 1 ? 's' : ''}}</div>
+                </div>
+                <button mat-icon-button>
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="convidados-col">
+            <div class="convidados-col-title pendentes">
+                <mat-icon>schedule</mat-icon> Pendentes
+            </div>
+            <div class="convidado-card" *ngFor="let convidado of pendentes()">
+                <ng-container *ngIf="convidado.foto; else userIcon2">
+                    <img [src]="convidado.foto" class="convidado-avatar">
+                </ng-container>
+                <ng-template #userIcon2>
+                    <mat-icon class="convidado-avatar">person</mat-icon>
+                </ng-template>
+                <div class="convidado-info">
+                    <div class="convidado-nome">{{convidado.nome}}</div>
+                    <div class="convidado-extra">Nenhuma resposta</div>
+                </div>
+                <button mat-icon-button>
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="convidados-col">
+            <div class="convidados-col-title ausentes">
+                <mat-icon>cancel</mat-icon> Ausentes
+            </div>
+            <div class="convidado-card" *ngFor="let convidado of ausentes()">
+                <ng-container *ngIf="convidado.foto; else userIcon3">
+                    <img [src]="convidado.foto" class="convidado-avatar">
+                </ng-container>
+                <ng-template #userIcon3>
+                    <mat-icon class="convidado-avatar">person</mat-icon>
+                </ng-template>
+                <div class="convidado-info">
+                    <div class="convidado-nome">{{convidado.nome}}</div>
+                </div>
+                <button mat-icon-button>
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
