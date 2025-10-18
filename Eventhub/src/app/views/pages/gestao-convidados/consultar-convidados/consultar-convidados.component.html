@@ -21,14 +21,15 @@
                     <mat-option value="ausente">Ausentes</mat-option>
                 </mat-select>
             </mat-form-field>
-            <button mat-flat-button color="accent" class="novo-convidado-btn">
+            <button mat-flat-button color="accent" class="novo-convidado-btn" routerLink="convidados/cadastrar">
                 <mat-icon>add</mat-icon> Adicionar Convidado
             </button>
         </div>
     </div>
 
     <div class="convidados-lista">
-        <div class="convidados-col">
+        <div class="convidados-col"
+            *ngIf="(!filtroStatus || filtroStatus === 'confirmado') && confirmados().length > 0">
             <div class="convidados-col-title confirmados">
                 <mat-icon>check_circle</mat-icon> Confirmados
             </div>
@@ -49,7 +50,7 @@
                 </button>
             </div>
         </div>
-        <div class="convidados-col">
+        <div class="convidados-col" *ngIf="(!filtroStatus || filtroStatus === 'pendente') && pendentes().length > 0">
             <div class="convidados-col-title pendentes">
                 <mat-icon>schedule</mat-icon> Pendentes
             </div>
@@ -69,7 +70,7 @@
                 </button>
             </div>
         </div>
-        <div class="convidados-col">
+        <div class="convidados-col" *ngIf="(!filtroStatus || filtroStatus === 'ausente') && ausentes().length > 0">
             <div class="convidados-col-title ausentes">
                 <mat-icon>cancel</mat-icon> Ausentes
             </div>
@@ -86,6 +87,17 @@
                 <button mat-icon-button>
                     <mat-icon>more_vert</mat-icon>
                 </button>
+            </div>
+        </div>
+        <!-- Mensagem quando nenhuma lista tem resultados -->
+        <div *ngIf="confirmados().length === 0 && pendentes().length === 0 && ausentes().length === 0"
+            class="nenhum-resultado">
+            <div class="nenhum-resultado-card">
+                <div class="nenhum-resultado-icone">
+                    <mat-icon>search_off</mat-icon>
+                </div>
+                <div class="nenhum-resultado-titulo">Nenhum resultado encontrado</div>
+                <div class="nenhum-resultado-sub">Nenhum convidado encontrado com os critérios de pesquisa.</div>
             </div>
         </div>
     </div>

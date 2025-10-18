@@ -38,7 +38,6 @@ import { DateUtils } from '../../../../core/utils/date.utils';
 })
 export class MeusEventosComponent extends BaseComponent implements OnInit {
   private readonly service = inject(EventoService);
-  private readonly userService = inject(UsuarioService);
   private readonly spinner = inject(SpinnerService);
   private readonly convidadoService = inject(ConvidadoService);
   private readonly presenteService = inject(PresenteService);
@@ -92,7 +91,7 @@ export class MeusEventosComponent extends BaseComponent implements OnInit {
 
   obterConvidadosConfirmados = (eventoId: string) => {
     const evento = this.eventosOriginais().find(ev => ev.id === eventoId);
-    return evento?.convidados?.filter(c => c.confirmado).length || 0;
+    return evento?.convidados?.filter(c => c.statusConfirmacao === 'Confirmado').length || 0;
   };
 
   obterPresentes = (eventoId: string) => {

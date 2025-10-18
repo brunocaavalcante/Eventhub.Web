@@ -1,25 +1,44 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { HomeEventoComponent } from './home-evento.component';
+import { SpinnerService } from '../../../../core/services/spinner.service';
+import { EventoService } from '../../../../core/services/evento.service';
+import { ConvidadoService } from '../../../../core/services/convidado.service';
+import { UsuarioService } from '../../../../core/services/usuario.service';
 
 describe('HomeEventoComponent (Jest)', () => {
   let component: HomeEventoComponent;
+  let fixture: ComponentFixture<HomeEventoComponent>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Mocks mínimos para dependências
     const spinner = { show: jest.fn(), hide: jest.fn() };
     const service = { buscarPorId: jest.fn() };
     const convidadoService = { buscarConvidadosPorEvento: jest.fn() };
     const route = { snapshot: { paramMap: { get: jest.fn().mockReturnValue('evento123') } } };
-    // @ts-ignore
-    component = new HomeEventoComponent();
-    // Injetar dependências mockadas
-    // @ts-ignore
-    component.spinner = spinner;
-    // @ts-ignore
-    component.service = service;
-    // @ts-ignore
-    component.convidadoService = convidadoService;
-    // @ts-ignore
-    component.route = route;
+    const mockUsuarioService = {
+      obterUsuarioLogado: jest.fn().mockResolvedValue(null)
+    };
+
+
+    await TestBed.configureTestingModule({
+      imports: [HomeEventoComponent],
+      providers: [
+        { provide: EventoService, useValue: service },
+        { provide: SpinnerService, useValue: spinner },
+        { provide: ActivatedRoute, useValue: route },
+        { provide: ConvidadoService, useValue: convidadoService },
+        { provide: UsuarioService, useValue: mockUsuarioService },
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(HomeEventoComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
+    fixture.detectChanges();
+    expect(component).toBeDefined();
   });
 
   it('deve identificar perfil de organizador e convidado corretamente', () => {

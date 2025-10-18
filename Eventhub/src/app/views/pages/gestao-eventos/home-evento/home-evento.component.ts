@@ -38,10 +38,10 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
       route: (id: string) => `/eventos/${id}/presentes`
     },
     {
-      icon: 'favorite',
-      title: 'Anfitriões',
-      desc: 'Conheça mais sobre nós',
-      route: (id: string) => `/eventos/${id}/anfitrioes`
+      icon: 'groups',
+      title: 'Convidados',
+      desc: 'Gerencie seus convidados',
+      route: (id: string) => `/convidados/consultar/${id}`
     },
     {
       icon: 'event_note',
@@ -56,10 +56,10 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
       route: (id: string) => `/eventos/${id}/galeria`
     },
     {
-      icon: 'groups',
-      title: 'Convidados',
-      desc: 'Gerencie seus convidados',
-      route: (id: string) => `/eventos/${id}/convidados`
+      icon: 'favorite',
+      title: 'Anfitriões',
+      desc: 'Conheça mais sobre nós',
+      route: (id: string) => `/eventos/${id}/anfitrioes`
     },
     {
       icon: 'message',
