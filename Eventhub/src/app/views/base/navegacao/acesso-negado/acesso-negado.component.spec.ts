@@ -3,18 +3,35 @@ import { AcessoNegadoComponent } from './acesso-negado.component';
 import { By } from '@angular/platform-browser';
 import { UsuarioService } from '../../../../core/services/usuario.service';
 import { of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 describe('AcessoNegadoComponent', () => {
   let component: AcessoNegadoComponent;
   let fixture: ComponentFixture<AcessoNegadoComponent>;
-  let usuarioServiceSpy: jasmine.SpyObj<UsuarioService>;
+
+  const mockUsuarioService = {
+    obterUsuarioLogado: jest.fn().mockResolvedValue(null)
+  };
+
+  const mockActivatedRoute = {
+    snapshot: {
+      queryParamMap: {
+        get: (key: string) => {
+          if (key === 'descricao') {
+            return '';
+          }
+          return null;
+        }
+      }
+    }
+  };
 
   beforeEach(async () => {
-    usuarioServiceSpy = jasmine.createSpyObj('UsuarioService', ['obterUsuarioLogado']);
     await TestBed.configureTestingModule({
       imports: [AcessoNegadoComponent],
       providers: [
-        { provide: UsuarioService, useValue: usuarioServiceSpy }
+        { provide: UsuarioService, useValue: mockUsuarioService },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ]
     }).compileComponents();
     fixture = TestBed.createComponent(AcessoNegadoComponent);
@@ -23,7 +40,7 @@ describe('AcessoNegadoComponent', () => {
 
   it('should create', () => {
     fixture.detectChanges();
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 
   it('deve exibir a mensagem padrão se não passar descrição', () => {
@@ -40,16 +57,16 @@ describe('AcessoNegadoComponent', () => {
   });
 
   it('deve exibir o botão de login se não houver usuário logado', async () => {
-    component.usuarioLogado.set(null);
+    await component.ngOnInit();
     fixture.detectChanges();
-    const btn = fixture.debugElement.query(By.css('button[routerLink="/login"]'));
-    expect(btn).toBeTruthy();
+    const btn = fixture.debugElement.query(By.css('button[routerLink="/usuarios/login"]'));
+    expect(btn).not.toBeNull();
   });
 
   it('não deve exibir o botão de login se houver usuário logado', async () => {
     component.usuarioLogado.set({ uid: '123' });
     fixture.detectChanges();
-    const btn = fixture.debugElement.query(By.css('button[routerLink="/login"]'));
+    const btn = fixture.debugElement.query(By.css('button[routerLink="/usuarios/login"]'));
     expect(btn).toBeFalsy();
   });
 });
