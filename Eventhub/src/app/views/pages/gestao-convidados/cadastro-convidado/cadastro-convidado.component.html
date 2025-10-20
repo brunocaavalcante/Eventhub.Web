@@ -1,0 +1,45 @@
+<div class="cadastro-convidado-container">
+    <h1 class="cadastro-title">Adicionar Novo Convidado</h1>
+    <div class="cadastro-subtitle">Preencha os campos abaixo para adicionar um convidado à sua lista.</div>
+
+    <form [formGroup]="form" (ngSubmit)="adicionarConvidado()" class="cadastro-form" autocomplete="off">
+        <mat-form-field appearance="outline" class="cadastro-field">
+            <mat-label>Nome</mat-label>
+            <input matInput placeholder="Seu nome completo" type="text" formControlName="nome" />
+            <mat-error *ngIf="displayMessage['nome']">
+                <mat-icon>error</mat-icon> {{displayMessage['nome']}}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="cadastro-field">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Ex: joao.silva@example.com" type="email" formControlName="email" />
+            <mat-error *ngIf="displayMessage['email']">
+                <mat-icon>error</mat-icon> {{displayMessage['email']}}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="cadastro-field">
+            <mat-label>Telefone</mat-label>
+            <input matInput placeholder="(99) 99999-9999" mask="(00) 00000-0000" type="tel"
+                formControlName="telefone" />
+            <mat-error *ngIf="displayMessage['telefone']">
+                <mat-icon>error</mat-icon> {{displayMessage['telefone']}}
+            </mat-error>
+        </mat-form-field>
+        <mat-error *ngIf="erros()" class="error-bottom">
+            <mat-icon>error</mat-icon> {{erros()}}
+        </mat-error>
+
+        <div class="cadastro-btn-group">
+            <button mat-stroked-button color="primary" class="cadastro-btn-cancelar" type="button"
+                (click)="abrirModalCancelar()">
+                <mat-icon>close</mat-icon>
+                Cancelar
+            </button>
+            <button mat-raised-button color="accent" class="cadastro-btn" type="submit">
+                <mat-icon>person_add</mat-icon> Adicionar Convidado
+            </button>
+        </div>
+    </form>
+</div>
