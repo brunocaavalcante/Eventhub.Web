@@ -1,6 +1,5 @@
-
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,11 +11,12 @@ import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { ConvidadoService } from '../../../../core/services/convidado.service';
 import { Convidado } from '../../../../core/models/convidado.model';
+import { EnviarConviteComponent } from '../enviar-convite/enviar-convite.component';
 
 @Component({
   selector: 'app-consultar-convidados',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, RouterLink, EnviarConviteComponent],
   templateUrl: './consultar-convidados.component.html',
   styleUrls: ['./consultar-convidados.component.scss']
 })
@@ -24,6 +24,8 @@ export class ConsultarConvidadosComponent extends BaseComponent implements OnIni
   filtroStatus: string = '';
   busca = signal('');
   convidados = signal<Convidado[]>([]);
+  eventoId: string = '';
+  tabAtiva: 'convidados' | 'convite' = 'convidados';
   private readonly convidadoService = inject(ConvidadoService);
   private readonly route = inject(ActivatedRoute);
 
@@ -35,15 +37,17 @@ export class ConsultarConvidadosComponent extends BaseComponent implements OnIni
       { nome: 'Isabela Costa', statusConfirmacao: 'Pendente', foto: 'https://randomuser.me/api/portraits/women/65.jpg' },
       { nome: 'Rafael Souza', statusConfirmacao: 'Pendente', foto: 'https://randomuser.me/api/portraits/men/76.jpg' },
       { nome: 'Gabriel Santos', statusConfirmacao: 'Recusado', foto: 'https://randomuser.me/api/portraits/men/85.jpg' },
-      { nome: 'Mariana Oliveira', statusConfirmacao: 'Recusado', foto: 'https://randomuser.me/api/portraits/women/68.jpg' }
+      { nome: 'Mariana Oliveira', statusConfirmacao: 'Recusado', foto: 'https://randomuser.me/api/portraits/women/68.jpg' },
+      { nome: 'Pedro Silva', statusConfirmacao: 'Pendente envio convite', foto: 'https://randomuser.me/api/portraits/men/41.jpg' },
+      { nome: 'Ana Carolina', statusConfirmacao: 'Pendente envio convite', foto: 'https://randomuser.me/api/portraits/women/22.jpg' }
     ];
     this.convidados.set(mockConvidados);
-    // DESCOMENTE PARA USAR O SERVIÇO REAL
-    // const eventoId = this.route.snapshot.paramMap.get('idEvento');
-    // if (eventoId) {
-    //   const lista = await this.convidadoService.buscarConvidadosPorEvento(eventoId);
-    //   this.convidados.set(lista);
-    // }
+
+    this.eventoId = this.route.snapshot.paramMap.get('idEvento') || '';
+    if (this.eventoId) {
+      //const lista = await this.convidadoService.buscarConvidadosPorEvento(this.eventoId);
+      //this.convidados.set(lista);
+    }
   }
 
   confirmados = computed(() =>
@@ -54,6 +58,9 @@ export class ConsultarConvidadosComponent extends BaseComponent implements OnIni
   );
   ausentes = computed(() =>
     this.convidados().filter(c => c.statusConfirmacao === 'Recusado' && this.filtraBusca(c))
+  );
+  pendenteEnvio = computed(() =>
+    this.convidados().filter(c => c.statusConfirmacao === 'Pendente envio convite' && this.filtraBusca(c))
   );
 
   private filtraBusca(convidado: Convidado) {

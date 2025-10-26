@@ -1,11 +1,53 @@
 @import 'variables';
 
-.convidados-container {
+.container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 32px 16px 0 16px;
 }
 
+.hd-group-btns {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 16px;
+    background-color: #ececf0;
+    border-radius: 15px;
+    padding: 4px;
+    width: auto;
+    max-width: 50%;
+    justify-content: space-between;
+
+    .btn-convidados,
+    .btn-convite {
+        display: flex;
+        width: 100% !important;
+        justify-content: center;
+        border-radius: 12px;
+        padding: 4px 8px;
+        cursor: pointer;
+        color: $cor-cinza-medio;
+        background: transparent;
+        font-weight: $font-peso-bold;
+        transition: background 0.18s, color 0.18s;
+
+        &.active {
+            background-color: $cor-primaria-clara-1;
+            color: $cor-primaria;
+        }
+
+        &:hover {
+            background-color: $cor-primaria-clara;
+            color: $cor-primaria;
+        }
+
+        mat-icon {
+            font-size: 17px;
+            height: 17px;
+            position: relative;
+            top: 2px;
+        }
+    }
+}
 
 .convidados-header {
     display: flex;
@@ -18,10 +60,13 @@
 }
 
 .convidados-title {
-    font-size: 2rem;
-    font-weight: $font-peso-bold;
-    color: $cor-preto;
+    font-size: 2.1rem;
+    font-family: 'Poppins', 'Segoe UI', 'Nunito', 'Inter', Arial, sans-serif;
+    font-weight: 700;
+    color: #181818;
     margin-bottom: 10px;
+    letter-spacing: 0.01em;
+    line-height: 1.18;
 }
 
 .convidados-subtitle {
@@ -129,15 +174,19 @@
     gap: 6px;
 
     &.confirmados {
-        color: #1a7a3c;
+        color: $cor-verde;
     }
 
     &.pendentes {
-        color: #e6a100;
+        color: $cor-amarelo;
     }
 
     &.ausentes {
-        color: #d32f2f;
+        color: $cor-vermelho;
+    }
+
+    &.pendente-envio {
+        color: $cor-azul;
     }
 }
 
@@ -173,8 +222,13 @@
 }
 
 .convidado-extra {
-    font-size: 0.98rem;
+    font-size: 0.92rem;
     color: $cor-cinza-medio;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block;
 }
 
 @media (max-width: $break-tablet) {
@@ -192,6 +246,10 @@
     .convidados-header {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .hd-group-btns {
+        max-width: 100%;
     }
 
     .convidados-actions {

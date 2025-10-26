@@ -3,7 +3,7 @@ export interface Convidado {
     nome: string;
     email?: string;
     telefone?: string;
-    statusConfirmacao?: "Pendente" | "Confirmado" | "Recusado";
+    statusConfirmacao?: "Pendente" | "Confirmado" | "Recusado" | "Pendente envio convite";
     acompanhante?: number;
     observacao?: string;
     criadoEm?: Date;
