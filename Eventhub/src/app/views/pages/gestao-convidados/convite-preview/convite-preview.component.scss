@@ -1,0 +1,168 @@
+@import 'variables';
+
+.convite-preview-wrapper {
+	padding: 0;
+	margin: 0;
+}
+
+.convite-preview-card {
+	position: relative;
+	background-size: cover;
+	background-position: center;
+	border-radius: $radius-card;
+	box-shadow: $sombra-card-leve;
+	border: 1.5px solid $cor-cinza-borda;
+	overflow: hidden;
+	min-height: 600px;
+	max-width: 520px;
+	margin: 0 auto;
+}
+
+.convite-preview-overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba($cor-branco, 0.88);
+	z-index: 1;
+}
+
+.convite-preview-content {
+	position: relative;
+	z-index: 2;
+	padding: 38px 32px 28px 32px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: 'Poppins', 'Segoe UI', 'Nunito', 'Inter', Arial, sans-serif;
+}
+
+.convite-preview-top-bar,
+.convite-preview-bottom-bar {
+	height: 6px;
+	width: 90px;
+	background: $cor-primaria;
+	border-radius: 8px;
+	margin-bottom: 18px;
+}
+.convite-preview-bottom-bar {
+	margin-top: 18px;
+	margin-bottom: 0;
+}
+
+.convite-preview-titulo {
+	color: $cor-primaria;
+	font-size: 1.08rem;
+	font-weight: $font-peso-bold;
+	text-align: center;
+	letter-spacing: 0.08em;
+	margin-bottom: 18px;
+	text-transform: uppercase;
+}
+
+.convite-preview-nomes {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px;
+	margin-bottom: 8px;
+}
+.convite-preview-nome {
+	color: $cor-preto;
+	font-size: 1.25rem;
+	font-weight: $font-peso-bold;
+	font-family: 'Poppins', 'Segoe UI', 'Nunito', 'Inter', Arial, sans-serif;
+}
+.convite-preview-e {
+	color: $cor-primaria;
+	font-size: 1.5rem;
+	font-weight: $font-peso-bold;
+	margin: 2px 0;
+}
+
+.convite-preview-divider {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 18px 0 12px 0;
+}
+.convite-preview-line {
+	height: 2px;
+	width: 48px;
+	background: $cor-primaria;
+	border-radius: 2px;
+}
+.convite-preview-dot {
+	width: 10px;
+	height: 10px;
+	background: $cor-primaria;
+	border-radius: 50%;
+}
+
+.convite-preview-data {
+	color: $cor-preto;
+	font-size: 1.08rem;
+	font-weight: $font-peso-normal;
+	margin-bottom: 2px;
+	text-align: center;
+}
+.convite-preview-hora {
+	color: $cor-primaria;
+	font-size: 1.08rem;
+	font-weight: $font-peso-normal;
+	margin-bottom: 18px;
+	text-align: center;
+}
+
+.convite-preview-local-card {
+	background: $cor-primaria-clara-1;
+	border: 2px solid $cor-primaria-clara;
+	border-radius: $radius;
+	padding: 16px 10px 10px 10px;
+	margin-bottom: 18px;
+	width: 100%;
+	max-width: 380px;
+	text-align: center;
+}
+.convite-preview-local-titulo {
+	color: $cor-primaria;
+	font-size: 1rem;
+	font-weight: $font-peso-bold;
+	text-transform: uppercase;
+	margin-bottom: 4px;
+}
+.convite-preview-local-nome {
+	color: $cor-preto;
+	font-size: 1.08rem;
+	font-weight: $font-peso-bold;
+}
+.convite-preview-local-endereco {
+	color: $cor-cinza-medio;
+	font-size: 0.98rem;
+	margin-top: 2px;
+}
+
+.convite-preview-msg {
+	color: $cor-cinza-escuro;
+	font-size: 1rem;
+	font-style: italic;
+	text-align: center;
+	margin-bottom: 12px;
+	margin-top: 8px;
+	line-height: 1.5;
+}
+
+.convite-preview-btn {
+	background: $cor-primaria;
+	color: $cor-branco;
+	font-size: 1.08rem;
+	font-weight: $font-peso-bold;
+	border-radius: $radius-btn;
+	padding: 10px 32px;
+	border: none;
+	margin-top: 8px;
+	box-shadow: $sombra-card-leve;
+	cursor: pointer;
+	transition: background 0.18s;
+}
+.convite-preview-btn:hover {
+	background: $cor-primaria-escura;
+}

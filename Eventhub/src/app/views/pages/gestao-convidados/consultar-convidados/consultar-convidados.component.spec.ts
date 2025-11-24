@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConsultarConvidadosComponent } from './consultar-convidados.component';
+import { UsuarioService } from '../../../../core/services/usuario.service';
 
 describe('ConsultarConvidadosComponent', () => {
   let component: ConsultarConvidadosComponent;
@@ -8,7 +9,8 @@ describe('ConsultarConvidadosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConsultarConvidadosComponent]
+      imports: [ConsultarConvidadosComponent],
+      providers: [UsuarioService]
     })
     .compileComponents();
 

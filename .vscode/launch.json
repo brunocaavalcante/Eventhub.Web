@@ -1,0 +1,33 @@
+{
+    // Debug configurations for Angular app in Eventhub folder
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Chrome (Angular)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/Eventhub",
+            "preLaunchTask": "ng serve",
+            "sourceMapPathOverrides": {
+                "webpack:/*": "${webRoot}/*",
+                "/*": "${webRoot}/*"
+            }
+        },
+        {
+            "name": "Attach to Chrome",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}/Eventhub"
+        },
+        {
+            "name": "Launch Edge (Angular)",
+            "type": "msedge",
+            "request": "launch",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/Eventhub",
+            "preLaunchTask": "ng serve"
+        }
+    ]
+}

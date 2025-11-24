@@ -1,0 +1,50 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ng serve",
+            "type": "shell",
+            "command": "npx",
+            "args": [
+                "ng",
+                "serve",
+                "--port",
+                "4200"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/Eventhub"
+            },
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "owner": "typescript",
+                    "source": "ts",
+                    "applyTo": "allDocuments",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}/Eventhub"
+                    ],
+                    "pattern": {
+                        "regexp": "^(.*)\\((\\d+),(\\d+)\\): (.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "message": 4
+                    }
+                }
+            ]
+        },
+        {
+            "type": "npm",
+            "script": "start",
+            "path": "Eventhub",
+            "problemMatcher": [],
+            "label": "npm: start - Eventhub",
+            "detail": "ng serve"
+        }
+    ]
+}

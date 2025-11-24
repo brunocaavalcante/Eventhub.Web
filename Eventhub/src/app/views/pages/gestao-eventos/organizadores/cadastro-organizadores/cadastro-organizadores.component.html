@@ -2,14 +2,14 @@
 
     <!-- Estado vazio -->
     <div *ngIf="organizadores.length === 0 && !exibirForm" class="organizador-empty-card">
-        <div class="organizador-empty-icon">
+        <div class="organizador-empty-card-icon">
             <mat-icon>person_add</mat-icon>
         </div>
-        <div class="organizador-empty-title">Nenhum Organizador Adicionado</div>
-        <div class="organizador-empty-desc">
+        <div class="organizador-empty-card-title">Nenhum Organizador Adicionado</div>
+        <div class="organizador-empty-card-desc">
             Para começar, adicione os organizadores do seu evento.
         </div>
-        <button mat-flat-button color="primary" class="organizador-empty-btn" (click)="exibirForm = true">
+        <button mat-flat-button color="primary" class="organizador-empty-card-btn" (click)="exibirForm = true">
             Adicionar Organizador
         </button>
     </div>
@@ -94,12 +94,12 @@
             <div class="organizador-card-info">
                 <div class="organizador-card-nome">{{ org.nome }}</div>
                 <div class="organizador-card-tipo">{{ org.tipo }}</div>
-                <div class="organizador-card-email"><mat-icon>mail</mat-icon> {{ org.email }}</div>
-                <div class="organizador-card-telefone"><mat-icon>call</mat-icon> {{ org.telefone }}</div>
-                <div class="organizador-card-msg" *ngIf="org.mensagem"><mat-icon>chat</mat-icon> {{
-                    org.mensagem }}</div>
+                <div class="organizador-card-email"><mat-icon>mail</mat-icon> <span>{{ org.email }}</span></div>
+                <div class="organizador-card-telefone"><mat-icon>call</mat-icon> <span>{{ org.telefone }}</span></div>
+                <div class="organizador-card-msg" *ngIf="org.mensagem"><mat-icon>chat</mat-icon> <span>{{ org.mensagem
+                        }}</span></div>
             </div>
-            <button mat-icon-button [matMenuTriggerFor]="menuOrg" class="organizador-card-menu">
+            <button mat-icon-button [matMenuTriggerFor]="menuOrg">
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menuOrg="matMenu">

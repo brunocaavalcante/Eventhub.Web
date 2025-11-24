@@ -1,0 +1,178 @@
+<div class="enviar-convite-container">
+    <div class="enviar-convite-header">
+        <h1 class="enviar-convite-title">Template do Convite</h1>
+        <div class="enviar-convite-subtitle">Personalize seu convite e envie para os convidados.</div>
+    </div>
+
+    <div class="enviar-convite-grid">
+        <!-- Editor Section -->
+        <div class="enviar-convite-editor">
+            <mat-card class="enviar-convite-card">
+                <div class="enviar-convite-card-title">
+                    <mat-icon>edit</mat-icon>
+                    Informações do Evento
+                </div>
+                <form [formGroup]="form">
+                    <mat-form-field appearance="outline" class="enviar-convite-field">
+                        <mat-label>Tipo de Evento</mat-label>
+                        <mat-select formControlName="eventType" (selectionChange)="onEventTypeChange($event.value)">
+                            <mat-option value="wedding">Casamento</mat-option>
+                            <mat-option value="baby_shower">Chá de Bebê</mat-option>
+                            <mat-option value="birthday">Aniversário</mat-option>
+                            <mat-option value="housewarming">Chá de Casa Nova</mat-option>
+                            <mat-option value="other">Outros</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <div class="enviar-convite-nomes" >
+                        <mat-form-field appearance="outline" class="enviar-convite-field">
+                            <mat-label>{{name1Label}}</mat-label>
+                            <input matInput formControlName="name1" />
+                            <mat-error *ngIf="displayMessage['name1']">
+                                <mat-icon>error</mat-icon> {{displayMessage['name1']}}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="enviar-convite-field" *ngIf="showName2">
+                            <mat-label>{{name2Label}}</mat-label>
+                            <input matInput formControlName="name2" />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="enviar-convite-row">
+                        <mat-form-field appearance="outline" class="enviar-convite-field">
+                            <mat-label>Data do Evento</mat-label>
+                            <input matInput formControlName="eventDate" />
+                            <mat-error *ngIf="displayMessage['eventDate']">
+                                <mat-icon>error</mat-icon> {{displayMessage['eventDate']}}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="enviar-convite-field">
+                            <mat-label>Horário</mat-label>
+                            <input matInput formControlName="eventTime" />
+                            <mat-error *ngIf="displayMessage['eventTime']">
+                                <mat-icon>error</mat-icon> {{displayMessage['eventTime']}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <mat-form-field appearance="outline" class="enviar-convite-field">
+                        <mat-label>Nome do Local</mat-label>
+                        <input matInput formControlName="venueName" />
+                        <mat-error *ngIf="displayMessage['venueName']">
+                            <mat-icon>error</mat-icon> {{displayMessage['venueName']}}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="enviar-convite-field">
+                        <mat-label>Endereço</mat-label>
+                        <input matInput formControlName="venueAddress" />
+                        <mat-error *ngIf="displayMessage['venueAddress']">
+                            <mat-icon>error</mat-icon> {{displayMessage['venueAddress']}}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="enviar-convite-field">
+                        <mat-label>Mensagem Personalizada</mat-label>
+                        <textarea matInput formControlName="message" rows="3"></textarea>
+                    </mat-form-field>
+                </form>
+            </mat-card>
+
+        <form [formGroup]="form">
+            <mat-card class="enviar-convite-card">
+                <div class="enviar-convite-card-title">
+                    <mat-icon>image</mat-icon>
+                    Imagem de Fundo
+                </div>
+                <div class="enviar-convite-bg-list">
+                    <ng-container *ngFor="let image of backgrounds">
+                        <button type="button" class="enviar-convite-bg-btn"
+                            [class.active]="form.value.backgroundImage === image" (click)="setBackground(image)">
+                            <img [src]="image" alt="Background" />
+                            <mat-icon *ngIf="form.value.backgroundImage === image">check</mat-icon>
+                        </button>
+                    </ng-container>
+                </div>
+                <input type="file" accept="image/*" (change)="uploadImage($event)" hidden #fileInput />
+                <button mat-stroked-button color="primary" (click)="fileInput.click()">Subir Imagem</button>
+            </mat-card>
+
+            <mat-card class="enviar-convite-card">
+                <div class="enviar-convite-card-title">
+                    <mat-icon>palette</mat-icon>
+                    Personalização Visual
+                </div>
+                <mat-form-field appearance="outline" class="enviar-convite-field">
+                    <mat-label>Cor do Tema</mat-label>
+                    <mat-select formControlName="themeColor">
+                        <mat-option value="rose">Rosa Romântico</mat-option>
+                        <mat-option value="purple">Roxo Elegante</mat-option>
+                        <mat-option value="blue">Azul Clássico</mat-option>
+                        <mat-option value="emerald">Verde Esmeralda</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="enviar-convite-field">
+                    <mat-label>Estilo de Fonte</mat-label>
+                    <mat-select formControlName="fontStyle">
+                        <mat-option value="elegant">Elegante</mat-option>
+                        <mat-option value="modern">Moderno</mat-option>
+                        <mat-option value="classic">Clássico</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-card>
+        </form>
+
+            <mat-card class="enviar-convite-card">
+                <div class="enviar-convite-card-title">
+                    <mat-icon>link</mat-icon>
+                    Link do Convite
+                </div>
+                <div class="enviar-convite-link-row">
+                    <input matInput [value]="inviteLink" readonly class="enviar-convite-link-input" />
+                    <button mat-stroked-button color="primary" (click)="copyLink()">Copiar</button>
+                </div>
+            </mat-card>
+
+            <mat-card class="enviar-convite-card">
+                <div class="enviar-convite-card-title">
+                    <mat-icon>group</mat-icon>
+                    Selecionar Convidados
+                </div>
+                <div class="enviar-convite-guests-list">
+                    <ng-container *ngFor="let guest of guests">
+                        <div class="enviar-convite-guest-row">
+                            <mat-checkbox [(ngModel)]="guest.selected"> </mat-checkbox>
+                            <img [src]="guest.avatar" class="enviar-convite-guest-avatar" />
+                            <span class="enviar-convite-guest-name">{{guest.name}}</span>
+                            <span *ngIf="guest.status === 'pending_invite'" class="enviar-convite-guest-badge">Pendente
+                                envio</span>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="enviar-convite-guests-count">
+                    {{selectedGuestsCount()}} de {{guests.length}} convidados selecionados
+                </div>
+            </mat-card>
+
+            <div class="enviar-convite-actions">
+                <button mat-stroked-button color="primary" (click)="saveTemplate()">
+                    <mat-icon>save</mat-icon>
+                    Salvar Template
+                </button>
+                <button mat-flat-button color="accent" [disabled]="selectedGuestsCount() === 0"
+                    (click)="openSendDialog()">
+                    <mat-icon>send</mat-icon>
+                    Enviar Convites ({{selectedGuestsCount()}})
+                </button>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="enviar-convite-preview">
+            <div class="enviar-convite-preview-fixed">
+                <div class="enviar-convite-preview-title">Visualização do Convite</div>
+                <div class="enviar-convite-preview-sub">Veja como seu convite ficará</div>
+                <app-convite-preview [data]="form.value"></app-convite-preview>
+            </div>
+        </div>
+    </div>
+
+</div>
