@@ -1,8 +1,9 @@
-// Replace the placeholders below with your Firebase project's config.
-// Do NOT commit real API keys to a public repository. Use environment variables or a secret manager for CI.
-
 export const environment = {
     production: false,
+    urlApi: 'http://localhost:3000/api',
+    encryptionKey: '1234567890123456',
+    encryptionIv: '1234567890123456',
+    versaoApp: '1.0.0',
     firebase: {
         apiKey: "AIzaSyAL--u0VV_ssGIUfDEpctA4ctd8V9fyCJY",
         authDomain: "eventhub-4630d.firebaseapp.com",

@@ -1,7 +1,9 @@
-// Production environment. Replace with your production Firebase config or keep using environment variables.
-
 export const environment = {
     production: true,
+    encryptionKey: '1234567890123456',
+    encryptionIv: '1234567890123456',
+    urlApi: 'https://api.eventhub.com.br/api',
+    versaoApp: '1.0.0',
     firebase: {
         apiKey: "AIzaSyAL--u0VV_ssGIUfDEpctA4ctd8V9fyCJY",
         authDomain: "eventhub-4630d.firebaseapp.com",
