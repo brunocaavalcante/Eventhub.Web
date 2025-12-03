@@ -15,7 +15,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { CadastroOrganizadoresComponent } from '../../organizadores/cadastro-organizadores/cadastro-organizadores.component';
 import { BaseComponent } from '../../../../../core/components/base.component';
 import { Organizador } from '../../../../../core/models/organizador.model';
-import { Usuario } from '../../../../../core/models/usuario.model';
+import { Usuario, UsuarioInfoDTO } from '../../../../../core/models/usuario.model';
 import { Evento } from '../../../../../core/models/evento.model';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { EventoService } from '../../../../../core/services/evento.service';
@@ -56,7 +56,7 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
   private readonly router = inject(Router);
   private readonly acRoute = inject(ActivatedRoute);
 
-  usuarioLogado: Usuario | null = null;
+  usuarioLogado: UsuarioInfoDTO | null = null;
   form!: FormGroup;
   imagens: string[] = [];
   organizadores: Organizador[] = [];
@@ -192,8 +192,8 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
       tipoEvento: this.acRoute.snapshot.params['tipo'] || 8
     };
 
-    if (this.usuarioLogado?.uid) {
-      evento.IdUsuario = this.usuarioLogado.uid;
+    if (this.usuarioLogado?.id) {
+      evento.IdUsuario = this.usuarioLogado.id;
     }
 
     if (evento.tipoData === 'unica') {

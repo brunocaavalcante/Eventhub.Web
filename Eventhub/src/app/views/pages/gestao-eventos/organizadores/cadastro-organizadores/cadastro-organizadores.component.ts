@@ -11,8 +11,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MatMenuModule } from '@angular/material/menu';
-import { ModalConfirmComponent } from '../../../../../core/components/modal/modal-confirm/modal-confirm.component';
 import { BaseComponent } from '../../../../../core/components/base.component';
+import { ModalConfirmComponent } from '../../../../../core/components/modal/modal-confirm/modal-confirm.component';
 
 @Component({
   selector: 'app-cadastro-organizadores',

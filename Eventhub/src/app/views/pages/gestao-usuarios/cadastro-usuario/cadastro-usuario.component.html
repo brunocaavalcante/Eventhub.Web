@@ -23,7 +23,9 @@
 
                 <mat-form-field appearance="outline" class="cadastro-field">
                     <mat-label>Senha</mat-label>
-                    <input matInput placeholder="Sua senha" type="password" formControlName="senha" />
+                    <input matInput placeholder="Sua senha" (blur)="validarSenhaSignal()"
+                     [type]="showPassword ? 'text' : 'password'" formControlName="senha" />
+                    <mat-icon matSuffix (click)="togglePassword()" style="cursor:pointer">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                     <mat-error *ngIf="displayMessage['senha']">
                         <mat-icon>error</mat-icon> {{displayMessage['senha']}}
                     </mat-error>
@@ -31,7 +33,9 @@
 
                 <mat-form-field appearance="outline" class="cadastro-field">
                     <mat-label>Confirmar Senha</mat-label>
-                    <input matInput placeholder="Confirme sua senha" type="password" formControlName="confirmarSenha" />
+                    <input matInput placeholder="Confirme sua senha" (blur)="validarSenhaSignal()"
+                    [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmarSenha" />
+                    <mat-icon matSuffix (click)="toggleConfirmPassword()" style="cursor:pointer">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                     <mat-error *ngIf="displayMessage['confirmarSenha']">
                         <mat-icon>error</mat-icon>{{displayMessage['confirmarSenha']}}
                     </mat-error>

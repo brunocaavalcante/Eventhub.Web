@@ -1,7 +1,7 @@
 <mat-toolbar class="app-toolbar">
     <!-- Hamburguer (mobile) -->
-    <button mat-icon-button (click)="toggleMenu()" *ngIf="isMobile()">
-        <mat-icon>menu</mat-icon>
+    <button mat-icon-button (click)="alternarMenuLateral()" *ngIf="isMobile()">
+            <mat-icon>menu</mat-icon>
     </button>
 
     <!-- Logo -->
@@ -16,19 +16,19 @@
     <div class="actions" *ngIf="!isMobile()">
         <nav class="nav">
             <ng-container *ngFor="let item of menuItems()">
-                <a *ngIf="!item.isButton" mat-button [routerLink]="[item.route]"
-                    (click)="$event.preventDefault(); navigate(item.route)">
+                    <a *ngIf="!item.isButton" mat-button [routerLink]="[item.route]"
+                        (click)="$event.preventDefault(); navegarPara(item.route)">
                     {{ item.label }}
                 </a>
 
-                <button *ngIf="item.isButton" mat-flat-button color="primary" (click)="navigate(item.route)">
+                    <button *ngIf="item.isButton" mat-flat-button color="primary" (click)="navegarPara(item.route)">
                     {{ item.label }}
                 </button>
             </ng-container>
         </nav>
 
         <!-- mostrar notificações e avatar apenas quando logado -->
-        <ng-container *ngIf="isLoggedIn()">
+        <ng-container *ngIf="user()">
             <button mat-icon-button class="icon-btn" matTooltip="Notificações">
                 <mat-icon>notifications_none</mat-icon>
             </button>

@@ -1,5 +1,5 @@
 import { ElementRef, inject } from "@angular/core";
-import { Usuario } from '../models/usuario.model';
+import { LoginResponseDTO, UsuarioInfoDTO } from '../models/usuario.model';
 import { UsuarioService } from '../services/usuario.service';
 
 import { FormGroup } from "@angular/forms";
@@ -17,7 +17,7 @@ export abstract class BaseComponent {
     /**
      * Busca o usuário logado usando UsuarioService
      */
-    protected async obterUsuarioLogado(): Promise<Usuario | null> {
+    protected async obterUsuarioLogado(): Promise<UsuarioInfoDTO | null> {
         return await this.userService.obterUsuarioLogado();
     }
 

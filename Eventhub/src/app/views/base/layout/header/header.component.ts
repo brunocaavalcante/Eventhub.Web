@@ -1,14 +1,16 @@
-import { Component, EventEmitter, inject, signal, computed, DestroyRef } from '@angular/core';
+import { Component, EventEmitter, inject, signal, computed, DestroyRef, OnInit } from '@angular/core';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs/operators';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Auth, user as afUser } from '@angular/fire/auth';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { UsuarioService } from '../../../../core/services/usuario.service';
+import { UsuarioInfoDTO } from '../../../../core/models/usuario.model';
+import { AuthService } from '../../../../core/services/auth.service';
 
 type MenuItem = {
   label: string;
@@ -32,17 +34,16 @@ type MenuItem = {
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   private readonly router = inject(Router);
-  private readonly auth = inject(Auth);
+  private readonly authService = inject(AuthService);
   private readonly usuarioService = inject(UsuarioService);
   private readonly destroyRef = inject(DestroyRef);
 
   // Signals
   isMobile = signal(window.innerWidth <= 900);
-  user = toSignal(afUser(this.auth), { initialValue: null });
-  isLoggedIn = computed(() => !!this.user());
-  avatarUrl = computed(() => this.user()?.photoURL || '');
+  user = signal<UsuarioInfoDTO | null>(null);
+  avatarUrl = computed(() => this.user()?.foto || '');
 
   openMenuSide: EventEmitter<void> = new EventEmitter<void>();
   private readonly onResize = () => this.isMobile.set(window.innerWidth <= 900);
@@ -61,20 +62,41 @@ export class HeaderComponent {
     { label: 'Perfil', route: '/perfil' }
   ];
 
-  menuItems = computed(() => this.isLoggedIn() ? this.loggedInMenu : this.loggedOutMenu);
+  menuItems = computed(() => this.user() ? this.loggedInMenu : this.loggedOutMenu);
 
-  constructor() {
+  ngOnInit(): void {
+    this.iniciarMonitoramentoDeTela();
+    this.atualizarUsuarioLogado();
+    this.observarNavegacao();
+  }
+
+  private iniciarMonitoramentoDeTela(): void {
     window.addEventListener('resize', this.onResize);
     this.destroyRef.onDestroy(() => window.removeEventListener('resize', this.onResize));
   }
 
-  toggleMenu() {
+  private observarNavegacao(): void {
+    this.router.events
+      .pipe(
+        filter((evento): evento is NavigationEnd => evento instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => this.atualizarUsuarioLogado());
+  }
+
+  private atualizarUsuarioLogado(): void {
+    this.user.set(this.usuarioService.obterUsuarioLogado());
+  }
+
+  alternarMenuLateral(): void {
     this.openMenuSide.emit();
   }
 
-  navigate(route?: string) {
-    if (!route) return;
-    this.router.navigate([route]);
+  navegarPara(rota?: string): void {
+    if (!rota) {
+      return;
+    }
+    this.router.navigate([rota]);
   }
 
   login() {
@@ -85,8 +107,10 @@ export class HeaderComponent {
     this.router.navigate(['usuarios/cadastro']);
   }
 
-  async logout() {
-    await this.usuarioService.logout();
-    this.router.navigate(['/']);
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => this.user.set(null),
+      error: () => this.user.set(null)
+    });
   }
 }

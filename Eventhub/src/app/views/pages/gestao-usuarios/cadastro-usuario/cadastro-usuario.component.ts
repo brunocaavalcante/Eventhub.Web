@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, inject, OnInit, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,8 @@ import { ModalSucessComponent } from '../../../../core/components/modal/modal-su
 import { MatDialogRef } from '@angular/material/dialog';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { MatInputModule } from '@angular/material/input';
+import { CreateUsuarioDTO } from '../../../../core/models/usuario.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-cadastro-usuario',
@@ -39,7 +41,10 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
   private readonly usuarioService = inject(UsuarioService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
   get nome() { return this.form.get('nome'); }
   get email() { return this.form.get('email'); }
   get senha() { return this.form.get('senha'); }
@@ -83,10 +88,7 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
     });
   }
 
-  ngOnInit(): void {
-    this.confirmarSenha?.valueChanges.subscribe(() => this.validarSenhaSignal());
-    this.senha?.valueChanges.subscribe(() => this.validarSenhaSignal());
-  }
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
@@ -96,7 +98,7 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
     const s = this.form.value.senha;
     const c = this.form.value.confirmarSenha;
 
-    if (s && c && s !== c) {
+    if (s && c && s != c) {
       this.confirmarSenha?.setErrors({ senhasDiferentes: true });
     } else {
       this.confirmarSenha?.setErrors(null);
@@ -114,18 +116,24 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
       const usuario = {
         nome: this.nome?.value,
         email: this.email?.value,
-        senha: this.senha?.value,
+        password: this.senha?.value,
         telefone: this.telefone?.value
-      } as any;
+      } as CreateUsuarioDTO;
 
-      var result = await this.usuarioService.cadastro(usuario);
-      if (result) {
-        this.openSuccessModal().afterClosed().subscribe(() => {
-          this.router.navigate(['/usuarios/login']);
-        });
-      }
+      this.usuarioService.cadastro(usuario).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+        next: (res) => {
+
+          if (res.executouComSucesso) {
+            this.openSuccessModal().afterClosed().subscribe(() => {
+              this.router.navigate(['/usuarios/login']);
+            });
+          }
+        },
+        error: (err) => {
+          console.error('Erro ao cadastrar usuário:', err);
+        }
+      });
     }
-    catch (err) { }
     finally {
       this.loading = false;
     }
@@ -139,5 +147,13 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
         okLabel: 'Fechar'
       }
     });
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }
