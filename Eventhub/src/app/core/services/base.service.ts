@@ -4,11 +4,15 @@ import { Firestore } from '@angular/fire/firestore';
 import { NotificationService } from './notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalErrorComponent } from '../components/modal/modal-error/modal-error.component';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class BaseService {
+    protected readonly urlApi = environment.urlApi;
+    protected readonly http = inject(HttpClient);
     protected readonly auth: Auth = inject(Auth);
     protected readonly firestore: Firestore = inject(Firestore);
     private readonly notification = inject(NotificationService);

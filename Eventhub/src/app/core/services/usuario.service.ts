@@ -1,46 +1,21 @@
 import { Injectable } from "@angular/core";
-import { Usuario } from "../models/usuario.model";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
-import { doc, setDoc, collection, getDoc, getDocs, deleteDoc, addDoc } from '@angular/fire/firestore';
+import { CreateUsuarioDTO, Usuario, UsuarioInfoDTO } from "../models/usuario.model";
+import { doc, setDoc, collection, getDoc, getDocs, deleteDoc } from '@angular/fire/firestore';
 import { BaseService } from "./base.service";
+import { Observable } from "rxjs";
+import { RetornoAPI } from "../models/retorno-api.model";
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioService extends BaseService {
 
     userCollection = collection(this.firestore, `usuarios`);
 
-    /**
-     * Cadastra um usuário no Firebase Authentication usando email e senha.
-     * Salva o perfil no Firestore com o mesmo UID do Auth.
-     */
-    cadastro(usuario: Usuario): Promise<any> {
-        if (!usuario || !usuario.email || !usuario.senha) {
-            return Promise.reject(new Error('Email e senha são obrigatórios'));
+    cadastro(usuario: CreateUsuarioDTO): Observable<RetornoAPI<void>> {
+        if (!usuario || !usuario.email || !usuario.password) {
+            throw new Error('Email e senha são obrigatórios para cadastro');
         }
-        return createUserWithEmailAndPassword(this.auth, usuario.email, usuario.senha)
-            .then(async (userCredential) => {
-                try {
-                    const user = userCredential.user;
-                    const now = new Date().toISOString();
 
-                    const payload: Omit<Usuario, 'senha'> = {
-                        uid: user.uid,
-                        nome: usuario.nome || '',
-                        email: user.email || usuario.email,
-                        fotoUrl: usuario.fotoUrl || '',
-                        telefone: usuario.telefone || '',
-                        dataCriacao: now
-                    } as any;
-
-                    const userDocRef = doc(this.firestore, `usuarios/${user.uid}`);
-                    await setDoc(userDocRef, payload);
-
-                    return { user, payload };
-                } catch (err) {
-                    this.handleError(err, 'Erro ao salvar dados do usuário.');
-                }
-            })
-            .catch(err => this.handleError(err));
+        return this.http.post<RetornoAPI<void>>(`${this.urlApi}/usuarios`, usuario);
     }
 
     async atualizar(uid: string, dados: Partial<Usuario>): Promise<void> {
@@ -85,28 +60,8 @@ export class UsuarioService extends BaseService {
         }
     }
 
-    async login(email: string, senha: string): Promise<{ user: any, perfil: Usuario | null } | void> {
-        if (!email || !senha) return Promise.reject(new Error('Email e senha são obrigatórios'));
-        try {
-            const cred = await signInWithEmailAndPassword(this.auth, email, senha);
-            const perfil = await this.obterPorId(cred.user.uid);
-            return { user: cred.user, perfil };
-        } catch (err) {
-            this.handleError(err);
-        }
-    }
-
-    async logout(): Promise<void> {
-        try {
-            await signOut(this.auth);
-        } catch (err) {
-            this.handleError(err, 'Erro ao fazer logout.');
-        }
-    }
-
-    async obterUsuarioLogado(): Promise<Usuario | null> {
-        const user = this.auth.currentUser;
-        if (!user) return null;
-        return this.obterPorId(user.uid);
+    obterUsuarioLogado(): UsuarioInfoDTO | null {
+        return sessionStorage.getItem('usuarioLogado') ?
+            JSON.parse(sessionStorage.getItem('usuarioLogado') as string)?.usuario as UsuarioInfoDTO : null;
     }
 }

@@ -22,5 +22,5 @@ export interface Evento {
     status?: 'Rascunho' | 'Ativo' | 'Cancelado' | 'Publicado' | 'Encerrado';
     criadoEm?: Date;
     atualizadoEm?: Date;
-    IdUsuario?: string;
+    IdUsuario?: number;
 }

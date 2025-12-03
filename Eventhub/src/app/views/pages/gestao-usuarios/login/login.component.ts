@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, inject, OnInit, ViewChildren } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -7,7 +7,8 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { FormBuilder, FormControlName, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UsuarioService } from '../../../../core/services/usuario.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
@@ -28,9 +29,10 @@ export class LoginComponent extends BaseComponent implements OnInit, AfterViewIn
 
   form: FormGroup;
   loading = false;
-  private readonly usuarioService = inject(UsuarioService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   get email() { return this.form.get('email'); }
   get senha() { return this.form.get('senha'); }
@@ -69,17 +71,19 @@ export class LoginComponent extends BaseComponent implements OnInit, AfterViewIn
     }
 
     this.loading = true;
-    try {
-      const email = this.email?.value;
-      const senha = this.senha?.value;
-      const result = await this.usuarioService.login(email, senha);
-      await this.router.navigate(['/']);
-      return result as any;
-    }
-    catch (err) {
-      return;
-    } finally {
-      this.loading = false;
-    }
+    const email = this.email?.value;
+    const password = this.senha?.value;
+    
+    this.authService.login({ email, password }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: async (result) => {
+        if (result.executouComSucesso) {
+          await this.router.navigate(['/']);
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        this.loading = false;
+      }
+    });
   }
 }
