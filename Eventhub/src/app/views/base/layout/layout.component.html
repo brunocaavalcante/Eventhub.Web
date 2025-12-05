@@ -1,4 +1,6 @@
 <div class="layout-container">
+    <app-header (openMenuSide)="abrirMenuSide()"></app-header>
+    <app-menu-side [open]="sideMenuOpen()" (fecharMenuSide)="fecharMenuSide()"></app-menu-side>
     <div class="content">
         <router-outlet></router-outlet>
     </div>

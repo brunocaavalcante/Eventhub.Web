@@ -1,1 +1,26 @@
-<p>menu-side works!</p>
+<div class="side-overlay" *ngIf="open">
+	<div class="side-backdrop" (click)="fechar()"></div>
+	<aside class="side-menu">
+		<div class="side-header">
+			<div class="side-avatar">
+				<img *ngIf="usuario()?.foto; else defaultAvatar" [src]="usuario()?.foto" alt="Avatar" />
+				<ng-template #defaultAvatar>
+					<mat-icon>account_circle</mat-icon>
+				</ng-template>
+			</div>
+			<div class="side-user-info">
+				<div class="side-user-nome">{{ usuario()?.nome }}</div>
+				<div class="side-user-email">{{ usuario()?.email }}</div>
+			</div>
+			<button mat-icon-button class="side-close-btn" (click)="fechar()" aria-label="Fechar menu">
+				<mat-icon>close</mat-icon>
+			</button>
+		</div>
+		<nav class="side-nav">
+			<a *ngFor="let item of menuItems()" class="side-nav-item" (click)="item.route && navegarPara(item.route)">
+				<mat-icon>{{ item.icon }}</mat-icon>
+				<span>{{ item.label }}</span>
+			</a>
+		</nav>
+	</aside>
+</div>

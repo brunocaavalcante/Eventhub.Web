@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, signal, computed, DestroyRef, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, inject, signal, computed, DestroyRef, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { UsuarioService } from '../../../../core/services/usuario.service';
 import { UsuarioInfoDTO } from '../../../../core/models/usuario.model';
 import { AuthService } from '../../../../core/services/auth.service';
 
-type MenuItem = {
+export type MenuItem = {
   label: string;
   route?: string;
   icon?: string;
@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
   user = signal<UsuarioInfoDTO | null>(null);
   avatarUrl = computed(() => this.user()?.foto || '');
 
-  openMenuSide: EventEmitter<void> = new EventEmitter<void>();
+  @Output() openMenuSide = new EventEmitter<void>();
   private readonly onResize = () => this.isMobile.set(window.innerWidth <= 900);
 
   // menu definitions (controlled here)
