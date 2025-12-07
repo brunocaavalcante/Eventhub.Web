@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CadastroOrganizadoresComponent } from './cadastro-organizadores.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
+import { UsuarioService } from '../../../../../core/services/usuario.service';
+import { PerfilService } from '../../../../../core/services/perfil.service';
 
 class MatDialogMock {
   open() {
@@ -10,15 +13,26 @@ class MatDialogMock {
   }
 }
 
+const mockPerfilService = {
+  obterPerfis: jest.fn(() => of({
+    executouComSucesso: true,
+    data: [],
+    statusHttp: 200,
+    erros: []
+  })),
+};
+
 describe('CadastroOrganizadoresComponent', () => {
   let component: CadastroOrganizadoresComponent;
   let fixture: ComponentFixture<CadastroOrganizadoresComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, CadastroOrganizadoresComponent],
+      imports: [ReactiveFormsModule, FormsModule, CadastroOrganizadoresComponent, HttpClientTestingModule],
       providers: [
-        { provide: MatDialog, useClass: MatDialogMock }
+        { provide: MatDialog, useClass: MatDialogMock },
+        { provide: UsuarioService, useValue: {} },
+        { provide: PerfilService, useValue: mockPerfilService }
       ]
     }).compileComponents();
 
@@ -103,7 +117,7 @@ describe('CadastroOrganizadoresComponent', () => {
       emailControl?.setValue('email-invalido');
       emailControl?.markAsTouched();
       component.validarCampo();
-      expect(component.displayMessage['email']).toContain('inválido');
+      expect(component.displayMessage['email']).toContain('deve ser válido.');
     });
 
     it('deve exibir mensagem de validação se telefone for vazio e tocado', () => {

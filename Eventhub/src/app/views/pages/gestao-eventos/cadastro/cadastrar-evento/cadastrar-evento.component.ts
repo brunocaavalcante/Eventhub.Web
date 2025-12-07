@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, inject, OnInit, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, HostListener, inject, OnInit, ViewChildren } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,9 +14,10 @@ import { CommonModule } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 import { CadastroOrganizadoresComponent } from '../../organizadores/cadastro-organizadores/cadastro-organizadores.component';
 import { BaseComponent } from '../../../../../core/components/base.component';
-import { Organizador } from '../../../../../core/models/organizador.model';
-import { Usuario, UsuarioInfoDTO } from '../../../../../core/models/usuario.model';
-import { Evento } from '../../../../../core/models/evento.model';
+import { Participante } from '../../../../../core/models/organizador.model';
+import { UsuarioInfoDTO } from '../../../../../core/models/usuario.model';
+import { CadastroEventoDto, Evento } from '../../../../../core/models/evento.model';
+
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { EventoService } from '../../../../../core/services/evento.service';
 import { ModalSucessComponent } from '../../../../../core/components/modal/modal-sucess/modal-sucess.component';
@@ -24,6 +25,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalConfirmComponent } from '../../../../../core/components/modal/modal-confirm/modal-confirm.component';
 import { Observable } from 'rxjs';
+import { TipoImagemEvento } from '../../../../../core/models/imagem.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
 
 @Component({
   selector: 'app-cadastrar-evento',
@@ -55,11 +59,12 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
   private readonly spinner = inject(SpinnerService);
   private readonly router = inject(Router);
   private readonly acRoute = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   usuarioLogado: UsuarioInfoDTO | null = null;
   form!: FormGroup;
   imagens: string[] = [];
-  organizadores: Organizador[] = [];
+  organizadores: Participante[] = [];
   etapa = 0;
   private salvou = false;
 
@@ -72,6 +77,12 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
       },
       descricao: {
         maxlength: 'A Descrição pode ter no máximo 500 caracteres'
+      },
+      quantidadeParticipantes: {
+        required: 'Informe a quantidade de participantes',
+        min: 'O valor mínimo é 1',
+        max: 'O valor máximo é 9999',
+        pattern: 'Informe um valor numérico válido'
       },
       tipoData: {
         required: 'Selecione o tipo de data'
@@ -111,7 +122,8 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
     this.form = this.fb.group({
       step1: this.fb.group({
         nome: ['', [Validators.required, Validators.minLength(3)]],
-        descricao: ['', [Validators.maxLength(500)]]
+        descricao: ['', [Validators.maxLength(500)]],
+        quantidadeParticipantes: [null, [Validators.required, Validators.min(1), Validators.max(9999), Validators.pattern('^[0-9]+$')]]
       }),
       step2: this.fb.group({
         tipoData: ['unica', Validators.required],
@@ -175,47 +187,56 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
 
   salvarEvento() {
     this.spinner.show();
-    const evento: Evento = {
+
+    const dto: CadastroEventoDto = {
       nome: this.form.get('step1.nome')?.value,
       descricao: this.form.get('step1.descricao')?.value,
-      tipoData: this.form.get('step2.tipoData')?.value,
-      cep: this.form.get('step2.cep')?.value,
-      rua: this.form.get('step2.rua')?.value,
-      cidade: this.form.get('step2.cidade')?.value,
-      numero: this.form.get('step2.numero')?.value,
-      pontoReferencia: this.form.get('step2.pontoReferencia')?.value,
-      // imagens: this.imagens,
-      organizadores: this.organizadores,
-      status: 'Ativo',
-      criadoEm: new Date(),
-      atualizadoEm: new Date(),
-      tipoEvento: this.acRoute.snapshot.params['tipo'] || 8
+      idTipoEvento: Number(this.acRoute.snapshot.params['tipo'] || 8),
+      idUsuarioCriador: this.usuarioLogado?.id ?? 0,
+      maxConvidado: Number(this.form.get('step1.quantidadeParticipantes')?.value),
+      dataInicio: this.form.get('step2.tipoData')?.value === 'unica'
+        ? this.form.get('step2.data')?.value
+        : this.form.get('step2.periodo.start')?.value,
+      dataFim: this.form.get('step2.tipoData')?.value === 'unica'
+        ? this.form.get('step2.data')?.value
+        : this.form.get('step2.periodo.end')?.value,
+
+      endereco: {
+        logradouro: this.form.get('step2.rua')?.value,
+        numero: this.form.get('step2.numero')?.value,
+        cidade: this.form.get('step2.cidade')?.value,
+        cep: this.form.get('step2.cep')?.value,
+        pontoReferencia: this.form.get('step2.pontoReferencia')?.value
+      },
+
+      imagens: this.imagens.map((img, idx) => ({
+        nomeArquivo: `imagem_${idx + 1}.jpg`,
+        base64: Base64ImageUtil.extractBase64(img),
+        tipoImagem: TipoImagemEvento.Local
+      })),
+
+      participantes: this.organizadores.map(org => ({
+        tipo: org.tipo,
+        nome: org.nome,
+        email: org.email,
+        telefone: org.telefone,
+        idPerfil: org.idPerfil ?? 0
+      }))
     };
 
-    if (this.usuarioLogado?.id) {
-      evento.IdUsuario = this.usuarioLogado.id;
-    }
-
-    if (evento.tipoData === 'unica') {
-      evento.dataInicio = this.form.get('step2.data')?.value;
-      evento.dataFim = null;
-    }
-    else {
-      evento.dataInicio = this.form.get('step2.periodo.start')?.value ?? null;
-      evento.dataFim = this.form.get('step2.periodo.end')?.value ?? null;
-    }
-    this.service.cadastro(evento)
-      .then(() => {
+    this.service.cadastro(dto).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
         this.salvou = true;
         this.spinner.hide();
         this.openSuccessModal().afterClosed().subscribe(() => {
           this.router.navigate(['/eventos/meus-eventos']);
         });
-      })
-      .catch((e) => {
+      },
+      error: (e) => {
         this.spinner.hide();
         console.error('Erro ao cadastrar evento:', e);
-      });
+      }
+    });
   }
 
   habilitarBotaoProximo(): boolean {
@@ -285,7 +306,7 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
     this.imagens.splice(index, 1);
   }
 
-  changeOrganizadores(event: Organizador[]) {
+  changeOrganizadores(event: Participante[]) {
     this.organizadores = event;
   }
 

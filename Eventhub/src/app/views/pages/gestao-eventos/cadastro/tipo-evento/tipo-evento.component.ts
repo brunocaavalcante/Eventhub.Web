@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { TipoEventoService } from '../../../../../core/services/tipo-evento.service';
+import { TipoEvento } from '../../../../../core/models/evento.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RetornoAPI } from '../../../../../core/models/retorno-api.model';
 
 @Component({
   selector: 'app-tipo-evento',
@@ -9,15 +13,26 @@ import { RouterLink } from '@angular/router';
   templateUrl: './tipo-evento.component.html',
   styleUrl: './tipo-evento.component.scss'
 })
-export class TipoEventoComponent {
-  eventTypes = [
-    { id: 1, icon: 'home', name: 'Chá de Casa Nova', desc: 'Comemore seu novo lar.' },
-    { id: 2, icon: 'favorite', name: 'Casamento', desc: 'Celebre o amor e a união.' },
-    { id: 3, icon: 'cake', name: 'Aniversário', desc: 'Marque mais um ano de vida.' },
-    { id: 4, icon: 'child_friendly', name: 'Chá de Bebê', desc: 'Dê boas-vindas ao bebê.' },
-    { id: 5, icon: 'school', name: 'Formatura', desc: 'Homenageie uma conquista.' },
-    { id: 6, icon: 'groups', name: 'Networking', desc: 'Conecte-se com pessoas.' },
-    { id: 7, icon: 'business_center', name: 'Corporativo', desc: 'Celebre um marco profissional.' },
-    { id: 8, icon: 'apps', name: 'Outro', desc: 'Crie um evento personalizado.' }
-  ];
+export class TipoEventoComponent implements OnInit {
+
+  private readonly tipoEventoService = inject(TipoEventoService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  eventTypes: TipoEvento[] = [];
+  ngOnInit(): void {
+    this.buscarTiposEvento();
+  }
+
+  buscarTiposEvento(): void {
+    this.tipoEventoService.obterTiposEvento().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: async (tiposEvento: RetornoAPI<TipoEvento[]>) => {
+        if (tiposEvento.executouComSucesso && tiposEvento.data) {
+          this.eventTypes = tiposEvento.data;
+        }
+      },
+      error: (error: any) => {
+        console.error('Erro ao buscar tipos de evento:', error);
+      }
+    });
+  }
 }

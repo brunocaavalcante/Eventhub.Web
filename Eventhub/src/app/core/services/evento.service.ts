@@ -1,10 +1,17 @@
 import { Injectable } from "@angular/core";
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
 import { BaseService } from "./base.service";
-import { Evento } from "../models/evento.model";
+import { CadastroEventoDto, Evento } from "../models/evento.model";
+import { Observable } from "rxjs";
+import { RetornoAPI } from "../models/retorno-api.model";
 
 @Injectable({ providedIn: 'root' })
 export class EventoService extends BaseService {
+
+
+    cadastro(evento: CadastroEventoDto): Observable<RetornoAPI<CadastroEventoDto[]>> {
+        return this.http.post<RetornoAPI<CadastroEventoDto[]>>(`${this.urlApi}/eventos`, evento);
+    }
 
     collection = collection(this.firestore, `eventos`);
 
@@ -18,19 +25,6 @@ export class EventoService extends BaseService {
                     eventos.push({ id: doc.id, ...doc.data() } as Evento);
                 });
                 return eventos;
-            })
-            .catch(err => this.handleError(err));
-    }
-
-    cadastro(evento: Evento): Promise<any> {
-        if (!evento || !evento.nome) {
-            return Promise.reject(new Error('Nome e data são obrigatórios'));
-        }
-
-        return addDoc(this.collection, evento)
-            .then(docRef => {
-                console.log('Evento cadastrado com ID:', docRef.id);
-                return { id: docRef.id, ...evento };
             })
             .catch(err => this.handleError(err));
     }

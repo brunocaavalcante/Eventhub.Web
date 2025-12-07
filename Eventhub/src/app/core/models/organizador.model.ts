@@ -1,11 +1,11 @@
-export interface Organizador {
+import { Imagem } from "./imagem.model";
+
+export interface Participante {
     tipo: 'Pessoa Física' | 'Pessoa Jurídica';
     nome: string;
-    foto?: string | null;
-    mensagem?: string;
     email: string;
     telefone: string;
+    mensagem?: string;
     id?: number;
-    eventoId?: number;
-    usuarioId?: number;
+    idPerfil?: number;
 }

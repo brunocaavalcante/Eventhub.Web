@@ -1,7 +1,7 @@
-import { Organizador } from '../../../../../core/models/organizador.model';
+import { Participante } from '../../../../../core/models/organizador.model';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChildren } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl, ReactiveFormsModule, FormsModule, FormControlName } from '@angular/forms';
+import { AfterViewInit, Component, DestroyRef, ElementRef, EventEmitter, inject, Input, OnInit, Output, signal, ViewChildren } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule, FormControlName } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +13,9 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { MatMenuModule } from '@angular/material/menu';
 import { BaseComponent } from '../../../../../core/components/base.component';
 import { ModalConfirmComponent } from '../../../../../core/components/modal/modal-confirm/modal-confirm.component';
+import { PerfilService } from '../../../../../core/services/perfil.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PerfilDto } from '../../../../../core/models/perfil.model';
 
 @Component({
   selector: 'app-cadastro-organizadores',
@@ -35,13 +38,17 @@ import { ModalConfirmComponent } from '../../../../../core/components/modal/moda
   ]
 })
 export class CadastroOrganizadoresComponent extends BaseComponent implements OnInit, AfterViewInit {
-  @Output() organizadoresChange = new EventEmitter<Organizador[]>();
+  @Output() organizadoresChange = new EventEmitter<Participante[]>();
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements!: ElementRef[];
 
   private readonly fb = inject(FormBuilder);
+  private readonly perfilService = inject(PerfilService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  perfis = signal<PerfilDto[]>([]);
 
   form!: FormGroup;
-  @Input() organizadores: Organizador[] = [];
+  @Input() organizadores: Participante[] = [];
   editandoIndex: number | null = null;
   exibirForm = false;
 
@@ -71,36 +78,53 @@ export class CadastroOrganizadoresComponent extends BaseComponent implements OnI
 
   ngOnInit(): void {
     this.form = this.fb.group({
+      papel: ['Ajudante', Validators.required],
       tipo: ['Pessoa Física', Validators.required],
       nome: ['', Validators.required],
-      foto: [null],
       mensagem: [''],
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', Validators.required]
     });
+
+    this.obterPerfis();
   }
 
   ngAfterViewInit(): void {
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
   }
 
+  obterPerfis() {
+    this.perfilService.obterPerfis().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (result) => {
+        if (result.executouComSucesso && Array.isArray(result.data)) {
+          this.perfis.set([...result.data]);
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao obter perfis:', err);
+      }
+    });
+  }
+
   adicionarOrganizador() {
     if (this.form.valid) {
-      const organizador = {
+      
+      const organizador: Participante = {
+        idPerfil: this.form.value.papel,
         tipo: this.form.value.tipo,
         nome: this.form.value.nome,
-        foto: this.form.value.foto,
         mensagem: this.form.value.mensagem,
         email: this.form.value.email,
-        telefone: this.form.value.telefone
+        telefone: this.form.value.telefone    
       };
+
       if (this.editandoIndex !== null) {
         this.organizadores[this.editandoIndex] = organizador;
         this.editandoIndex = null;
       } else {
         this.organizadores.push(organizador);
       }
-      this.form.reset({ tipo: 'Pessoa Física' });
+      this.form.reset({ papel: 'Ajudante', tipo: 'Pessoa Física' });
       this.exibirForm = false;
       this.emitirOrganizadores();
     }
@@ -127,29 +151,12 @@ export class CadastroOrganizadoresComponent extends BaseComponent implements OnI
     this.form.patchValue({
       tipo: org.tipo,
       nome: org.nome,
-      foto: org.foto,
       mensagem: org.mensagem,
       email: org.email,
       telefone: org.telefone
     });
     this.editandoIndex = index;
     this.exibirForm = true;
-  }
-
-  onFotoSelect(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.form.patchValue({ foto: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  removerFoto() {
-    this.form.patchValue({ foto: null });
   }
 
   emitirOrganizadores() {

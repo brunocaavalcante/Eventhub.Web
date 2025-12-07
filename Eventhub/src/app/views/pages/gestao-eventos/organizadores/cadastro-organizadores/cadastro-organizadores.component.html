@@ -53,21 +53,35 @@
             </mat-form-field>
         </div>
 
-        <div class="organizador-upload-row">
-            <label class="organizador-upload-label" matTooltip="Foto do organizador">
-                <input type="file" accept="image/png, image/jpeg, image/gif" hidden (change)="onFotoSelect($event)" />
-                <mat-icon>add_a_photo</mat-icon>
-                <span>Carregar foto do organizador (Opcional)</span>
-                <small>PNG, JPG, GIF até 10MB</small>
-            </label>
-            <div *ngIf="form.value.foto" class="organizador-upload-preview">
-                <div class="organizador-preview-img-wrapper">
-                    <img [src]="form.value.foto" alt="Pré-visualização da foto do organizador" />
-                    <mat-icon class="organizador-remove-foto-btn" (click)="removerFoto()">close</mat-icon>
-                </div>
-                <span class="foto-legenda">Pré-visualização</span>
-            </div>
+         <!-- Campo Papel -->
+        <mat-form-field appearance="outline" class="organizador-field w-100">
+            <mat-label>Papel</mat-label>
+            <mat-select formControlName="papel">
+                <mat-option *ngFor="let perfil of perfis()" [value]="perfil.id">
+                    <mat-icon style="vertical-align: middle; margin-right: 6px;">{{ perfil.icon }}</mat-icon>
+                    {{ perfil.descricao }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div *ngIf="form.value.papel == 9" class="organizador-row">
+            <mat-form-field appearance="outline" class="organizador-field w-100">
+                <mat-label>Nome do perfil personalizado</mat-label>
+                <input matInput formControlName="perfilPersonalizado" placeholder="Digite o nome do perfil" />
+            </mat-form-field>
         </div>
+
+        <!-- Info box sobre permissões -->
+        <mat-card class="info-box" >
+            <div class="info-content">
+                <mat-icon>info</mat-icon>
+                <div>
+                    <b>Sobre permissões</b>
+                    <div class="txt">
+                        As permissões padrão serão aplicadas. Você pode personalizá-las após adicionar o organizador.
+                    </div>
+                </div>
+            </div>
+        </mat-card>  
 
         <div class="organizador-form-actions">
             <button mat-stroked-button type="button" (click)="exibirForm = false">
@@ -84,12 +98,9 @@
     <div *ngIf="organizadores.length > 0 && !exibirForm" class="organizadores-cards-list">
         <div class="organizador-card w-100" *ngFor="let org of organizadores; let i = index">
             <div class="organizador-card-avatar">
-                <ng-container *ngIf="org.foto; else defaultAvatar">
-                    <img [src]="org.foto" alt="Foto do organizador" />
-                </ng-container>
-                <ng-template #defaultAvatar>
+                <ng-container >
                     <mat-icon>account_circle</mat-icon>
-                </ng-template>
+                </ng-container>
             </div>
             <div class="organizador-card-info">
                 <div class="organizador-card-nome">{{ org.nome }}</div>
