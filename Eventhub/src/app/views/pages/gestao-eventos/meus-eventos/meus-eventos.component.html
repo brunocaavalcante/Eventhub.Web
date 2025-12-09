@@ -18,24 +18,23 @@
                 <mat-label>Status</mat-label>
                 <mat-select [value]="filtroStatus()"
                     (selectionChange)="filtroStatus.set($event.value); onBuscarEventos()">
-                    <mat-option value="">Todos os Status</mat-option>
-                    <mat-option value="ativo">Ativo</mat-option>
-                    <mat-option value="rascunho">Rascunho</mat-option>
-                    <mat-option value="finalizado">Finalizado</mat-option>
-                    <mat-option value="cancelado">Cancelado</mat-option>
+                    <mat-option [value]="status.descricao" *ngFor="let status of status()">{{status.descricao}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
 
         <div class="meus-eventos-grid">
             <div *ngFor="let evento of meusEventos()" class="evento-card" [routerLink]="['/eventos/home', evento.id]"
-                [ngClass]="'status-' + evento.status?.toLowerCase()">
+                [ngClass]="'status-' + evento.status.toLowerCase()">
                 <div class="evento-img-wrapper">
-                    <img [src]="getTipoEventoInfo(evento.tipoEvento).imagem" [alt]="evento.nome" class="evento-img" />
+                    <img [src]="getTipoEventoInfo(evento.idTipoEvento).imagem" [alt]="evento.nome" class="evento-img" />
                 </div>
                 <div class="evento-info">
-                    <div class="evento-nome">{{evento.nome}}</div>
-                    <div class="evento-meta"><b>Tipo:</b> {{getTipoEventoInfo(evento.tipoEvento).descricao}}</div>
+                    <div class="evento-nome">
+                        <span>{{evento.nome}}</span>
+                        <div class="evento-status-badge" [ngClass]="'badge-' + evento.status.toLowerCase()">{{evento.status}}</div>
+                    </div>
+                    <div class="evento-meta"><b>Tipo:</b> {{evento.tipoEvento}}</div>
                     <div class="evento-meta">
                         <b>Data:</b>
                         <ng-container *ngIf="evento.tipoData === 'periodo'; else unicaData">
@@ -47,11 +46,8 @@
                         </ng-template>
                     </div>
                     <div class="evento-status">
-                        <span class="material-icons">groups</span> {{obterConvidadosConfirmados(evento.id || '')}}
+                        <span class="material-icons">groups</span> {{obterConvidadosConfirmados(evento.id || 0)}}
                         confirmados
-                        <span class="material-icons">card_giftcard</span> {{obterPresentes(evento.id || '')}} presentes
-                        <span class="evento-status-badge"
-                            [ngClass]="'badge-' + (evento?.status ? evento.status?.toLowerCase() : '')">{{evento?.status}}</span>
                     </div>
                 </div>
             </div>

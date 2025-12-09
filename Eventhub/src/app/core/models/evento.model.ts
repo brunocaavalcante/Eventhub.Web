@@ -10,21 +10,6 @@ export enum StatusEvento {
     Cancelado = 4
 }
 
-export function getNomeStatusEvento(status: StatusEvento | number): string {
-    switch (status) {
-        case StatusEvento.Ativo:
-            return 'Ativo';
-        case StatusEvento.Rascunho:
-            return 'Rascunho';
-        case StatusEvento.Finalizado:
-            return 'Finalizado';
-        case StatusEvento.Cancelado:
-            return 'Cancelado';
-        default:
-            return 'Desconhecido';
-    }
-}
-
 export interface Evento {
     id?: string;
     nome: string;
@@ -49,6 +34,26 @@ export interface Evento {
     IdUsuario?: number;
 }
 
+export interface EventoStatusDto {
+    id: number;
+    descricao: string;
+}
+
+export interface EventoUserDto {
+    id: number;
+    idStatus: number;
+    status: string;
+    nome: string;
+    descricao: string;
+    maxConvidado: number;
+    idTipoEvento: number;
+    tipoEvento: string;
+    dataInicio: Date;
+    dataFim: Date;
+    fotoCapaBase64: string;
+    tipoData: 'unica' | 'periodo';
+}
+
 export interface CadastroEventoDto {
     nome: string;
     descricao?: string;
@@ -70,7 +75,7 @@ export interface TipoEvento {
     idFoto?: string;
 }
 
-export interface EnderecoEventoDto{
+export interface EnderecoEventoDto {
     cep: string;
     logradouro: string;
     cidade: string;

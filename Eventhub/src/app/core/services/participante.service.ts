@@ -2,9 +2,29 @@ import { Injectable } from "@angular/core";
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
 import { BaseService } from "./base.service";
 import { Convidado } from "../models/convidado.model";
+import { map, Observable } from "rxjs";
+import { RetornoAPI } from "../models/retorno-api.model";
+import { EnvioConviteDTO } from "../models/envio.convite.model";
 
 @Injectable({ providedIn: 'root' })
-export class ConvidadoService extends BaseService {
+export class ParticipanteService extends BaseService {
+
+    buscarParticipantesConfirmados(idEvento: number): Observable<number> {
+        return this.http.get<RetornoAPI<EnvioConviteDTO[]>>(`${this.urlApi}/participantes/evento/${idEvento}/confirmados`).pipe(
+            map(response => {
+                if (response && response.executouComSucesso && response.data) {
+                    // Soma o participante (1) + seus acompanhantes para cada confirmado
+                    return response.data.reduce((total, p) => {
+                        if (p.status === "Confirmado") {
+                            return total + (p.qtdAcompanhantes + 1);
+                        }
+                        return total;
+                    }, 0);
+                }
+                return 0;
+            })
+        );
+    }
 
     collection = collection(this.firestore, `convidados`);
 

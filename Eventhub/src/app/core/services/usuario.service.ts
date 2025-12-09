@@ -59,7 +59,7 @@ export class UsuarioService extends BaseService {
             this.handleError(err, 'Erro ao listar usuários.');
         }
     }
-
+    
     obterUsuarioLogado(): UsuarioInfoDTO | null {
         return sessionStorage.getItem('usuarioLogado') ?
             JSON.parse(sessionStorage.getItem('usuarioLogado') as string)?.usuario as UsuarioInfoDTO : null;

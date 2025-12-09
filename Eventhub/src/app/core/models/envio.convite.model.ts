@@ -15,3 +15,14 @@ export interface EnvioConvite {
     fontStyle?: string;
     backgroundImage?: string;
 }
+
+export interface EnvioConviteDTO {
+    id: number;
+    idConvite: number;
+    idParticipante: number;
+    idEvento: number;
+    dataEnvio: Date | string;
+    status: string;
+    mensagemResposta: string;
+    qtdAcompanhantes: number;
+}

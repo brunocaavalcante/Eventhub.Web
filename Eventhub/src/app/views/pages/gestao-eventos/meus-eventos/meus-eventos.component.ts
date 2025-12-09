@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, DestroyRef } from '@angular/core';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
@@ -10,14 +10,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EventoService } from '../../../../core/services/evento.service';
-import { ConvidadoService } from '../../../../core/services/convidado.service';
+import { ParticipanteService } from '../../../../core/services/participante.service';
 import { PresenteService } from '../../../../core/services/presente.service';
 import { UsuarioService } from '../../../../core/services/usuario.service';
-import { Usuario } from '../../../../core/models/usuario.model';
-import { Evento } from '../../../../core/models/evento.model';
+import { Usuario, UsuarioInfoDTO } from '../../../../core/models/usuario.model';
+import { Evento, EventoStatusDto, EventoUserDto, StatusEvento } from '../../../../core/models/evento.model';
 import { getTipoEventoInfo } from '../../../../core/models/tipo-evento.model';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { DateUtils } from '../../../../core/utils/date.utils';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-meus-eventos',
@@ -38,22 +39,24 @@ import { DateUtils } from '../../../../core/utils/date.utils';
 })
 export class MeusEventosComponent extends BaseComponent implements OnInit {
   private readonly service = inject(EventoService);
+  private readonly participanteService = inject(ParticipanteService);
   private readonly spinner = inject(SpinnerService);
-  private readonly convidadoService = inject(ConvidadoService);
-  private readonly presenteService = inject(PresenteService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  usuarioLogado = signal<Usuario | null>(null);
-  eventosOriginais = signal<Evento[]>([]);
+  usuarioLogado = signal<UsuarioInfoDTO | null>(null);
+  eventosOriginais = signal<EventoUserDto[]>([]);
+  status = signal<EventoStatusDto[]>([]);
   filtroBusca = signal('');
   filtroStatus = signal('');
+  convidadosConfirmadosCache = signal<Map<number, number>>(new Map());
 
   meusEventos = computed(() => {
     const termo = this.filtroBusca().trim().toLowerCase();
-    const status = this.filtroStatus();
+    const statusFiltro = this.filtroStatus();
+
     return this.eventosOriginais().filter(ev => {
-      const tipoInfo = getTipoEventoInfo(ev.tipoEvento ?? 0);
-      const nomeOuTipo = ev.nome.toLowerCase().includes(termo) || tipoInfo.descricao.toLowerCase().includes(termo);
-      const statusOk = !status || (ev.status && ev.status.toLowerCase() === status);
+      const nomeOuTipo = ev.nome.toLowerCase().includes(termo) || ev.tipoEvento.toLowerCase().includes(termo);
+      const statusOk = !statusFiltro || (ev.status !== undefined && ev.status.toLowerCase() === statusFiltro.toLowerCase());
       return nomeOuTipo && statusOk;
     });
   });
@@ -61,50 +64,67 @@ export class MeusEventosComponent extends BaseComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.spinner.show();
     try {
-      await this.obterUsuario();
-      const eventos = await this.service.buscarMeusEventos(this.usuarioLogado()!.uid!);
-      this.eventosOriginais.set(eventos);
-      await this.carregarInformacoesEventos();
+      this.obterUsuario();
+      this.obterStatusEvento();
+      this.obterMeusEventos();
     } finally {
       this.spinner.hide();
     }
   }
 
-  /**
-   * Carrega convidados confirmados e presentes para cada evento da lista.
-   * Adiciona as informações diretamente em cada objeto evento.
-   */
-  async carregarInformacoesEventos(): Promise<void> {
-    const eventos = this.eventosOriginais();
-    const promises = eventos.map(async (evento: Evento) => {
-      const [convidados, presentes] = await Promise.all([
-        this.convidadoService.buscarConvidadosPorEvento(evento.id!),
-        this.presenteService.buscarPresentesPorEvento(evento.id!)
-      ]);
-      evento.convidados = convidados;
-      evento.presentes = presentes;
+  obterMeusEventos() {
+    this.service.buscarMeusEventos(this.usuarioLogado()!.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (response) => {
+        this.eventosOriginais.set(response.data);
+        response.data.forEach(evento => {
+          if (evento.id) {
+            this.carregarConvidadosConfirmados(evento.id);
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao buscar eventos:', error);
+      }
     });
-    await Promise.all(promises);
-    this.eventosOriginais.set([...eventos]);
-    console.log('Eventos atualizados com convidados e presentes:', this.eventosOriginais());
   }
 
-  obterConvidadosConfirmados = (eventoId: string) => {
-    const evento = this.eventosOriginais().find(ev => ev.id === eventoId);
-    return evento?.convidados?.filter(c => c.statusConfirmacao === 'Confirmado').length || 0;
-  };
+  obterStatusEvento() {
+    this.service.buscarStatusEventos().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (response) => {
+        if (response.executouComSucesso) {
+          this.status.set(response.data);
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao buscar status dos eventos:', error);
+      }
+    });
+  }
 
-  obterPresentes = (eventoId: string) => {
-    const evento = this.eventosOriginais().find(ev => ev.id === eventoId);
-    return evento?.presentes?.length || 0;
-  };
+  carregarConvidadosConfirmados(eventoId: number) {
+    this.participanteService.buscarParticipantesConfirmados(eventoId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (count) => {
+          const cache = new Map(this.convidadosConfirmadosCache());
+          cache.set(eventoId, count);
+          this.convidadosConfirmadosCache.set(cache);
+        },
+        error: (error) => {
+          console.error('Erro ao buscar convidados confirmados:', error);
+        }
+      });
+  }
 
-  async obterUsuario() {
-    this.usuarioLogado.set(await this.userService.obterUsuarioLogado());
+  obterConvidadosConfirmados(eventoId: number): number {
+    return this.convidadosConfirmadosCache().get(eventoId) ?? 0;
+  }
+
+  obterUsuario() {
+    this.usuarioLogado.set(this.userService.obterUsuarioLogado());
   }
 
   onBuscarEventos() {
-    // Atualiza os signals para disparar o filtro reativo
     this.filtroBusca.set(this.filtroBusca());
     this.filtroStatus.set(this.filtroStatus());
   }

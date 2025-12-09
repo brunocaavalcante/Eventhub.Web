@@ -72,8 +72,6 @@
     box-shadow: $sombra-card;
     display: flex;
     flex-direction: column;
-    min-width: 380px;
-    max-width: 30%;
     position: relative;
     overflow: hidden;
     transition: box-shadow 0.2s;
@@ -116,11 +114,14 @@
     background: #3ec97c;
 }
 
-.badge-rascunho {
+.badge-agendado {
     background: #6c8cff;
 }
+.badge-inativo {
+    background: #ffb800;
+}
 
-.badge-finalizado {
+.badge-concluido {
     background: #bdbdbd;
 }
 
@@ -149,6 +150,9 @@
     font-weight: $font-peso-bold;
     color: $cor-preto;
     margin-bottom: 2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .evento-meta {
@@ -176,16 +180,21 @@
         grid-template-columns: 1fr;
         gap: $gap;
     }
+
+    .evento-card {
+        max-width: 100%;
+        min-width: unset;
+    }
 }
 
 @media (max-width: $break-mobile) {
     .meus-eventos-container {
-        padding: 18px 2px 0 2px;
+        padding: 18px 7px 0 7px;
     }
 
     .meus-eventos-header {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
         gap: 12px;
     }
 
@@ -208,6 +217,9 @@
 
     .evento-card {
         max-width: 100%;
+        min-width: unset;
+        width: 100%;
+        
     }
 
     .empty-event-container {
