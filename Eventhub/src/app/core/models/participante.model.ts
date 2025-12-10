@@ -1,3 +1,5 @@
+import { PerfilDto } from "./perfil.model";
+
 export interface Convidado {
     id?: string;
     nome: string;
@@ -10,4 +12,11 @@ export interface Convidado {
     atualizadoEm?: Date;
     idEvento?: string;
     foto?: string;
+}
+
+export interface ParticipanteDto {
+    id: number;
+    idEvento: number;
+    perfil: PerfilDto;
+    status: string;
 }

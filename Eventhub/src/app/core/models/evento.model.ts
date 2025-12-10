@@ -1,4 +1,4 @@
-import { Convidado } from "./convidado.model";
+import { Convidado } from "./participante.model";
 import { Imagem } from "./imagem.model";
 import { Participante } from "./organizador.model";
 import { Presente } from "./presente.model";
@@ -32,6 +32,18 @@ export interface Evento {
     criadoEm?: Date;
     atualizadoEm?: Date;
     IdUsuario?: number;
+}
+
+export interface EventoDto{
+    id: number;
+    idTipoEvento: number;
+    nome: string;
+    descricao?: string;
+    dataInicio?: Date | null;
+    dataFim?: Date | null;
+    maxConvidado?: number;
+    tipoData: 'unica' | 'periodo';
+    endereco?: EnderecoEventoDto;
 }
 
 export interface EventoStatusDto {

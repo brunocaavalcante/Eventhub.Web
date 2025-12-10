@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CadastroConvidadoComponent } from './cadastro-convidado.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConvidadoService } from '../../../../core/services/convidado.service';
+import { ParticipanteService } from '../../../../core/services/participante.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { UsuarioService } from '../../../../core/services/usuario.service';
@@ -29,7 +29,7 @@ describe('CadastroConvidadoComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CadastroConvidadoComponent, ReactiveFormsModule],
       providers: [
-        { provide: ConvidadoService, useValue: convidadoServiceMock },
+        { provide: ParticipanteService, useValue: convidadoServiceMock },
         { provide: Router, useValue: routerMock },
         { provide: MatDialog, useValue: dialogMock },
         { provide: SpinnerService, useValue: spinnerMock },

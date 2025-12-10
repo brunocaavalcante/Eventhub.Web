@@ -1,5 +1,5 @@
 import { ElementRef, inject } from "@angular/core";
-import { LoginResponseDTO, UsuarioInfoDTO } from '../models/usuario.model';
+import { UsuarioInfoDTO } from '../models/usuario.model';
 import { UsuarioService } from '../services/usuario.service';
 
 import { FormGroup } from "@angular/forms";

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
 import { BaseService } from "./base.service";
-import { Convidado } from "../models/convidado.model";
+import { Convidado, ParticipanteDto } from "../models/participante.model";
 import { map, Observable } from "rxjs";
 import { RetornoAPI } from "../models/retorno-api.model";
 import { EnvioConviteDTO } from "../models/envio.convite.model";
@@ -26,21 +26,15 @@ export class ParticipanteService extends BaseService {
         );
     }
 
-    collection = collection(this.firestore, `convidados`);
-
-    buscarConvidadosPorEvento(eventoId: string): Promise<Convidado[]> {
-        const convidadosRef = collection(this.firestore, 'convidados');
-        const q = query(convidadosRef, where('idEvento', '==', eventoId));
-        return getDocs(q)
-            .then(querySnapshot => {
-                const convidados: Convidado[] = [];
-                querySnapshot.forEach(doc => {
-                    convidados.push({ id: doc.id, ...doc.data() } as Convidado);
-                });
-                return convidados;
-            })
-            .catch(err => this.handleError(err));
+    obterParticipantePorIdUsuario(idUsuario: number, idEvento: number): Observable<RetornoAPI<ParticipanteDto>> {
+        return this.http.get<RetornoAPI<ParticipanteDto>>(`${this.urlApi}/participantes/evento/${idEvento}/usuario/${idUsuario}`);
     }
+
+    obterParticipantesPorIdEvento(idEvento: number): Observable<RetornoAPI<ParticipanteDto[]>> {
+        return this.http.get<RetornoAPI<ParticipanteDto[]>>(`${this.urlApi}/participantes/evento/${idEvento}`);
+    }
+
+    collection = collection(this.firestore, `convidados`);
 
     cadastro(convidado: Convidado): Promise<any> {
         if (!convidado || !convidado.nome || !convidado.idEvento) {

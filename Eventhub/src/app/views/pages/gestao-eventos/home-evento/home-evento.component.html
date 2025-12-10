@@ -1,6 +1,6 @@
 <div class="home-evento-container">
     <div class="evento-banner">
-        <img [src]="getTipoEventoInfo(evento?.tipoEvento).imagem" alt="Banner do Evento" class="evento-banner-img" />
+        <img [src]="getTipoEventoInfo(evento?.idTipoEvento).imagem" alt="Banner do Evento" class="evento-banner-img" />
         <div class="evento-banner-info">
             <h1 class="evento-titulo">{{ evento?.nome }}</h1>
             <div class="evento-detalhes">
@@ -22,8 +22,9 @@
 
             </div>
             <div class="evento-endereco">
-                <span class="evento-local"><mat-icon>location_on</mat-icon>{{evento?.rua}}, {{evento?.numero}} -
-                    {{evento?.pontoReferencia}}</span>
+                <span class="evento-local"><mat-icon>location_on</mat-icon>{{evento?.endereco?.logradouro}},
+                    {{evento?.endereco?.numero}} -
+                    {{evento?.endereco?.pontoReferencia}}</span>
             </div>
         </div>
     </div>
@@ -37,10 +38,10 @@
     </div>
 
     <div class="home-evento-cards">
-        <a class="evento-card-link" *ngFor="let card of cardsVisiveis()" [routerLink]="card.route(evento?.id || '')">
-            <mat-icon class="evento-card-icon">{{card.icon}}</mat-icon>
-            <div class="evento-card-title">{{card.title}}</div>
-            <div class="evento-card-desc">{{card.desc}}</div>
+        <a class="evento-card-link" *ngFor="let card of cards()" [routerLink]="[card.rota, evento?.id]">
+            <mat-icon class="evento-card-icon">{{card.icone}}</mat-icon>
+            <div class="evento-card-title">{{card.nome}}</div>
+            <div class="evento-card-desc">{{card.descricao}}</div>
         </a>
     </div>
 </div>

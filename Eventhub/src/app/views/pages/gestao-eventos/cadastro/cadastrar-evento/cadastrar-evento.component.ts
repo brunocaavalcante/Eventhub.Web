@@ -16,7 +16,7 @@ import { CadastroOrganizadoresComponent } from '../../organizadores/cadastro-org
 import { BaseComponent } from '../../../../../core/components/base.component';
 import { Participante } from '../../../../../core/models/organizador.model';
 import { UsuarioInfoDTO } from '../../../../../core/models/usuario.model';
-import { CadastroEventoDto, Evento } from '../../../../../core/models/evento.model';
+import { CadastroEventoDto } from '../../../../../core/models/evento.model';
 
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { EventoService } from '../../../../../core/services/evento.service';

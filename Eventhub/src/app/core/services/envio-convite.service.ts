@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
 import { BaseService } from "./base.service";
-import { Convidado } from "../models/convidado.model";
+import { Convidado } from "../models/participante.model";
 
 @Injectable({ providedIn: 'root' })
 export class EnvioConviteService extends BaseService {

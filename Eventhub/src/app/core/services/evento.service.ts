@@ -1,20 +1,23 @@
 import { Injectable } from "@angular/core";
-import { collection, query, where, getDocs, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
+import { collection, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
 import { BaseService } from "./base.service";
-import { CadastroEventoDto, Evento, EventoStatusDto, EventoUserDto } from "../models/evento.model";
+import { CadastroEventoDto, Evento, EventoDto, EventoStatusDto, EventoUserDto } from "../models/evento.model";
 import { Observable } from "rxjs";
 import { RetornoAPI } from "../models/retorno-api.model";
 
 @Injectable({ providedIn: 'root' })
 export class EventoService extends BaseService {
 
-
     cadastro(evento: CadastroEventoDto): Observable<RetornoAPI<CadastroEventoDto[]>> {
         return this.http.post<RetornoAPI<CadastroEventoDto[]>>(`${this.urlApi}/eventos`, evento);
-    }    
+    }
 
     buscarMeusEventos(idUser: number): Observable<RetornoAPI<EventoUserDto[]>> {
         return this.http.get<RetornoAPI<EventoUserDto[]>>(`${this.urlApi}/eventos/usuario/${idUser}`);
+    }
+
+    buscarEventoPorId(idEvento: number): Observable<RetornoAPI<EventoDto>> {
+        return this.http.get<RetornoAPI<EventoDto>>(`${this.urlApi}/eventos/${idEvento}`);
     }
 
     buscarStatusEventos(): Observable<RetornoAPI<EventoStatusDto[]>> {
@@ -38,20 +41,6 @@ export class EventoService extends BaseService {
         }
         const eventoDoc = doc(this.firestore, 'eventos', id);
         return deleteDoc(eventoDoc)
-            .catch(err => this.handleError(err));
-    }
-
-    buscarPorId(id: string): Promise<Evento | null> {
-        const eventosRef = collection(this.firestore, 'eventos');
-        const q = query(eventosRef, where('__name__', '==', id));
-        return getDocs(q)
-            .then(querySnapshot => {
-                if (!querySnapshot.empty) {
-                    const docSnap = querySnapshot.docs[0];
-                    return { id: docSnap.id, ...docSnap.data() } as Evento;
-                }
-                return null;
-            })
             .catch(err => this.handleError(err));
     }
 }

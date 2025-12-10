@@ -11,8 +11,8 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { MatCardModule } from '@angular/material/card';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ConvidadoService } from '../../../../core/services/convidado.service';
-import { Convidado } from '../../../../core/models/convidado.model';
+import { ParticipanteService } from '../../../../core/services/participante.service';
+import { Convidado } from '../../../../core/models/participante.model';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
 
@@ -33,7 +33,7 @@ export class CadastroConvidadoComponent extends BaseComponent implements OnInit,
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly acRouter = inject(ActivatedRoute);
-  private readonly service = inject(ConvidadoService);
+  private readonly service = inject(ParticipanteService);
   private readonly spinner = inject(SpinnerService);
 
   constructor() {

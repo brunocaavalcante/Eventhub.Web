@@ -11,14 +11,13 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EventoService } from '../../../../core/services/evento.service';
 import { ParticipanteService } from '../../../../core/services/participante.service';
-import { PresenteService } from '../../../../core/services/presente.service';
-import { UsuarioService } from '../../../../core/services/usuario.service';
-import { Usuario, UsuarioInfoDTO } from '../../../../core/models/usuario.model';
-import { Evento, EventoStatusDto, EventoUserDto, StatusEvento } from '../../../../core/models/evento.model';
+import { UsuarioInfoDTO } from '../../../../core/models/usuario.model';
+import { EventoStatusDto, EventoUserDto } from '../../../../core/models/evento.model';
 import { getTipoEventoInfo } from '../../../../core/models/tipo-evento.model';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { DateUtils } from '../../../../core/utils/date.utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-meus-eventos',
@@ -61,44 +60,43 @@ export class MeusEventosComponent extends BaseComponent implements OnInit {
     });
   });
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.spinner.show();
-    try {
-      this.obterUsuario();
-      this.obterStatusEvento();
-      this.obterMeusEventos();
-    } finally {
+    this.obterUsuario();
+
+    const usuario = this.usuarioLogado();
+    if (!usuario) {
       this.spinner.hide();
+      return;
     }
-  }
 
-  obterMeusEventos() {
-    this.service.buscarMeusEventos(this.usuarioLogado()!.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (response) => {
-        this.eventosOriginais.set(response.data);
-        response.data.forEach(evento => {
-          if (evento.id) {
-            this.carregarConvidadosConfirmados(evento.id);
+    forkJoin({
+      status: this.service.buscarStatusEventos(),
+      eventos: this.service.buscarMeusEventos(usuario.id)
+    })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.spinner.hide())
+      )
+      .subscribe({
+        next: ({ status, eventos }) => {
+          if (status?.executouComSucesso) {
+            this.status.set(status.data);
           }
-        });
-      },
-      error: (error) => {
-        console.error('Erro ao buscar eventos:', error);
-      }
-    });
-  }
 
-  obterStatusEvento() {
-    this.service.buscarStatusEventos().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (response) => {
-        if (response.executouComSucesso) {
-          this.status.set(response.data);
+          if (eventos?.executouComSucesso && eventos.data) {
+            this.eventosOriginais.set(eventos.data);
+            eventos.data.forEach(evento => {
+              if (evento.id) {
+                this.carregarConvidadosConfirmados(evento.id);
+              }
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao carregar dados iniciais:', error);
         }
-      },
-      error: (error) => {
-        console.error('Erro ao buscar status dos eventos:', error);
-      }
-    });
+      });
   }
 
   carregarConvidadosConfirmados(eventoId: number) {

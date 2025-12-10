@@ -9,8 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../../../../core/components/base.component';
-import { ConvidadoService } from '../../../../core/services/convidado.service';
-import { Convidado } from '../../../../core/models/convidado.model';
+import { ParticipanteService } from '../../../../core/services/participante.service';
+import { Convidado } from '../../../../core/models/participante.model';
 import { EnviarConviteComponent } from '../enviar-convite/enviar-convite.component';
 
 @Component({
@@ -26,7 +26,7 @@ export class ConsultarConvidadosComponent extends BaseComponent implements OnIni
   convidados = signal<Convidado[]>([]);
   eventoId: string = '';
   tabAtiva: 'convidados' | 'convite' = 'convidados';
-  private readonly convidadoService = inject(ConvidadoService);
+  private readonly convidadoService = inject(ParticipanteService);
   private readonly route = inject(ActivatedRoute);
 
   async ngOnInit() {

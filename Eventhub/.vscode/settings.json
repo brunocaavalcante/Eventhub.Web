@@ -1,0 +1,14 @@
+{
+    "jest.jestCommandLine": "node_modules\\.bin\\jest.cmd",
+    "jest.runMode": {
+        "type": "on-demand",
+        "runAllTestsOnStartup": false
+    },
+    "jest.nodeEnv": {
+        "NODE_ENV": "test"
+    },
+    "jest.rootPath": ".",
+    "jest.debugMode": true,
+    "jest.pathToJest": "node_modules/jest/bin/jest.js",
+    "jest.pathToConfig": "jest.config.js"
+}

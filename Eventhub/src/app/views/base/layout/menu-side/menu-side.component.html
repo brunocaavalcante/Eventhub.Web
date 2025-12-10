@@ -2,7 +2,7 @@
 	<div class="side-backdrop" (click)="fechar()"></div>
 	<aside class="side-menu">
 		<div class="side-header">
-			<div class="side-avatar">
+			<div *ngIf="usuario()" class="side-avatar">
 				<img *ngIf="usuario()?.foto; else defaultAvatar" [src]="usuario()?.foto" alt="Avatar" />
 				<ng-template #defaultAvatar>
 					<mat-icon>account_circle</mat-icon>
