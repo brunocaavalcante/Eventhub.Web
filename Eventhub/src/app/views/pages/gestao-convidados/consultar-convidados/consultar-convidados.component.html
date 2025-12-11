@@ -26,12 +26,12 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="convidados-select">
                     <mat-label>Filtrar por status</mat-label>
-                    <mat-select [(ngModel)]="filtroStatus">
+                    <mat-select [(ngModel)]="filtroStatusModel">
                         <mat-option value="">Todos</mat-option>
-                        <mat-option value="confirmado">Confirmados</mat-option>
-                        <mat-option value="pendente">Pendentes</mat-option>
-                        <mat-option value="ausente">Ausentes</mat-option>
-                        <mat-option value="pendente-envio">Pendente envio convite</mat-option>
+                        <mat-option value="Confirmado">Confirmados</mat-option>
+                        <mat-option value="Pendente">Pendentes</mat-option>
+                        <mat-option value="Ausente">Ausentes</mat-option>
+                        <mat-option value="PendenteEnvio">Pendente envio convite</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <button mat-flat-button color="accent" class="novo-convidado-btn"
@@ -42,8 +42,7 @@
         </div>
 
         <div class="convidados-lista">
-            <div class="convidados-col"
-                *ngIf="(!filtroStatus || filtroStatus === 'confirmado') && confirmados().length > 0">
+            <div class="convidados-col">
                 <div class="convidados-col-title confirmados">
                     <mat-icon>check_circle</mat-icon> Confirmados
                 </div>
@@ -56,16 +55,16 @@
                     </ng-template>
                     <div class="convidado-info">
                         <div class="convidado-nome">{{convidado.nome}}</div>
-                        <div class="convidado-extra" *ngIf="convidado.acompanhante">+{{convidado.acompanhante}}
-                            acompanhante{{convidado.acompanhante > 1 ? 's' : ''}}</div>
+                        <div class="convidado-extra" *ngIf="convidado.quantidadeAcompanhantes">
+                            +{{convidado.quantidadeAcompanhantes}}
+                            acompanhante{{convidado.quantidadeAcompanhantes > 1 ? 's' : ''}}</div>
                     </div>
                     <button mat-icon-button>
                         <mat-icon>more_vert</mat-icon>
                     </button>
                 </div>
             </div>
-            <div class="convidados-col"
-                *ngIf="(!filtroStatus || filtroStatus === 'pendente') && pendentes().length > 0">
+            <div class="convidados-col">
                 <div class="convidados-col-title pendentes">
                     <mat-icon>schedule</mat-icon> Pendentes
                 </div>
@@ -85,7 +84,7 @@
                     </button>
                 </div>
             </div>
-            <div class="convidados-col" *ngIf="(!filtroStatus || filtroStatus === 'ausente') && ausentes().length > 0">
+            <div class="convidados-col">
                 <div class="convidados-col-title ausentes">
                     <mat-icon>cancel</mat-icon> Ausentes
                 </div>
@@ -104,8 +103,7 @@
                     </button>
                 </div>
             </div>
-            <div class="convidados-col"
-                *ngIf="(!filtroStatus || filtroStatus === 'pendente-envio') && pendenteEnvio().length > 0">
+            <div class="convidados-col">
                 <div class="convidados-col-title pendente-envio">
                     <mat-icon>mail</mat-icon> Pendente envio convite
                 </div>
@@ -126,7 +124,7 @@
                 </div>
             </div>
             <!-- Mensagem quando nenhuma lista tem resultados -->
-            <div *ngIf="confirmados().length === 0 && pendentes().length === 0 && ausentes().length === 0"
+            <div *ngIf="confirmados().length === 0 && pendentes().length === 0 && ausentes().length === 0 && pendenteEnvio().length === 0"
                 class="nenhum-resultado">
                 <div class="nenhum-resultado-card">
                     <div class="nenhum-resultado-icone">

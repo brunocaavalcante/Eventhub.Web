@@ -14,6 +14,22 @@ export interface Convidado {
     foto?: string;
 }
 
+export interface CadastroConvidadoDto {
+    idEvento: number;
+    nome: string;
+    email?: string;
+    telefone?: string;
+}
+
+export interface ListarConvidadosDto {
+    nome: string;
+    email: string;
+    telefone: string;
+    quantidadeAcompanhantes: number;
+    foto: string;
+    statusConfirmacao: string;
+}
+
 export interface ParticipanteDto {
     id: number;
     idEvento: number;

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { collection, addDoc, query, where, getDocs, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
+import { collection, query, where, getDocs, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
 import { BaseService } from "./base.service";
-import { Convidado, ParticipanteDto } from "../models/participante.model";
+import { CadastroConvidadoDto, Convidado, ListarConvidadosDto, ParticipanteDto } from "../models/participante.model";
 import { map, Observable } from "rxjs";
 import { RetornoAPI } from "../models/retorno-api.model";
 import { EnvioConviteDTO } from "../models/envio.convite.model";
@@ -30,22 +30,15 @@ export class ParticipanteService extends BaseService {
         return this.http.get<RetornoAPI<ParticipanteDto>>(`${this.urlApi}/participantes/evento/${idEvento}/usuario/${idUsuario}`);
     }
 
-    obterParticipantesPorIdEvento(idEvento: number): Observable<RetornoAPI<ParticipanteDto[]>> {
-        return this.http.get<RetornoAPI<ParticipanteDto[]>>(`${this.urlApi}/participantes/evento/${idEvento}`);
+    obterConvidadosPorIdEvento(idEvento: number): Observable<RetornoAPI<ListarConvidadosDto[]>> {
+        return this.http.get<RetornoAPI<ListarConvidadosDto[]>>(`${this.urlApi}/participantes/evento/${idEvento}/convidados`);
+    }
+
+    cadastroConvidado(convidado: CadastroConvidadoDto): Observable<RetornoAPI<ParticipanteDto>> {
+        return this.http.post<RetornoAPI<ParticipanteDto>>(`${this.urlApi}/participantes/convidado`, convidado);
     }
 
     collection = collection(this.firestore, `convidados`);
-
-    cadastro(convidado: Convidado): Promise<any> {
-        if (!convidado || !convidado.nome || !convidado.idEvento) {
-            return Promise.reject(new Error('Nome e idEvento são obrigatórios'));
-        }
-        return addDoc(this.collection, convidado)
-            .then(docRef => {
-                return { id: docRef.id, ...convidado };
-            })
-            .catch(err => this.handleError(err));
-    }
 
     atualizar(id: string, convidado: Partial<Convidado>): Promise<void> {
         if (!id) {

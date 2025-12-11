@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, signal, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, inject, OnInit, signal, ViewChildren } from '@angular/core';
 import { ModalConfirmComponent } from '../../../../core/components/modal/modal-confirm/modal-confirm.component';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControlName, ValidationErrors, AbstractControl } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControlName } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,9 +12,10 @@ import { MatCardModule } from '@angular/material/card';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ParticipanteService } from '../../../../core/services/participante.service';
-import { Convidado } from '../../../../core/models/participante.model';
+import { CadastroConvidadoDto } from '../../../../core/models/participante.model';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -35,6 +36,7 @@ export class CadastroConvidadoComponent extends BaseComponent implements OnInit,
   private readonly acRouter = inject(ActivatedRoute);
   private readonly service = inject(ParticipanteService);
   private readonly spinner = inject(SpinnerService);
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     super();
@@ -86,29 +88,33 @@ export class CadastroConvidadoComponent extends BaseComponent implements OnInit,
     }
     this.spinner.show();
 
-    const model: Convidado = {
+    const model: CadastroConvidadoDto = {
       nome: this.form.value.nome,
       email: this.form.value.email,
       telefone: this.form.value.telefone,
-      idEvento: this.idEvento || undefined
+      idEvento: Number(this.idEvento ?? 0)
     };
 
-    this.service.cadastro(model).then(() => {
-      this.spinner.hide();
-      this.dialog.open(ModalSucessComponent, {
-        data: {
-          title: 'Cadastro Realizado',
-          message: 'O convidado foi adicionado com sucesso.',
-          okLabel: 'Fechar'
+    this.service.cadastroConvidado(model).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (result) => {
+        if (result.executouComSucesso && result.data) {
+          this.dialog.open(ModalSucessComponent, {
+            data: {
+              title: 'Cadastro Realizado',
+              message: 'O convidado foi adicionado com sucesso.',
+              okLabel: 'Fechar'
+            }
+          }).afterClosed().subscribe(() => {
+            this.router.navigate(['/convidados', this.idEvento]);
+          });
         }
-      }).afterClosed().subscribe(() => {
-        this.router.navigate(['/convidados/consultar', this.idEvento]);
-      });
-    })
-      .catch((err) => {
-        console.error(err);
         this.spinner.hide();
-      });
+      },
+      error: (err) => {
+        console.error('Erro ao cadastrar convidado:', err);
+        this.spinner.hide();
+      }
+    });
   }
 
   abrirModalCancelar() {
@@ -121,7 +127,7 @@ export class CadastroConvidadoComponent extends BaseComponent implements OnInit,
       }
     }).afterClosed().subscribe((confirmado: boolean) => {
       if (confirmado) {
-        this.router.navigate(['/convidados/consultar', this.idEvento]);
+        this.router.navigate(['/convidados', this.idEvento]);
       }
     });
   }
