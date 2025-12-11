@@ -10,12 +10,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { ConvitePreviewComponent } from '../convite-preview/convite-preview.component';
+import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 
 @Component({
   selector: 'app-enviar-convite',
   standalone: true,
-  imports: [MatInputModule, MatFormFieldModule, MatCardModule, MatIconModule, MatCheckboxModule, MatSelectModule, ReactiveFormsModule, CommonModule, FormsModule, MatButtonModule, ConvitePreviewComponent],
+  imports: [MatInputModule, MatFormFieldModule, MatCardModule, MatIconModule, MatCheckboxModule, MatSelectModule, ReactiveFormsModule, CommonModule, FormsModule, MatButtonModule, MatBottomSheetModule, ConvitePreviewComponent],
   templateUrl: './enviar-convite.component.html',
   styleUrls: ['./enviar-convite.component.scss']
 })
@@ -41,7 +42,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
   name1Label = 'Nome do Noivo';
   name2Label = 'Nome da Noiva';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private bottomSheet: MatBottomSheet) {
     super();
     this.validationMessages = {
       name1: {
@@ -172,5 +173,13 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
   confirmSend() {
     // Lógica de envio real
     this.showSendDialog = false;
+  }
+
+  openPreviewSheet() {
+    if (!this.form) return;
+    this.bottomSheet.open(ConvitePreviewComponent, {
+      data: this.form.value,
+      panelClass: 'convite-preview-sheet'
+    });
   }
 }

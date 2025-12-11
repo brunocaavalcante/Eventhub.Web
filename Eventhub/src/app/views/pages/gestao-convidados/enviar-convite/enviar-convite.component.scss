@@ -258,6 +258,20 @@
         margin-bottom: 18px;
     }
 }
+.enviar-convite-preview-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 5;
+    box-shadow: $sombra-card-leve;
+    display: none;
+    background-color: $cor-primaria;
+
+    mat-icon {
+        color: $cor-branco;
+    }
+}
+
 
 @media (max-width: $break-tablet) {
     .enviar-convite-grid {
@@ -290,5 +304,13 @@
 
     .enviar-convite-preview {
         padding: 14px 8px;
+    }
+
+    .enviar-convite-preview {
+        display: none;
+    }
+
+    .enviar-convite-preview-fab {
+        display: flex;
     }
 }
