@@ -1,4 +1,5 @@
 export interface Imagem {
+    id?: number;
     nomeArquivo: string;
     base64: string;
     tipoImagem: TipoImagemEvento;

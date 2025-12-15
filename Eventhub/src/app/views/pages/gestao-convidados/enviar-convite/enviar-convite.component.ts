@@ -16,14 +16,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EventoDto, TipoEvento } from '../../../../core/models/evento.model';
 import { TipoEventoService } from '../../../../core/services/tipo-evento.service';
 import { EnvioConviteService } from '../../../../core/services/envio-convite.service';
-import { CadastroConviteDTO, ConviteDTO } from '../../../../core/models/envio.convite.model';
+import { CadastroConviteDTO, ConviteDTO, UpdateConviteDTO } from '../../../../core/models/envio.convite.model';
 import { TipoImagemEvento } from '../../../../core/models/imagem.model';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DateUtils } from '../../../../core/utils/date.utils';
 import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
-
 
 @Component({
   selector: 'app-enviar-convite',
@@ -172,7 +171,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
 
     if (!evento) return;
 
-    const conviteBackground = convite?.foto ? Base64ImageUtil.resolveImageSource(convite.foto) : null;
+    const conviteBackground = convite?.foto ? Base64ImageUtil.resolveImageSource(convite.foto.base64) : null;
     if (conviteBackground) {
       this.addBackgroundOption(conviteBackground);
     }
@@ -338,26 +337,39 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       dataInicio: dataInicio.toISOString(),
       dataFim: dataFim.toISOString(),
       foto: {
+        id: this.convite()?.foto?.id ?? 0,
         nomeArquivo: 'convite-evento.png',
         base64: backgroundBase64,
         tipoImagem: TipoImagemEvento.Convite
       }
     };
 
-    this.conviteService.criarConvite(conviteData).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    const conviteExistente = this.convite();
+    const isAtualizacao = !!conviteExistente && conviteExistente.id > 0;
+
+    const request$ = isAtualizacao
+      ? this.conviteService.atualizarConvite(this.mapToUpdateDto(conviteExistente!.id, conviteData))
+      : this.conviteService.criarConvite(conviteData);
+
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
         if (result.executouComSucesso) {
+          if (result.data) {
+            this.convite.set(result.data);
+          }
           this.dialog.open(ModalSucessComponent, {
             data: {
-              title: 'Cadastro Realizado',
-              message: 'O template do convite foi criado com sucesso.',
+              title: isAtualizacao ? 'Atualização Realizada' : 'Cadastro Realizado',
+              message: isAtualizacao
+                ? 'O template do convite foi atualizado com sucesso.'
+                : 'O template do convite foi criado com sucesso.',
               okLabel: 'Fechar'
             }
           });
         }
       },
       error: (error) => {
-        console.error('Erro ao salvar convite:', error);
+        console.error('Erro ao salvar/atualizar convite:', error);
       }
     });
   }
@@ -381,6 +393,19 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       data: this.previewData,
       panelClass: 'convite-preview-sheet'
     });
+  }
+
+  private mapToUpdateDto(conviteId: number, data: CadastroConviteDTO): UpdateConviteDTO {
+    return {
+      id: conviteId,
+      nome: data.nome,
+      nome2: data.nome2,
+      mensagem: data.mensagem,
+      temaConvite: data.temaConvite,
+      dataInicio: data.dataInicio,
+      dataFim: data.dataFim,
+      foto: data.foto
+    };
   }
 
   private formatDateDisplay(value: Date | string | null | undefined): string {

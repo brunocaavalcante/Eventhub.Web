@@ -22,6 +22,17 @@ export interface CadastroConviteDTO {
     foto: Imagem;
 }
 
+export interface UpdateConviteDTO {
+    id: number;
+    nome: string;
+    nome2: string;
+    mensagem: string;
+    temaConvite: string;
+    dataInicio: Date | string;
+    dataFim: Date | string;
+    foto: Imagem;
+}
+
 export interface ConviteDTO {
     id: number;
     idEvento: number;
@@ -29,5 +40,5 @@ export interface ConviteDTO {
     nome2: string;
     mensagem: string;
     temaConvite: string;
-    foto: string;
+    foto: Imagem;
 }

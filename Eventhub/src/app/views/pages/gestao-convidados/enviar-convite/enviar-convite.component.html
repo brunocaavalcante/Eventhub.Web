@@ -74,7 +74,7 @@
 
                     <mat-form-field appearance="outline" class="enviar-convite-field">
                         <mat-label>Nome do Local</mat-label>
-                        <input matInput formControlName="venueName" />
+                        <input matInput formControlName="venueName" placeholder="ex: Rancho Arara Azul" />
                         <mat-error *ngIf="displayMessage['venueName']">
                             <mat-icon>error</mat-icon> {{displayMessage['venueName']}}
                         </mat-error>
