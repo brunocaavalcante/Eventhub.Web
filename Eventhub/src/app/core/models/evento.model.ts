@@ -93,4 +93,5 @@ export interface EnderecoEventoDto {
     cidade: string;
     numero: string;
     pontoReferencia?: string;
+    nomeLocal?: string;
 }

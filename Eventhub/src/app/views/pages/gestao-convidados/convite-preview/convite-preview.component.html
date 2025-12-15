@@ -1,5 +1,5 @@
 <div class="convite-preview-wrapper">
-	<div class="convite-preview-card" [ngStyle]="{ 'background-image': 'url(' + data?.backgroundImage + ')' }">
+	<div class="convite-preview-card" [ngStyle]="{ 'background-image': getBackgroundStyle() }">
 		<div class="convite-preview-overlay"></div>
 		<div class="convite-preview-content">
 			<div class="convite-preview-top-bar"></div>
@@ -16,6 +16,9 @@
 			</div>
 			<div class="convite-preview-data">{{ data?.eventDate }}</div>
 			<div class="convite-preview-hora">{{ data?.eventTime ? 'às ' + data?.eventTime : '' }}</div>
+			<div class="convite-preview-separator">até</div>
+			<div class="convite-preview-data">{{ data?.eventEndDate }}</div>
+			<div class="convite-preview-hora">{{ data?.eventEndTime ? 'às ' + data?.eventEndTime : '' }}</div>
 			<div class="convite-preview-local-card">
 				<div class="convite-preview-local-titulo">LOCAL</div>
 				<div class="convite-preview-local-nome">{{ data?.venueName }}</div>

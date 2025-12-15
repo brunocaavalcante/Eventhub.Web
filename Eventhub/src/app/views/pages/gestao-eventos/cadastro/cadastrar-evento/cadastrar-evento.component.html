@@ -27,7 +27,7 @@
                 
                 <mat-form-field appearance="outline" class="cadastro-evento-field w-100">
                     <mat-label>Quantidade de Participantes</mat-label>
-                    <input matInput type="number" min="1" max="9999" placeholder="Ex: 50" formControlName="quantidadeParticipantes" />
+                    <input matInput type="text" mask="09999999" min="1" max="9999" placeholder="Ex: 50" formControlName="quantidadeParticipantes" />
                     <mat-error *ngIf="displayMessage['quantidadeParticipantes']">
                         <mat-icon>error</mat-icon> {{displayMessage['quantidadeParticipantes']}}
                     </mat-error>
@@ -47,45 +47,44 @@
                     <span class="cadastro-evento-section-number">2</span>
                     <span>Escolher Data e Local</span>
                 </div><br>
-                <div class="cadastro-evento-tipo-data">
-                    <span>Duração do Evento:</span><br>
-                    <mat-radio-group formControlName="tipoData" class="cadastro-evento-radio-group">
-                        <mat-radio-button value="unica" color="primary">Data Única</mat-radio-button>
-                        <mat-radio-button value="periodo" color="primary">Período</mat-radio-button>
-                    </mat-radio-group>
+                <div class="cadastro-evento-row">
+                    <mat-form-field appearance="outline" class="cadastro-evento-field">
+                        <mat-label>Data de Início</mat-label>
+                        <input matInput [matDatepicker]="pickerInicio" placeholder="dd/MM/yyyy" formControlName="dataInicio"
+                            (blur)="validarFormulario(form)" />
+                        <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerInicio></mat-datepicker>
+                        <mat-error *ngIf="displayMessage['dataInicio']">
+                            <mat-icon>error</mat-icon> {{displayMessage['dataInicio']}}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="cadastro-evento-field">
+                        <mat-label>Data de Término</mat-label>
+                        <input matInput [matDatepicker]="pickerFim" placeholder="dd/MM/yyyy" formControlName="dataFim"
+                            (blur)="validarFormulario(form)" />
+                        <mat-datepicker-toggle matSuffix [for]="pickerFim"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerFim></mat-datepicker>
+                        <mat-error *ngIf="displayMessage['dataFim']">
+                            <mat-icon>error</mat-icon> {{displayMessage['dataFim']}}
+                        </mat-error>
+                    </mat-form-field>
                 </div>
 
                 <div class="cadastro-evento-row">
-                    <!-- Data Única -->
-                    <mat-form-field appearance="outline" class="cadastro-evento-field"
-                        *ngIf="form.get('step2.tipoData')?.value === 'unica'">
-                        <mat-label>Data do Evento</mat-label>
-                        <input matInput [matDatepicker]="picker" placeholder="dd/MM/yyyy" formControlName="data"
-                            (blur)="validarFormulario(form)" name="dataUnica" />
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                        <mat-error *ngIf="displayMessage['data']">
-                            <mat-icon>error</mat-icon> {{displayMessage['data']}}
+                    <mat-form-field appearance="outline" class="cadastro-evento-field">
+                        <mat-label>Horário de Início</mat-label>
+                        <input matInput type="time" formControlName="horaInicio"
+                            (blur)="validarFormulario(form)" />
+                        <mat-error *ngIf="displayMessage['horaInicio']">
+                            <mat-icon>error</mat-icon> {{displayMessage['horaInicio']}}
                         </mat-error>
                     </mat-form-field>
-
-                    <!-- Período (Range) -->
-                    <mat-form-field appearance="outline" class="cadastro-evento-field"
-                        *ngIf="form.get('step2.tipoData')?.value === 'periodo'">
-                        <mat-label>Período do Evento</mat-label>
-                        <mat-date-range-input [rangePicker]="rangePicker" formGroupName="periodo">
-                            <input matStartDate placeholder="Data Inicial" formControlName="start" name="dataInicio"
-                                (blur)="validarFormulario(form)" />
-                            <input matEndDate placeholder="Data Final" formControlName="end" name="dataFim"
-                                (blur)="validarFormulario(form)" />
-                        </mat-date-range-input>
-                        <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
-                        <mat-date-range-picker #rangePicker></mat-date-range-picker>
-                        <mat-error *ngIf="displayMessage['start']">
-                            <mat-icon>error</mat-icon> {{displayMessage['start']}}
-                        </mat-error>
-                        <mat-error *ngIf="displayMessage['end']">
-                            <mat-icon>error</mat-icon> {{displayMessage['end']}}
+                    <mat-form-field appearance="outline" class="cadastro-evento-field">
+                        <mat-label>Horário de Término</mat-label>
+                        <input matInput type="time" formControlName="horaFim"
+                            (blur)="validarFormulario(form)" />
+                        <mat-error *ngIf="displayMessage['horaFim']">
+                            <mat-icon>error</mat-icon> {{displayMessage['horaFim']}}
                         </mat-error>
                     </mat-form-field>
                 </div>
@@ -141,7 +140,7 @@
                         <mat-icon>cloud_upload</mat-icon>
                         <span>Arraste e solte imagens do local aqui ou clique para selecionar</span>
                     </div>
-                    <div class="cadastro-evento-preview-col" *ngIf="imagens?.length">
+                    <div class="cadastro-evento-preview-col" *ngIf="imagens.length">
                         <div class="cadastro-evento-preview-list">
                             <div class="cadastro-evento-preview-img-wrapper" *ngFor="let img of imagens; let i = index">
                                 <img [src]="img" alt="Prévia imagem" class="cadastro-evento-preview-img" />

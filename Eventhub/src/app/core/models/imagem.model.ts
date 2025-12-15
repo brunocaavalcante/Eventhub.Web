@@ -8,5 +8,6 @@ export enum TipoImagemEvento {
   Local = 'local',
   Profile = 'profile',
   Galeria = 'galeria',
-  Capa = 'capa'
+  Capa = 'capa',
+  Convite = 'convite'
 }

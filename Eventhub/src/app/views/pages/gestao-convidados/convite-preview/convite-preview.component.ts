@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, Input, Optional } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 
 @Component({
   selector: 'app-convite-preview',
@@ -26,6 +27,11 @@ export class ConvitePreviewComponent {
   closeSheet() {
     this.bottomSheetRef?.dismiss();
   }
+
+  getBackgroundStyle(): string {
+    const source = Base64ImageUtil.resolveImageSource(this.data?.backgroundImage);
+    return source ? `url(${source})` : 'none';
+  }
 }
 
 export interface ConvitePreviewData {
@@ -34,6 +40,8 @@ export interface ConvitePreviewData {
   name2?: string;
   eventDate?: string;
   eventTime?: string;
+  eventEndDate?: string;
+  eventEndTime?: string;
   venueName?: string;
   venueAddress?: string;
   message?: string;

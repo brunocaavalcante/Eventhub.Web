@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, inject, OnInit, signal, ViewChildren } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { MatInputModule } from '@angular/material/input';
@@ -9,14 +9,27 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { ConvitePreviewComponent } from '../convite-preview/convite-preview.component';
+import { ConvitePreviewComponent, ConvitePreviewData } from '../convite-preview/convite-preview.component';
 import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { EventoService } from '../../../../core/services/evento.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EventoDto, TipoEvento } from '../../../../core/models/evento.model';
+import { TipoEventoService } from '../../../../core/services/tipo-evento.service';
+import { EnvioConviteService } from '../../../../core/services/envio-convite.service';
+import { CadastroConviteDTO, ConviteDTO } from '../../../../core/models/envio.convite.model';
+import { TipoImagemEvento } from '../../../../core/models/imagem.model';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { DateUtils } from '../../../../core/utils/date.utils';
+import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
+import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
 
 
 @Component({
   selector: 'app-enviar-convite',
   standalone: true,
-  imports: [MatInputModule, MatFormFieldModule, MatCardModule, MatIconModule, MatCheckboxModule, MatSelectModule, ReactiveFormsModule, CommonModule, FormsModule, MatButtonModule, MatBottomSheetModule, ConvitePreviewComponent],
+  imports: [MatInputModule, MatFormFieldModule,
+    MatCardModule, MatIconModule, MatCheckboxModule, MatSelectModule, ReactiveFormsModule, CommonModule, FormsModule, MatButtonModule, MatBottomSheetModule, ConvitePreviewComponent, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './enviar-convite.component.html',
   styleUrls: ['./enviar-convite.component.scss']
 })
@@ -42,6 +55,15 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
   name1Label = 'Nome do Noivo';
   name2Label = 'Nome da Noiva';
 
+  private readonly eventoService = inject(EventoService);
+  private readonly tipoEventoService = inject(TipoEventoService);
+  private readonly conviteService = inject(EnvioConviteService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  evento = signal<EventoDto | null>(null);
+  convite = signal<ConviteDTO | null>(null);
+  tipoEventos = signal<TipoEvento[] | null>(null);
+
   constructor(private fb: FormBuilder, private bottomSheet: MatBottomSheet) {
     super();
     this.validationMessages = {
@@ -54,6 +76,12 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       eventTime: {
         required: 'Informe o horário do evento',
       },
+      eventEndDate: {
+        required: 'Informe a data de término',
+      },
+      eventEndTime: {
+        required: 'Informe o horário de término',
+      },
       venueName: {
         required: 'Informe o local do evento',
       },
@@ -65,13 +93,15 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
     this.configurarMensagensValidacaoBase(this.validationMessages);
 
     this.form = this.fb.group({
-      eventType: ['wedding'],
-      name1: ['João', Validators.required],
-      name2: ['Maria'],
-      eventDate: ['15 de Junho de 2025', Validators.required],
-      eventTime: ['16:00', Validators.required],
-      venueName: ['Jardim dos Sonhos', Validators.required],
-      venueAddress: ['Rua das Flores, 123 - São Paulo, SP', Validators.required],
+      eventType: [{ value: '', disabled: true }],
+      name1: ['', Validators.required],
+      name2: [''],
+      eventDate: [null, Validators.required],
+      eventTime: ['', Validators.required],
+      eventEndDate: [null, Validators.required],
+      eventEndTime: ['', Validators.required],
+      venueName: ['', Validators.required],
+      venueAddress: ['', Validators.required],
       message: ['Com imenso prazer, convidamos você e família para celebrar conosco este momento especial. Sua presença é fundamental para tornar este dia ainda mais memorável.'],
       themeColor: ['rose'],
       fontStyle: ['elegant'],
@@ -79,10 +109,90 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.obterTipoEventos();
+    this.obterEventoPorId(1);
+  }
 
   ngAfterViewInit(): void {
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
+  }
+
+  obterEventoPorId(id: number) {
+    this.eventoService.buscarEventoPorId(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (result) => {
+        if (result.executouComSucesso && result.data) {
+          this.evento.set(result.data);
+          this.obterConvitePorEvento(id);
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao carregar evento:', error);
+      }
+    });
+  }
+
+  obterConvitePorEvento(idEvento: number) {
+    this.conviteService.buscarConvitePorEvento(idEvento).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (result) => {
+        if (result.executouComSucesso && result.data) {
+          this.convite.set(result.data);
+          this.setForm();
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao carregar convite:', error);
+      }
+    });
+  }
+
+  obterTipoEventos() {
+    this.tipoEventoService.obterTiposEvento().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (result) => {
+        if (result.executouComSucesso && Array.isArray(result.data)) {
+          this.tipoEventos.set(result.data);
+          const evento = this.evento();
+          if (evento) {
+            const tipoEvento = result.data.find(t => t.id === evento.idTipoEvento);
+            if (tipoEvento) {
+              this.form.patchValue({ eventType: tipoEvento.id });
+            }
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao carregar tipos de evento:', error);
+      }
+    });
+  }
+
+  setForm() {
+    const evento = this.evento();
+    const convite = this.convite();
+
+    if (!evento) return;
+
+    const conviteBackground = convite?.foto ? Base64ImageUtil.resolveImageSource(convite.foto) : null;
+    if (conviteBackground) {
+      this.addBackgroundOption(conviteBackground);
+    }
+
+    const backgroundImage = conviteBackground || this.backgrounds[0];
+
+    this.form.patchValue({
+      name1: convite?.nome || '',
+      name2: convite?.nome2 || '',
+      message: convite?.mensagem || '',
+      themeColor: convite?.temaConvite || 'rose',
+      backgroundImage,
+      eventType: evento.idTipoEvento,
+      eventDate: evento.dataInicio ? new Date(evento.dataInicio) : null,
+      eventTime: DateUtils.formatarHora(evento.dataInicio),
+      eventEndDate: evento.dataFim ? new Date(evento.dataFim) : null,
+      eventEndTime: DateUtils.formatarHora(evento.dataFim),
+      venueAddress: evento.endereco ? `${evento.endereco.logradouro}, ${evento.endereco.numero} ${evento.endereco?.pontoReferencia} - ${evento.endereco.cidade}` : '',
+      venueName: evento.endereco?.nomeLocal || ''
+    });
   }
 
   onEventTypeChange(type: string) {
@@ -139,15 +249,33 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
     this.form.patchValue({ backgroundImage: image });
   }
 
-  uploadImage(event: any) {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        this.form.patchValue({ backgroundImage: reader.result as string });
-      };
-      reader.readAsDataURL(file);
+  private addBackgroundOption(imageSrc: string) {
+    if (!imageSrc) {
+      return;
     }
+    if (this.backgrounds.includes(imageSrc)) {
+      return;
+    }
+    this.backgrounds = [...this.backgrounds, imageSrc];
+  }
+
+  uploadImage(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const dataUrl = reader.result as string;
+      this.addBackgroundOption(dataUrl);
+      this.form.patchValue({ backgroundImage: dataUrl });
+      if (input) {
+        input.value = '';
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   copyLink() {
@@ -158,8 +286,80 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
     return this.guests.filter(g => g.selected).length;
   }
 
-  saveTemplate() {
-    // Lógica de salvar template
+  get previewData(): ConvitePreviewData {
+    if (!this.form) {
+      return {} as ConvitePreviewData;
+    }
+
+    const raw = this.form.getRawValue();
+    return {
+      eventType: raw.eventType,
+      name1: raw.name1,
+      name2: raw.name2,
+      eventDate: this.formatDateDisplay(raw.eventDate),
+      eventTime: raw.eventTime || '',
+      eventEndDate: this.formatDateDisplay(raw.eventEndDate),
+      eventEndTime: raw.eventEndTime || '',
+      venueName: raw.venueName,
+      venueAddress: raw.venueAddress,
+      message: raw.message,
+      themeColor: raw.themeColor,
+      fontStyle: raw.fontStyle,
+      backgroundImage: raw.backgroundImage,
+      inviteText: raw.inviteText,
+    };
+  }
+
+  async saveTemplate(): Promise<void> {
+    if (this.form.invalid) return;
+
+    const evento = this.evento();
+    if (!evento) {
+      return;
+    }
+
+    const raw = this.form.getRawValue();
+    const dataInicio = DateUtils.combineDateAndTime(raw.eventDate, raw.eventTime);
+    const dataFim = DateUtils.combineDateAndTime(raw.eventEndDate, raw.eventEndTime);
+
+    if (!dataInicio || !dataFim) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const backgroundBase64 = await Base64ImageUtil.getBackgroundBase64(raw.backgroundImage);
+
+    const conviteData: CadastroConviteDTO = {
+      idEvento: evento.id,
+      nome: raw.name1,
+      nome2: raw.name2,
+      mensagem: raw.message,
+      temaConvite: `${raw.themeColor ?? ''}`,
+      dataInicio: dataInicio.toISOString(),
+      dataFim: dataFim.toISOString(),
+      foto: {
+        nomeArquivo: 'convite-evento.png',
+        base64: backgroundBase64,
+        tipoImagem: TipoImagemEvento.Convite
+      }
+    };
+
+    this.conviteService.criarConvite(conviteData).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (result) => {
+        if (result.executouComSucesso) {
+          this.dialog.open(ModalSucessComponent, {
+            data: {
+              title: 'Cadastro Realizado',
+              message: 'O template do convite foi criado com sucesso.',
+              okLabel: 'Fechar'
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao salvar convite:', error);
+      }
+    });
   }
 
   openSendDialog() {
@@ -178,8 +378,17 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
   openPreviewSheet() {
     if (!this.form) return;
     this.bottomSheet.open(ConvitePreviewComponent, {
-      data: this.form.value,
+      data: this.previewData,
       panelClass: 'convite-preview-sheet'
     });
+  }
+
+  private formatDateDisplay(value: Date | string | null | undefined): string {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
   }
 }

@@ -40,4 +40,16 @@ export class DateUtils {
         if (!d) return '';
         return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     }
+
+    static combineDateAndTime(date: Date | string | null, time: string | null): Date | null {
+        if (!date) return null;
+        const result = new Date(date);
+        if (time) {
+            const [hours, minutes] = time.split(':');
+            result.setHours(Number(hours) || 0, Number(minutes) || 0, 0, 0);
+        } else {
+            result.setHours(0, 0, 0, 0);
+        }
+        return result;
+    }
 }

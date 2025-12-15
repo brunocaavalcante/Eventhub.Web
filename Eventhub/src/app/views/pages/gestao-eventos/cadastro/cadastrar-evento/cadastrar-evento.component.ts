@@ -8,7 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
@@ -28,6 +27,7 @@ import { Observable } from 'rxjs';
 import { TipoImagemEvento } from '../../../../../core/models/imagem.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
+import { DateUtils } from '../../../../../core/utils/date.utils';
 
 @Component({
   selector: 'app-cadastrar-evento',
@@ -42,7 +42,6 @@ import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
     MatProgressBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatRadioModule,
     FormsModule,
     ReactiveFormsModule,
     NgxMaskDirective,
@@ -84,17 +83,17 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
         max: 'O valor máximo é 9999',
         pattern: 'Informe um valor numérico válido'
       },
-      tipoData: {
-        required: 'Selecione o tipo de data'
-      },
-      data: {
-        required: 'Informe a data do evento'
-      },
-      start: {
+      dataInicio: {
         required: 'Informe a data de início do evento'
       },
-      end: {
+      horaInicio: {
+        required: 'Informe o horário de início do evento'
+      },
+      dataFim: {
         required: 'Informe a data de término do evento'
+      },
+      horaFim: {
+        required: 'Informe o horário de término do evento'
       },
       cep: {
         pattern: 'CEP inválido'
@@ -126,12 +125,10 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
         quantidadeParticipantes: [null, [Validators.required, Validators.min(1), Validators.max(9999), Validators.pattern('^[0-9]+$')]]
       }),
       step2: this.fb.group({
-        tipoData: ['unica', Validators.required],
-        data: [null, [Validators.required]],
-        periodo: this.fb.group({
-          start: [null],
-          end: [null]
-        }),
+        dataInicio: [null, [Validators.required]],
+        horaInicio: ['', [Validators.required]],
+        dataFim: [null, [Validators.required]],
+        horaFim: ['', [Validators.required]],
         cep: ['', []],
         rua: ['', [Validators.required]],
         cidade: ['', [Validators.required]],
@@ -140,35 +137,7 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
       }),
     });
 
-    this.configuraValidacaoDatas();
     this.usuarioLogado = await this.userService.obterUsuarioLogado();
-  }
-
-  configuraValidacaoDatas() {
-    const step2 = this.form.get('step2') as FormGroup;
-    const tipoDataCtrl = step2.get('tipoData');
-    const dataCtrl = step2.get('data');
-    const start = step2.get('periodo.start');
-    const end = step2.get('periodo.end');
-
-    tipoDataCtrl?.valueChanges.subscribe((tipo: string) => {
-      if (tipo === 'unica') {
-        dataCtrl?.setValidators([Validators.required]);
-        start?.setValue(null);
-        start?.setValidators(null);
-        end?.setValue(null);
-        end?.setValidators(null);
-      } else if (tipo === 'periodo') {
-        dataCtrl?.setValidators(null);
-        start?.setValidators([Validators.required]);
-        end?.setValidators([Validators.required]);
-        dataCtrl?.setValue(null);
-      }
-
-      dataCtrl?.updateValueAndValidity();
-      start?.updateValueAndValidity();
-      end?.updateValueAndValidity();
-    });
   }
 
   proximo() {
@@ -188,18 +157,23 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
   salvarEvento() {
     this.spinner.show();
 
+    const dataInicio = DateUtils.combineDateAndTime(
+      this.form.get('step2.dataInicio')?.value,
+      this.form.get('step2.horaInicio')?.value
+    );
+    const dataFim = DateUtils.combineDateAndTime(
+      this.form.get('step2.dataFim')?.value,
+      this.form.get('step2.horaFim')?.value
+    );
+
     const dto: CadastroEventoDto = {
       nome: this.form.get('step1.nome')?.value,
       descricao: this.form.get('step1.descricao')?.value,
       idTipoEvento: Number(this.acRoute.snapshot.params['tipo'] || 8),
       idUsuarioCriador: this.usuarioLogado?.id ?? 0,
       maxConvidado: Number(this.form.get('step1.quantidadeParticipantes')?.value),
-      dataInicio: this.form.get('step2.tipoData')?.value === 'unica'
-        ? this.form.get('step2.data')?.value
-        : this.form.get('step2.periodo.start')?.value,
-      dataFim: this.form.get('step2.tipoData')?.value === 'unica'
-        ? this.form.get('step2.data')?.value
-        : this.form.get('step2.periodo.end')?.value,
+      dataInicio: dataInicio!,
+      dataFim: dataFim,
 
       endereco: {
         logradouro: this.form.get('step2.rua')?.value,

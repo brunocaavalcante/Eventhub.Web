@@ -13,14 +13,10 @@
                     Informações do Evento
                 </div>
                 <form [formGroup]="form">
-                    <mat-form-field appearance="outline" class="enviar-convite-field">
+                    <mat-form-field appearance="outline" class="enviar-convite-field" >
                         <mat-label>Tipo de Evento</mat-label>
-                        <mat-select formControlName="eventType" (selectionChange)="onEventTypeChange($event.value)">
-                            <mat-option value="wedding">Casamento</mat-option>
-                            <mat-option value="baby_shower">Chá de Bebê</mat-option>
-                            <mat-option value="birthday">Aniversário</mat-option>
-                            <mat-option value="housewarming">Chá de Casa Nova</mat-option>
-                            <mat-option value="other">Outros</mat-option>
+                        <mat-select formControlName="eventType">
+                            <mat-option *ngFor="let tipoEvento of tipoEventos()" [value]="tipoEvento.id">{{tipoEvento.nome}}</mat-option>
                         </mat-select>
                     </mat-form-field>
 
@@ -40,17 +36,38 @@
 
                     <div class="enviar-convite-row">
                         <mat-form-field appearance="outline" class="enviar-convite-field">
-                            <mat-label>Data do Evento</mat-label>
-                            <input matInput formControlName="eventDate" />
+                            <mat-label>Data de Início do Evento</mat-label>
+                            <input matInput [matDatepicker]="eventStartPicker" formControlName="eventDate" placeholder="dd/MM/aaaa" />
+                            <mat-datepicker-toggle matSuffix [for]="eventStartPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #eventStartPicker></mat-datepicker>
                             <mat-error *ngIf="displayMessage['eventDate']">
                                 <mat-icon>error</mat-icon> {{displayMessage['eventDate']}}
                             </mat-error>
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="enviar-convite-field">
-                            <mat-label>Horário</mat-label>
-                            <input matInput formControlName="eventTime" />
+                            <mat-label>Horário de Início do Evento</mat-label>
+                            <input matInput type="time" formControlName="eventTime" />
                             <mat-error *ngIf="displayMessage['eventTime']">
                                 <mat-icon>error</mat-icon> {{displayMessage['eventTime']}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    
+                    <div class="enviar-convite-row">
+                        <mat-form-field appearance="outline" class="enviar-convite-field">
+                            <mat-label>Data Término do Evento</mat-label>
+                            <input matInput [matDatepicker]="eventEndPicker" formControlName="eventEndDate" placeholder="dd/MM/aaaa" />
+                            <mat-datepicker-toggle matSuffix [for]="eventEndPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #eventEndPicker></mat-datepicker>
+                            <mat-error *ngIf="displayMessage['eventEndDate']">
+                                <mat-icon>error</mat-icon> {{displayMessage['eventEndDate']}}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="enviar-convite-field">
+                            <mat-label>Horário Término do Evento</mat-label>
+                            <input matInput type="time" formControlName="eventEndTime" />
+                            <mat-error *ngIf="displayMessage['eventEndTime']">
+                                <mat-icon>error</mat-icon> {{displayMessage['eventEndTime']}}
                             </mat-error>
                         </mat-form-field>
                     </div>
@@ -170,7 +187,7 @@
             <div class="enviar-convite-preview-fixed">
                 <div class="enviar-convite-preview-title">Visualização do Convite</div>
                 <div class="enviar-convite-preview-sub">Veja como seu convite ficará</div>
-                <app-convite-preview [data]="form.value"></app-convite-preview>
+                <app-convite-preview [data]="previewData"></app-convite-preview>
             </div>
         </div>
     </div>
