@@ -16,6 +16,9 @@
 	min-height: 600px;
 	max-width: 520px;
 	margin: 0 auto;
+	--convite-theme: #{$cor-primaria};
+	--convite-theme-soft: #{$cor-primaria-clara-1};
+	--convite-theme-dark: #{$cor-primaria-escura};
 }
 
 :host-context(.convite-preview-sheet) {
@@ -52,7 +55,7 @@
 .convite-preview-bottom-bar {
 	height: 6px;
 	width: 90px;
-	background: $cor-primaria;
+	background: var(--convite-theme, $cor-primaria);
 	border-radius: 8px;
 	margin-bottom: 18px;
 }
@@ -62,7 +65,7 @@
 }
 
 .convite-preview-titulo {
-	color: $cor-primaria;
+	color: var(--convite-theme, $cor-primaria);
 	font-size: 1.08rem;
 	font-weight: $font-peso-bold;
 	text-align: center;
@@ -85,7 +88,7 @@
 	font-family: 'Poppins', 'Segoe UI', 'Nunito', 'Inter', Arial, sans-serif;
 }
 .convite-preview-e {
-	color: $cor-primaria;
+	color: var(--convite-theme, $cor-primaria);
 	font-size: 1.5rem;
 	font-weight: $font-peso-bold;
 	margin: 2px 0;
@@ -100,13 +103,13 @@
 .convite-preview-line {
 	height: 2px;
 	width: 48px;
-	background: $cor-primaria;
+	background: var(--convite-theme, $cor-primaria);
 	border-radius: 2px;
 }
 .convite-preview-dot {
 	width: 10px;
 	height: 10px;
-	background: $cor-primaria;
+	background: var(--convite-theme, $cor-primaria);
 	border-radius: 50%;
 }
 
@@ -118,7 +121,7 @@
 	text-align: center;
 }
 .convite-preview-hora {
-	color: $cor-primaria;
+	color: var(--convite-theme, $cor-primaria);
 	font-size: 1.08rem;
 	font-weight: $font-peso-normal;
 	margin-bottom: 18px;
@@ -126,8 +129,8 @@
 }
 
 .convite-preview-local-card {
-	background: $cor-primaria-clara-1;
-	border: 2px solid $cor-primaria-clara;
+	background: var(--convite-theme-soft, $cor-primaria-clara-1);
+	border: 2px solid var(--convite-theme, $cor-primaria);
 	border-radius: $radius;
 	padding: 16px 10px 10px 10px;
 	margin-bottom: 18px;
@@ -136,7 +139,7 @@
 	text-align: center;
 }
 .convite-preview-local-titulo {
-	color: $cor-primaria;
+	color: var(--convite-theme, $cor-primaria);
 	font-size: 1rem;
 	font-weight: $font-peso-bold;
 	text-transform: uppercase;
@@ -164,7 +167,7 @@
 }
 
 .convite-preview-btn {
-	background: $cor-primaria;
+	background: var(--convite-theme, $cor-primaria);
 	color: $cor-branco;
 	font-size: 1.08rem;
 	font-weight: $font-peso-bold;
@@ -177,5 +180,5 @@
 	transition: background 0.18s;
 }
 .convite-preview-btn:hover {
-	background: $cor-primaria-escura;
+	background: var(--convite-theme-dark, $cor-primaria-escura);
 }

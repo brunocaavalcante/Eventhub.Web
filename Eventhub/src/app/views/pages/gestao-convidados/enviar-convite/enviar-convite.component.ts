@@ -23,12 +23,22 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { DateUtils } from '../../../../core/utils/date.utils';
 import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
+import { ColorPickerDirective } from 'ngx-color-picker';
+
+const DEFAULT_THEME_COLOR = '#D16BA5';
+const LEGACY_THEME_COLOR_MAP: Record<string, string> = {
+  rose: '#D16BA5',
+  purple: '#9C6ADE',
+  blue: '#3F51B5',
+  emerald: '#2ECC71'
+};
 
 @Component({
   selector: 'app-enviar-convite',
   standalone: true,
   imports: [MatInputModule, MatFormFieldModule,
-    MatCardModule, MatIconModule, MatCheckboxModule, MatSelectModule, ReactiveFormsModule, CommonModule, FormsModule, MatButtonModule, MatBottomSheetModule, ConvitePreviewComponent, MatDatepickerModule, MatNativeDateModule],
+    MatCardModule, MatIconModule, MatCheckboxModule, MatSelectModule, ColorPickerDirective,
+    ReactiveFormsModule, CommonModule, FormsModule, MatButtonModule, MatBottomSheetModule, ConvitePreviewComponent, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './enviar-convite.component.html',
   styleUrls: ['./enviar-convite.component.scss']
 })
@@ -53,6 +63,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
   showName2 = true;
   name1Label = 'Nome do Noivo';
   name2Label = 'Nome da Noiva';
+  themePickerOpen = false;
 
   private readonly eventoService = inject(EventoService);
   private readonly tipoEventoService = inject(TipoEventoService);
@@ -102,7 +113,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       venueName: ['', Validators.required],
       venueAddress: ['', Validators.required],
       message: ['Com imenso prazer, convidamos você e família para celebrar conosco este momento especial. Sua presença é fundamental para tornar este dia ainda mais memorável.'],
-      themeColor: ['rose'],
+      themeColor: [DEFAULT_THEME_COLOR],
       fontStyle: ['elegant'],
       backgroundImage: [this.backgrounds[0]],
     });
@@ -182,7 +193,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       name1: convite?.nome || '',
       name2: convite?.nome2 || '',
       message: convite?.mensagem || '',
-      themeColor: convite?.temaConvite || 'rose',
+      themeColor: this.resolveThemeColor(convite?.temaConvite),
       backgroundImage,
       eventType: evento.idTipoEvento,
       eventDate: evento.dataInicio ? new Date(evento.dataInicio) : null,
@@ -333,7 +344,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       nome: raw.name1,
       nome2: raw.name2,
       mensagem: raw.message,
-      temaConvite: `${raw.themeColor ?? ''}`,
+      temaConvite: this.resolveThemeColor(raw.themeColor),
       dataInicio: dataInicio.toISOString(),
       dataFim: dataFim.toISOString(),
       foto: {
@@ -415,5 +426,29 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       return '';
     }
     return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  }
+
+  get themeColorValue(): string {
+    return this.form?.get('themeColor')?.value || DEFAULT_THEME_COLOR;
+  }
+
+  onThemeColorChange(color: string) {
+    const normalized = this.resolveThemeColor(color);
+    this.form.get('themeColor')?.setValue(normalized, { emitEvent: true });
+  }
+
+  private resolveThemeColor(color?: string | null): string {
+    if (!color) {
+      return DEFAULT_THEME_COLOR;
+    }
+    const trimmed = color.trim();
+    if (!trimmed) {
+      return DEFAULT_THEME_COLOR;
+    }
+    if (trimmed.startsWith('#')) {
+      return trimmed.length === 4 || trimmed.length === 7 ? trimmed : DEFAULT_THEME_COLOR;
+    }
+    const mapped = LEGACY_THEME_COLOR_MAP[trimmed as keyof typeof LEGACY_THEME_COLOR_MAP];
+    return mapped ?? DEFAULT_THEME_COLOR;
   }
 }

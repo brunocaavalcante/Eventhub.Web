@@ -94,6 +94,22 @@
     margin-bottom: 14px;
 }
 
+.enviar-convite-color-field {
+    .enviar-convite-color-swatch {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+        border: 1px solid $cor-cinza-borda;
+        box-shadow: inset 0 0 2px rgba($cor-preto, 0.25);
+    }
+
+    input[matinput][readonly] {
+        cursor: pointer;
+    }
+}
+
 .enviar-convite-nomes {
     display: grid;
     grid-template-columns: 1fr 1fr;

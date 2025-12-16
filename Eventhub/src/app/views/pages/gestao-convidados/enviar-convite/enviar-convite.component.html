@@ -117,15 +117,20 @@
                     <mat-icon>palette</mat-icon>
                     Personalização Visual
                 </div>
-                <mat-form-field appearance="outline" class="enviar-convite-field">
+                <mat-form-field appearance="outline" class="enviar-convite-field enviar-convite-color-field">
                     <mat-label>Cor do Tema</mat-label>
-                    <mat-select formControlName="themeColor">
-                        <mat-option value="rose">Rosa Romântico</mat-option>
-                        <mat-option value="purple">Roxo Elegante</mat-option>
-                        <mat-option value="blue">Azul Clássico</mat-option>
-                        <mat-option value="emerald">Verde Esmeralda</mat-option>
-                    </mat-select>
+                    <span matPrefix class="enviar-convite-color-swatch" [style.background]="themeColorValue"></span>
+                    <input matInput formControlName="themeColor" readonly role="textbox"
+                        [colorPicker]="themeColorValue"
+                        [cpOutputFormat]="'hex'"
+                        [cpAlphaChannel]="'disabled'"
+                        (colorPickerChange)="onThemeColorChange($event)" />
+                    <button mat-icon-button matSuffix type="button"  aria-label="Selecionar cor do tema">
+                        <mat-icon>palette</mat-icon>
+                    </button>
+                    <mat-hint>Escolha qualquer cor sólida</mat-hint>
                 </mat-form-field>
+
                 <mat-form-field appearance="outline" class="enviar-convite-field">
                     <mat-label>Estilo de Fonte</mat-label>
                     <mat-select formControlName="fontStyle">
