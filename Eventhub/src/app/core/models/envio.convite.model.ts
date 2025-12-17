@@ -36,6 +36,7 @@ export interface UpdateConviteDTO {
 export interface ConviteDTO {
     id: number;
     idEvento: number;
+    opacity: number;
     nome: string;
     nome2: string;
     mensagem: string;

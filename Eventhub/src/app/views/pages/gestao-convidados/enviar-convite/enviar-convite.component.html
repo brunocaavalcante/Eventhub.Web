@@ -13,14 +13,15 @@
                     Informações do Evento
                 </div>
                 <form [formGroup]="form">
-                    <mat-form-field appearance="outline" class="enviar-convite-field" >
+                    <mat-form-field appearance="outline" class="enviar-convite-field">
                         <mat-label>Tipo de Evento</mat-label>
                         <mat-select formControlName="eventType">
-                            <mat-option *ngFor="let tipoEvento of tipoEventos()" [value]="tipoEvento.id">{{tipoEvento.nome}}</mat-option>
+                            <mat-option *ngFor="let tipoEvento of tipoEventos()"
+                                [value]="tipoEvento.id">{{tipoEvento.nome}}</mat-option>
                         </mat-select>
                     </mat-form-field>
 
-                    <div class="enviar-convite-nomes" >
+                    <div class="enviar-convite-nomes">
                         <mat-form-field appearance="outline" class="enviar-convite-field">
                             <mat-label>{{name1Label}}</mat-label>
                             <input matInput formControlName="name1" />
@@ -37,7 +38,8 @@
                     <div class="enviar-convite-row">
                         <mat-form-field appearance="outline" class="enviar-convite-field">
                             <mat-label>Data de Início do Evento</mat-label>
-                            <input matInput [matDatepicker]="eventStartPicker" formControlName="eventDate" placeholder="dd/MM/aaaa" />
+                            <input matInput [matDatepicker]="eventStartPicker" formControlName="eventDate"
+                                placeholder="dd/MM/aaaa" />
                             <mat-datepicker-toggle matSuffix [for]="eventStartPicker"></mat-datepicker-toggle>
                             <mat-datepicker #eventStartPicker></mat-datepicker>
                             <mat-error *ngIf="displayMessage['eventDate']">
@@ -52,11 +54,12 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    
+
                     <div class="enviar-convite-row">
                         <mat-form-field appearance="outline" class="enviar-convite-field">
                             <mat-label>Data Término do Evento</mat-label>
-                            <input matInput [matDatepicker]="eventEndPicker" formControlName="eventEndDate" placeholder="dd/MM/aaaa" />
+                            <input matInput [matDatepicker]="eventEndPicker" formControlName="eventEndDate"
+                                placeholder="dd/MM/aaaa" />
                             <mat-datepicker-toggle matSuffix [for]="eventEndPicker"></mat-datepicker-toggle>
                             <mat-datepicker #eventEndPicker></mat-datepicker>
                             <mat-error *ngIf="displayMessage['eventEndDate']">
@@ -93,54 +96,55 @@
                 </form>
             </mat-card>
 
-        <form [formGroup]="form">
-            <mat-card class="enviar-convite-card">
-                <div class="enviar-convite-card-title">
-                    <mat-icon>image</mat-icon>
-                    Imagem de Fundo
-                </div>
-                <div class="enviar-convite-bg-list">
-                    <ng-container *ngFor="let image of backgrounds">
-                        <button type="button" class="enviar-convite-bg-btn"
-                            [class.active]="form.value.backgroundImage === image" (click)="setBackground(image)">
-                            <img [src]="image" alt="Background" />
-                            <mat-icon *ngIf="form.value.backgroundImage === image">check</mat-icon>
-                        </button>
-                    </ng-container>
-                </div>
-                <input type="file" accept="image/*" (change)="uploadImage($event)" hidden #fileInput />
-                <button mat-stroked-button color="primary" (click)="fileInput.click()">Subir Imagem</button>
-            </mat-card>
+            <form [formGroup]="form">
+                <mat-card class="enviar-convite-card">
+                    <div class="enviar-convite-card-title">
+                        <mat-icon>image</mat-icon>
+                        Imagem de Fundo
+                    </div>
+                    <div class="enviar-convite-bg-list">
+                        <ng-container *ngFor="let image of backgrounds">
+                            <button type="button" class="enviar-convite-bg-btn"
+                                [class.active]="form.value.backgroundImage === image" (click)="setBackground(image)">
+                                <img [src]="image" alt="Background" />
+                                <mat-icon *ngIf="form.value.backgroundImage === image">check</mat-icon>
+                            </button>
+                        </ng-container>
+                    </div>
+                    <input type="file" accept="image/*" (change)="uploadImage($event)" hidden #fileInput />
+                    <label>Opacidade: {{form.value.backgroundOpacity}}%</label>
+                    <mat-slider min="0" max="100" step="1" showTickMarks discrete>
+                        <input matSliderThumb formControlName="backgroundOpacity">
+                    </mat-slider>
+                    <button mat-stroked-button color="primary" (click)="fileInput.click()">Subir Imagem</button>
+                </mat-card>
 
-            <mat-card class="enviar-convite-card">
-                <div class="enviar-convite-card-title">
-                    <mat-icon>palette</mat-icon>
-                    Personalização Visual
-                </div>
-                <mat-form-field appearance="outline" class="enviar-convite-field enviar-convite-color-field">
-                    <mat-label>Cor do Tema</mat-label>
-                    <span matPrefix class="enviar-convite-color-swatch" [style.background]="themeColorValue"></span>
-                    <input matInput formControlName="themeColor" readonly role="textbox"
-                        [colorPicker]="themeColorValue"
-                        [cpOutputFormat]="'hex'"
-                        [cpAlphaChannel]="'disabled'"
-                        (colorPickerChange)="onThemeColorChange($event)" />
-                    <button mat-icon-button matSuffix type="button"  aria-label="Selecionar cor do tema">
+                <mat-card class="enviar-convite-card">
+                    <div class="enviar-convite-card-title">
                         <mat-icon>palette</mat-icon>
-                    </button>
-                    <mat-hint>Escolha qualquer cor sólida</mat-hint>
-                </mat-form-field>
+                        Personalização Visual
+                    </div>
+                    <mat-form-field appearance="outline" class="enviar-convite-field enviar-convite-color-field">
+                        <mat-label>Cor do Tema</mat-label>
+                        <span matPrefix class="enviar-convite-color-swatch"
+                            [style.background]="themeColorValue"></span>
+                        <input type="color" formControlName="themeColor" matInput aria-label="Selecionar cor do tema" />
+                        <button mat-icon-button matSuffix type="button" aria-label="Selecionar cor do tema">
+                            <mat-icon>palette</mat-icon>
+                        </button>
+                        <mat-hint>Escolha a cor principal do convite</mat-hint>
+                    </mat-form-field>
 
-                <mat-form-field appearance="outline" class="enviar-convite-field">
-                    <mat-label>Estilo de Fonte</mat-label>
-                    <mat-select formControlName="fontStyle">
-                        <mat-option value="elegant">Elegante</mat-option>
-                        <mat-option value="modern">Moderno</mat-option>
-                        <mat-option value="classic">Clássico</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-card>
-        </form>
+                    <mat-form-field appearance="outline" class="enviar-convite-field">
+                        <mat-label>Estilo de Fonte</mat-label>
+                        <mat-select formControlName="fontStyle">
+                            <mat-option value="elegant">Elegante</mat-option>
+                            <mat-option value="modern">Moderno</mat-option>
+                            <mat-option value="classic">Clássico</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-card>
+            </form>
 
             <mat-card class="enviar-convite-card">
                 <div class="enviar-convite-card-title">

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, Input, Optional } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
-import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 
 const PREVIEW_DEFAULT_THEME_COLOR = '#D16BA5';
 
@@ -31,8 +30,11 @@ export class ConvitePreviewComponent {
   }
 
   get cardStyle(): Record<string, string> {
+    const opacity = (this.data?.backgroundOpacity ?? 100) / 100;
+
     return {
       'background-image': this.getBackgroundImage(),
+      '--background-opacity': opacity.toString(),
       '--convite-theme': this.themeColor,
       '--convite-theme-soft': this.themeColorSoft,
       '--convite-theme-dark': this.themeColorDark
@@ -52,8 +54,12 @@ export class ConvitePreviewComponent {
   }
 
   private getBackgroundImage(): string {
-    const source = Base64ImageUtil.resolveImageSource(this.data?.backgroundImage);
-    return source ? `url(${source})` : 'none';
+    const bg = this.data?.backgroundImage;
+    if (!bg) return 'none';
+
+    if (bg.startsWith('assets/')) return `url('${bg}')`;
+
+    return `url('${bg}')`;
   }
 
   private normalizeColor(color?: string | null): string {
@@ -109,5 +115,6 @@ export interface ConvitePreviewData {
   themeColor?: string;
   fontStyle?: string;
   backgroundImage?: string;
+  backgroundOpacity?: number;
   inviteText?: string;
 }

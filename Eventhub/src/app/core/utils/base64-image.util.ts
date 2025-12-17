@@ -41,6 +41,10 @@ export class Base64ImageUtil {
       return trimmed;
     }
 
+    if (trimmed.startsWith('assets/')) {
+      return trimmed;
+    }
+
     return this.toDataUrl(trimmed, mimeType);
   }
 

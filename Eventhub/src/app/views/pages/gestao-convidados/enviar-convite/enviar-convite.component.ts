@@ -23,7 +23,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { DateUtils } from '../../../../core/utils/date.utils';
 import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
-import { ColorPickerDirective } from 'ngx-color-picker';
+import { MatSliderModule } from '@angular/material/slider';
+import { TipoEventoEnum } from '../../../../core/models/tipo-evento.model';
 
 const DEFAULT_THEME_COLOR = '#D16BA5';
 const LEGACY_THEME_COLOR_MAP: Record<string, string> = {
@@ -36,8 +37,8 @@ const LEGACY_THEME_COLOR_MAP: Record<string, string> = {
 @Component({
   selector: 'app-enviar-convite',
   standalone: true,
-  imports: [MatInputModule, MatFormFieldModule,
-    MatCardModule, MatIconModule, MatCheckboxModule, MatSelectModule, ColorPickerDirective,
+  imports: [MatInputModule, MatFormFieldModule, MatSliderModule,
+    MatCardModule, MatIconModule, MatCheckboxModule, MatSelectModule,
     ReactiveFormsModule, CommonModule, FormsModule, MatButtonModule, MatBottomSheetModule, ConvitePreviewComponent, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './enviar-convite.component.html',
   styleUrls: ['./enviar-convite.component.scss']
@@ -53,10 +54,11 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
     { id: 4, name: 'Rafael Souza', status: 'pending', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop', selected: false },
   ];
   backgrounds = [
-    'https://images.unsplash.com/photo-1752857015591-c1b85c01c461?w=800&h=1200&fit=crop',
-    'https://images.unsplash.com/photo-1515923019249-6b544314450f?w=800&h=1200&fit=crop',
-    'https://images.unsplash.com/photo-1680882310680-a8e33beaaf9d?w=800&h=1200&fit=crop',
-    'https://images.unsplash.com/photo-1552536273-91084b4b10b4?w=800&h=1200&fit=crop',
+    'assets/imagens/bkg-convite/bkg-2.jpg',
+    'assets/imagens/bkg-convite/bkg-4.jpg',
+    'assets/imagens/bkg-convite/bkg-5.jpg',
+    'assets/imagens/bkg-convite/bkg-6.jpg',
+    'assets/imagens/bkg-convite/bkg-11.jpg',
   ];
   inviteLink = 'https://meuevent.app/convite/casamento-joao-maria';
   showSendDialog = false;
@@ -64,6 +66,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
   name1Label = 'Nome do Noivo';
   name2Label = 'Nome da Noiva';
   themePickerOpen = false;
+  opacity: number = 100;
 
   private readonly eventoService = inject(EventoService);
   private readonly tipoEventoService = inject(TipoEventoService);
@@ -116,6 +119,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       themeColor: [DEFAULT_THEME_COLOR],
       fontStyle: ['elegant'],
       backgroundImage: [this.backgrounds[0]],
+      backgroundOpacity: [57]
     });
   }
 
@@ -133,6 +137,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       next: (result) => {
         if (result.executouComSucesso && result.data) {
           this.evento.set(result.data);
+          this.onEventTypeChange(result.data.idTipoEvento);
           this.obterConvitePorEvento(id);
         }
       },
@@ -201,13 +206,14 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       eventEndDate: evento.dataFim ? new Date(evento.dataFim) : null,
       eventEndTime: DateUtils.formatarHora(evento.dataFim),
       venueAddress: evento.endereco ? `${evento.endereco.logradouro}, ${evento.endereco.numero} ${evento.endereco?.pontoReferencia} - ${evento.endereco.cidade}` : '',
-      venueName: evento.endereco?.nomeLocal || ''
+      venueName: evento.endereco?.nomeLocal || '',
+      backgroundOpacity: convite?.opacity || 57
     });
   }
 
-  onEventTypeChange(type: string) {
+  onEventTypeChange(type: number) {
     switch (type) {
-      case 'wedding':
+      case TipoEventoEnum.CASAMENTO:
         this.name1Label = 'Nome do Noivo';
         this.name2Label = 'Nome da Noiva';
         this.showName2 = true;
@@ -216,7 +222,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
           backgroundImage: this.backgrounds[0],
         });
         break;
-      case 'baby_shower':
+      case TipoEventoEnum.CHA_DE_BEBE:
         this.name1Label = 'Nome da Mãe';
         this.name2Label = 'Nome do Pai';
         this.showName2 = true;
@@ -225,7 +231,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
           backgroundImage: this.backgrounds[1],
         });
         break;
-      case 'birthday':
+      case TipoEventoEnum.ANIVERSARIO:
         this.name1Label = 'Nome do Aniversariante';
         this.name2Label = '';
         this.showName2 = false;
@@ -234,7 +240,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
           backgroundImage: this.backgrounds[2],
         });
         break;
-      case 'housewarming':
+      case TipoEventoEnum.CHA_DE_CASA_NOVA:
         this.name1Label = 'Primeiro Nome';
         this.name2Label = 'Segundo Nome';
         this.showName2 = true;
@@ -243,7 +249,34 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
           backgroundImage: this.backgrounds[3],
         });
         break;
-      case 'other':
+      case TipoEventoEnum.FORMATURA:
+        this.name1Label = 'Nome do Formando';
+        this.name2Label = '';
+        this.showName2 = false;
+        this.form.patchValue({
+          message: 'Convido você para celebrar comigo a conquista de mais uma etapa importante da minha vida. Sua presença tornará esse momento ainda mais especial!',
+          backgroundImage: this.backgrounds[4],
+        });
+        break;
+      case TipoEventoEnum.NETWORKING:
+        this.name1Label = 'Nome do Anfitrião';
+        this.name2Label = '';
+        this.showName2 = false;
+        this.form.patchValue({
+          message: 'Junte-se a nós para uma noite de conexões valiosas e oportunidades de crescimento profissional. Sua presença fará toda a diferença!',
+          backgroundImage: this.backgrounds[0],
+        });
+        break;
+      case TipoEventoEnum.COORPORATIVO:
+        this.name1Label = 'Nome da Empresa';
+        this.name2Label = '';
+        this.showName2 = false;
+        this.form.patchValue({
+          message: 'Temos o prazer de convidá-lo(a) para o nosso evento corporativo exclusivo. Venha fazer parte de uma experiência enriquecedora e de networking!',
+          backgroundImage: this.backgrounds[1],
+        });
+        break;
+      case TipoEventoEnum.OUTROS:
         this.name1Label = 'Nome do Anfitrião';
         this.name2Label = 'Segundo Anfitrião';
         this.showName2 = true;
@@ -316,6 +349,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
       themeColor: raw.themeColor,
       fontStyle: raw.fontStyle,
       backgroundImage: raw.backgroundImage,
+      backgroundOpacity: raw.backgroundOpacity || 100,
       inviteText: raw.inviteText,
     };
   }

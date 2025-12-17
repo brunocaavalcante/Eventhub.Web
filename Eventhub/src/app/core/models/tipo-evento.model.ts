@@ -1,13 +1,16 @@
 export enum TipoEventoEnum {
-    CHÁ_DE_CASA_NOVA = 1,
+    CHA_DE_CASA_NOVA = 1,
     CASAMENTO = 2,
-    CHÁ_DE_BEBÊ = 3,
-    ANIVERSARIO = 4,
-    OUTROS = 5
+    ANIVERSARIO = 3,
+    CHA_DE_BEBE = 4,
+    FORMATURA = 5,
+    NETWORKING = 6,
+    COORPORATIVO = 7,
+    OUTROS = 8
 }
 
 export const TipoEventoDescricaoImagem: Record<number, { descricao: string; imagem: string }> = {
-    [TipoEventoEnum.CHÁ_DE_CASA_NOVA]: {
+    [TipoEventoEnum.CHA_DE_CASA_NOVA]: {
         descricao: 'Chá de Casa Nova',
         imagem: 'assets/imagens/casa-nova.png'
     },
@@ -15,7 +18,7 @@ export const TipoEventoDescricaoImagem: Record<number, { descricao: string; imag
         descricao: 'Casamento',
         imagem: 'assets/imagens/carrosel.png'
     },
-    [TipoEventoEnum.CHÁ_DE_BEBÊ]: {
+    [TipoEventoEnum.CHA_DE_BEBE]: {
         descricao: 'Chá de Bebê',
         imagem: 'assets/imagens/cha-bebe.png'
     },

@@ -23,8 +23,6 @@
     "@angular/router": "^19.0.0",
     "crypto-js": "^4.2.0",
     "firebase": "^12.3.0",
-    "ngx-color": "^10.1.0",
-    "ngx-color-picker": "^20.1.1",
     "ngx-mask": "^20.0.3",
     "ngx-ui-loader": "^19.0.0",
     "rxjs": "~7.8.0",

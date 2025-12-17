@@ -37,7 +37,7 @@
 .convite-preview-overlay {
 	position: absolute;
 	inset: 0;
-	background: rgba($cor-branco, 0.88);
+	background: rgba($cor-branco, var(--background-opacity, 0.88));
 	z-index: 1;
 }
 
