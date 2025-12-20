@@ -1,0 +1,21 @@
+<div class="dropzone-row">
+    <div class="dropzone" (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
+        <input #fileInput type="file" accept="image/*" multiple hidden (change)="onFileSelect($event)"
+            [attr.max]="10" />
+
+        <div *ngIf="imagens.length >= 10" class="limit-msg">
+            Limite de 10 imagens atingido.
+        </div>
+
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Arraste e solte imagens do local aqui ou clique para selecionar</span>
+    </div>
+    <div class="preview-col" *ngIf="imagens.length">
+        <div class="preview-list">
+            <div class="preview-img-wrapper" *ngFor="let img of imagens; let i = index">
+                <img [src]="img" alt="Prévia imagem" class="preview-img" />
+                <mat-icon class="remove-btn" (click)="removerImagem(i)">close</mat-icon>
+            </div>
+        </div>
+    </div>
+</div>
