@@ -27,6 +27,13 @@ $cor-info-escura: #0277bd;
 $cor-erro: #d32f2f;
 $cor-texto: #333;
 $cor-texto-secundario: #666;
+$cor-btn: #ff4fa0;
+$cor-btn-hover: darken($cor-btn, 8%);
+$cor-btn-secundario: #ffffff;
+$cor-btn-secundario-hover: darken($cor-btn-secundario, 8%);
+
+// widths
+$btn-min-width: 150px;
 
 // Radius e espaçamentos
 $radius: 12px;
@@ -44,7 +51,7 @@ $font-texto-secundario-mobile: 0.9rem;
 $font-desc: 0.9rem;
 $font-desc-mobile: 0.8rem;
 $font-padrao: 0.77rem;
-$font-btn: 0.7rem;
+$font-btn: 1rem;
 $font-btn-mobile: 0.65rem;
 $font-peso-bold: 700;
 $font-peso-normal: 500;

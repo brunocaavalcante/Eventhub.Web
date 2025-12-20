@@ -6,10 +6,10 @@
   flex-direction: column;
   max-width: $max-width;
   margin: auto;
-  padding: 0 40px;
+  padding: 0 40px 40px 40px;
 
   @media (max-width: 600px) {
-    padding: 0 15px;    
+    padding: 0 15px 15px 15px;  
   }
 }
 
@@ -26,9 +26,9 @@
   }
 }
 
-@mixin btn-primary {
-  background: $cor-secundaria;
-  color: $cor-branco;
+@mixin btn-primary($bg-color: $cor-primaria, $color: $cor-branco) {
+  background: $bg-color;
+  color: $color;
   font-size: $font-btn;
   font-weight: $font-peso-bold;
   border-radius: $radius-btn;
@@ -43,6 +43,7 @@
   height: 55px;
   position: relative;
   top: -10px;
+  min-width: $btn-min-width;
 
   &:hover,
   &:focus {

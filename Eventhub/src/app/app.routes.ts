@@ -22,5 +22,9 @@ export const routes: Routes = [
     {
         path: 'convidados',
         loadChildren: () => import('./views/pages/gestao-convidados/gestao-convidados.route').then(m => m.routes)
+    },
+    {
+        path: 'presentes',
+        loadChildren: () => import('./views/pages/gestao-presentes/gestao-presentes.route').then(m => m.routes)
     }
 ];

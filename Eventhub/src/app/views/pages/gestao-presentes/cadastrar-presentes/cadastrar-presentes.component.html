@@ -1,0 +1,66 @@
+<div class="container">
+    <div class="header">
+        <mat-icon matTooltip="Voltar">arrow_back_ios_new</mat-icon>
+        <h1>Adicionar Presente</h1>
+    </div>
+    <p class="txt-secundario">Adicione novos presentes para o seu evento.</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nome do Presente</mat-label>
+            <input matInput formControlName="nome" placeholder="Digite o nome do presente" />
+            <mat-error *ngIf="displayMessage['nome']">
+                <mat-icon>error</mat-icon> {{ displayMessage['nome'] }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput formControlName="descricao" placeholder="Descreva o presente"></textarea>
+            <mat-error *ngIf="displayMessage['descricao']">
+                <mat-icon>error</mat-icon> {{ displayMessage['descricao'] }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Categoria</mat-label>
+            <mat-select formControlName="categoria" placeholder="Selecione uma categoria">
+                <mat-option value="Eletrônicos">Eletrônicos</mat-option>
+                <mat-option value="Eletrodomésticos">Eletrodomésticos</mat-option>
+                <mat-option value="Utilidades Domésticas">Utilidades Domésticas</mat-option>
+                <mat-option value="Decoração">Decoração</mat-option>
+                <mat-option value="Cama, Mesa e Banho">Cama, Mesa e Banho</mat-option>
+                <mat-option value="Outros">Outros</mat-option>
+            </mat-select>
+            <mat-error *ngIf="displayMessage['categoria']">
+                <mat-icon>error</mat-icon> {{ displayMessage['categoria'] }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Valor</mat-label>
+            <input matInput 
+                   formControlName="valor" 
+                   placeholder="R$ 0,00" 
+                   type="text"
+                   mask="separator.2"
+                   thousandSeparator="."
+                   decimalMarker=","
+                   prefix="R$ " />
+            <mat-error *ngIf="displayMessage['valor']">
+                <mat-icon>error</mat-icon> {{ displayMessage['valor'] }}
+            </mat-error>
+        </mat-form-field>
+
+        <app-drop-zone-image (imagensChange)="onImagensChange($event)"></app-drop-zone-image>
+
+        <div class="actions">
+            <button mat-button class="secundary" type="button" (click)="cancelar()">
+                Cancelar
+            </button>
+            <button mat-button class="primary" type="submit" [disabled]="form.invalid">
+                Salvar
+            </button>
+        </div>
+    </form>
+</div>
