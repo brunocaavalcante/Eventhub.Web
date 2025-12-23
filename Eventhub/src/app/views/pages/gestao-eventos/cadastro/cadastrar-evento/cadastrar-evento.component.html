@@ -127,28 +127,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="cadastro-evento-dropzone-row">
-                    <div class="cadastro-evento-dropzone" (dragover)="onDragOver($event)" (drop)="onDrop($event)"
-                        (click)="fileInput.click()">
-                        <input #fileInput type="file" accept="image/*" multiple hidden (change)="onFileSelect($event)"
-                            [attr.max]="10" />
-
-                        <div *ngIf="imagens.length >= 10" class="cadastro-evento-limit-msg">
-                            Limite de 10 imagens atingido.
-                        </div>
-
-                        <mat-icon>cloud_upload</mat-icon>
-                        <span>Arraste e solte imagens do local aqui ou clique para selecionar</span>
-                    </div>
-                    <div class="cadastro-evento-preview-col" *ngIf="imagens.length">
-                        <div class="cadastro-evento-preview-list">
-                            <div class="cadastro-evento-preview-img-wrapper" *ngFor="let img of imagens; let i = index">
-                                <img [src]="img" alt="Prévia imagem" class="cadastro-evento-preview-img" />
-                                <mat-icon class="cadastro-evento-remove-btn" (click)="removerImagem(i)">close</mat-icon>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <app-drop-zone-image [imagens]="imagens" (imagensChange)="imagens = $event"></app-drop-zone-image>
             </section>
 
             <!-- ...etapa 3... -->

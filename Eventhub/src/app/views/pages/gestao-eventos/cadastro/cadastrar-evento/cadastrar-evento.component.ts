@@ -28,6 +28,7 @@ import { TipoImagemEvento } from '../../../../../core/models/imagem.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
 import { DateUtils } from '../../../../../core/utils/date.utils';
+import { DropZoneImageComponent } from "../../../../../core/components/drop-zone-image/drop-zone-image.component";
 
 @Component({
   selector: 'app-cadastrar-evento',
@@ -45,8 +46,9 @@ import { DateUtils } from '../../../../../core/utils/date.utils';
     FormsModule,
     ReactiveFormsModule,
     NgxMaskDirective,
-    CadastroOrganizadoresComponent
-  ],
+    CadastroOrganizadoresComponent,
+    DropZoneImageComponent
+],
   templateUrl: './cadastrar-evento.component.html',
   styleUrl: './cadastrar-evento.component.scss'
 })
@@ -242,42 +244,6 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
         this.form.get('step2')?.patchValue({ rua: '', cidade: '' });
       }
     }
-  }
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    if (event.dataTransfer?.files) {
-      this.handleFiles(event.dataTransfer.files);
-    }
-  }
-
-  onFileSelect(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      this.handleFiles(input.files);
-      input.value = '';
-    }
-  }
-
-  handleFiles(files: FileList) {
-    const arquivosNovos = Array.from(files).slice(0, 10 - this.imagens.length);
-    arquivosNovos.forEach(file => {
-      if (this.imagens.length < 10) {
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.imagens.push(e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  }
-
-  removerImagem(index: number) {
-    this.imagens.splice(index, 1);
   }
 
   changeOrganizadores(event: Participante[]) {

@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'mixins';
 
 .meus-eventos-container {
     max-width: 1200px;
@@ -31,16 +32,7 @@
 }
 
 .novo-evento-btn {
-    background: $cor-secundaria;
-    color: $cor-branco;
-    font-size: $font-btn;
-    font-weight: $font-peso-bold;
-    border-radius: $radius-btn;
-    padding: 10px 22px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: $sombra-card-leve;
+    @include btn-primary;
 }
 
 .status-filter-btn {

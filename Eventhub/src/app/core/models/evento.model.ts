@@ -1,37 +1,11 @@
-import { Convidado } from "./participante.model";
 import { Imagem } from "./imagem.model";
 import { Participante } from "./organizador.model";
-import { Presente } from "./presente.model";
 
 export enum StatusEvento {
     Ativo = 1,
     Rascunho = 2,
     Finalizado = 3,
     Cancelado = 4
-}
-
-export interface Evento {
-    id?: string;
-    nome: string;
-    descricao?: string;
-    quantidadeParticipantes?: number;
-    tipoData: 'unica' | 'periodo';
-    tipoEvento?: number;
-    dataInicio?: Date | null;
-    dataFim?: Date | null;
-    cep?: string;
-    rua?: string;
-    cidade?: string;
-    numero?: string;
-    pontoReferencia?: string;
-    imagens?: string[];
-    organizadores?: Participante[];
-    convidados?: Convidado[];
-    presentes?: Presente[];
-    status?: StatusEvento | number;
-    criadoEm?: Date;
-    atualizadoEm?: Date;
-    IdUsuario?: number;
 }
 
 export interface EventoDto{
