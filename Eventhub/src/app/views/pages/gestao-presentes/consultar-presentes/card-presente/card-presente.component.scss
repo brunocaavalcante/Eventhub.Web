@@ -1,0 +1,219 @@
+@import 'variables';
+@import 'mixins';
+
+mat-card {
+    border: 1px solid #dfdcdc !important;
+    max-width: 400px;
+    max-height: 450px;
+    transition: box-shadow 0.4s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &:hover {
+        box-shadow: 0px 0px 7px 0 $cor-cinza-escuro;
+    }
+
+    mat-card-header {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+// Menu Suspenso
+.btn-menu {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    
+    &:hover {
+        background: rgba(255, 255, 255, 1);
+    }
+
+    mat-icon {
+        color: $cor-cinza-medio;
+    }
+}
+
+.menu-excluir {
+    color: $cor-erro;
+
+    mat-icon {
+        color: $cor-erro;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .presente-nome {
+        @include font-size(1.1rem);
+        font-weight: 500;
+        margin-top: 10px;
+        color: $cor-texto;
+    }
+
+    .presente-status{
+        border: 1px solid $cor-verde;
+        border-radius: 12px;
+        padding: 1px 8px;
+        @include font-size(0.8rem);
+        color: $cor-verde;
+    }
+}
+
+.presente-imagem {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 1px solid #c9c6c6;
+    border-radius: 10px 10px 0 0;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    mat-icon {
+        font-size: 70px;
+        width: 70px;
+        height: 70px;
+        opacity: 0.3;
+    }
+}
+
+// Carrossel de Imagens
+.carousel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+
+    .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.3s ease;
+    }
+
+    .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        z-index: 2;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+
+        mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+        }
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        &.carousel-btn-prev {
+            left: 8px;
+        }
+
+        &.carousel-btn-next {
+            right: 8px;
+        }
+    }
+
+    &:hover .carousel-btn {
+        opacity: 1;
+    }
+
+    .carousel-indicators {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 6px;
+        z-index: 2;
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.9);
+            }
+
+            &.active {
+                background: white;
+                width: 24px;
+                border-radius: 4px;
+            }
+        }
+    }
+}
+
+
+mat-card-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+
+    button {
+        width: 95%;
+        height: 40px !important;
+        @include btn-primary;
+    }
+}
+
+.presente-valor {
+    @include font-size(1rem);
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    color: $cor-primaria;
+}
+
+.presente-descricao {
+    @include font-size(0.9rem);
+    @include truncate-multiline(3);
+    color: $cor-cinza-escuro;
+    margin-top: 3px;
+    margin-bottom: 10px !important;
+    flex: 1;
+
+    @media (max-width:600px) {
+        margin-bottom: 0px !important;
+    }
+}
+
+.contribuicao-label{
+    @include font-size(0.85rem);
+    color: $cor-cinza-medio;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.contribuicoes{
+    @include font-size(0.7rem);
+    color: $cor-primaria;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}

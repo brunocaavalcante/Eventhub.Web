@@ -14,4 +14,8 @@ export class PresenteService extends BaseService {
     obterCategoriasPresentes(): Observable<RetornoAPI<CategoriaPresenteDto[]>> {
         return this.http.get<RetornoAPI<CategoriaPresenteDto[]>>(`${this.urlApi}/presentes/categorias`);
     }
+
+    obterPresentesPorEvento(idEvento: string): Observable<RetornoAPI<Presente[]>> {
+        return this.http.get<RetornoAPI<Presente[]>>(`${this.urlApi}/presentes/evento/${idEvento}`);
+    }
 }

@@ -9,7 +9,7 @@
   padding: 0 40px 40px 40px;
 
   @media (max-width: 600px) {
-    padding: 0 15px 15px 15px;  
+    padding: 0 15px 15px 15px;
   }
 }
 
@@ -21,6 +21,7 @@
   @media (max-width: 900px) {
     grid-template-columns: repeat(2, 1fr);
   }
+
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
   }
@@ -28,7 +29,7 @@
 
 @mixin btn-primary($bg-color: $cor-primaria, $color: $cor-branco) {
   background: $bg-color;
-  color: $color;
+  color: $color !important;
   font-size: $font-btn;
   font-weight: $font-peso-bold;
   border-radius: $radius-btn;
@@ -49,7 +50,7 @@
   &:focus {
     background: darken($cor-secundaria, 8%);
     box-shadow: $sombra-card;
-    color: $cor-branco;
+    color: $cor-branco !important;
     outline: none;
   }
 
@@ -64,7 +65,7 @@
     cursor: not-allowed;
     box-shadow: none;
   }
-  
+
   @media (max-width: 600px) {
     font-size: 0.95rem;
     padding: 8px 14px;
@@ -99,4 +100,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@mixin truncate-multiline($lines: 2) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+}
+
+@mixin font-size($size) {
+  font-size: $size;
+
+  @media (max-width: 600px) {
+    font-size: $size * 0.85;
+  }
 }

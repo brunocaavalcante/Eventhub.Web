@@ -1,13 +1,15 @@
 import { Imagem } from "./imagem.model";
 
 export interface Presente {
-    id?: string;
+    id?: number;
+    eventoId?: number;
     nome: string;
     descricao?: string;
     valor?: number;
+    status?: StatusPresenteDto;
+    categoria?: CategoriaPresenteDto;
     contribuicoes?: ContribuicaoPresente[];
-    status?: 'disponivel' | 'parcial' | 'completo';
-    eventoId?: string;
+    imagens?: Imagem[];
 }
 
 export interface ContribuicaoPresente {
@@ -25,7 +27,12 @@ export interface CreatePresenteDto {
     imagens?: Imagem[];
 }
 
-export interface CategoriaPresenteDto{
+export interface CategoriaPresenteDto {
     id: number;
     nome: string;
+}
+
+export interface StatusPresenteDto {
+    id: number;
+    descricao: string;
 }

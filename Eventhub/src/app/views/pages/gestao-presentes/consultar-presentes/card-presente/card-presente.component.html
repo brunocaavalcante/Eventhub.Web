@@ -1,0 +1,74 @@
+<mat-card>
+    <!-- Menu Suspenso -->
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="btn-menu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="editarPresente(presente)">
+            <mat-icon>edit</mat-icon>
+            <span>Editar</span>
+        </button>
+        <button mat-menu-item (click)="verContribuicoes(presente)">
+            <mat-icon>people</mat-icon>
+            <span>Ver Contribuições</span>
+        </button>
+        <button mat-menu-item (click)="excluirPresente(presente)" class="menu-excluir">
+            <mat-icon>delete</mat-icon>
+            <span>Excluir</span>
+        </button>
+    </mat-menu>
+
+    <mat-card-header class="presente-imagem">
+        <!-- Carrossel de Imagens -->
+        <div class="carousel" *ngIf="hasImages; else noImage">
+            <img [src]="currentImage" [alt]="presente.nome" class="carousel-image">
+
+            <button *ngIf="hasMultipleImages" mat-icon-button class="carousel-btn carousel-btn-prev"
+                (click)="previousImage()">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button *ngIf="hasMultipleImages" mat-icon-button class="carousel-btn carousel-btn-next"
+                (click)="nextImage()">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+
+            <div *ngIf="hasMultipleImages" class="carousel-indicators">
+                <span *ngFor="let img of imagens; let i = index" class="indicator"
+                    [class.active]="i === currentImageIndex" (click)="goToImage(i)">
+                </span>
+            </div>
+        </div>
+
+        <ng-template #noImage>
+            <mat-icon>card_giftcard</mat-icon>
+        </ng-template>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="header">
+            <h3 class="presente-nome">{{ presente.nome }}</h3>
+            <div class="presente-status">{{presente.status?.descricao}} </div>
+        </div>
+        <div class="presente-valor">{{ presente.valor | currencyBr }}</div>
+        <div class="presente-descricao">{{ presente.descricao }}</div>
+
+        @if(presente.contribuicoes && presente.contribuicoes.length > 0){
+        <div class="contribuicao">
+            <div class="contribuicao-label">
+                <div>Cota compartilhada</div>
+                <div class="contribuicao-valor">
+                    R$ 1.200,00 / R$ 3.000,00
+                </div>
+            </div>
+            <mat-progress-bar color="primary" mode="determinate" [value]="50"></mat-progress-bar>
+            <div class="contribuicoes">2 contribuidores</div>
+        </div>
+        }
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button class="btn-reservar" [routerLink]="['gestao-presentes/contribuir']">
+            <mat-icon>favorite</mat-icon>
+            Presentear com Pix
+        </button>
+    </mat-card-actions>
+</mat-card>
