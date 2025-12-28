@@ -36,7 +36,7 @@
       </button>
     </div>
   </div>
-  
+
   <!-- Grid de presentes -->
   <div class="presentes-grid">
     <!-- Disponíveis -->
@@ -46,7 +46,7 @@
         <h2>Disponíveis ({{ disponiveis().length }})</h2>
       </div>
       <div class="presentes-cards">
-        <app-card-presente *ngFor="let presente of disponiveis()" [presente]="presente"></app-card-presente>
+        <app-card-presente *ngFor="let presente of disponiveis()" [presente]="presente" (excluir)="excluirPresente(presente)"></app-card-presente>
       </div>
     </div>
 
@@ -57,7 +57,8 @@
         <h2>Parcialmente Reservados ({{ parciais().length }})</h2>
       </div>
       <div class="presentes-cards">
-        <app-card-presente *ngFor="let presente of parciais()" [presente]="presente"></app-card-presente>
+        <app-card-presente *ngFor="let presente of parciais()" (excluir)="excluirPresente(presente)"
+          [presente]="presente"></app-card-presente>
       </div>
     </div>
 
@@ -68,7 +69,7 @@
         <h2>Reservados ({{ reservados().length }})</h2>
       </div>
       <div class="presentes-cards">
-        <app-card-presente *ngFor="let presente of reservados()" [presente]="presente"></app-card-presente>
+        <app-card-presente *ngFor="let presente of reservados()" (excluir)="excluirPresente(presente)" [presente]="presente"></app-card-presente>
       </div>
     </div>
 

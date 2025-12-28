@@ -16,9 +16,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { PresenteService } from '../../../../core/services/presente.service';
 import { Presente } from '../../../../core/models/presente.model';
-import { ModalConfirmComponent } from '../../../../core/components/modal/modal-confirm/modal-confirm.component';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { CardPresenteComponent } from './card-presente/card-presente.component';
+import { ModalService } from '../../../../core/services/modal.service';
+import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
 
 @Component({
   selector: 'app-consultar-presentes',
@@ -47,6 +48,7 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
   private readonly destroyRef = inject(DestroyRef);
   private readonly presenteService = inject(PresenteService);
   private readonly spinner = inject(SpinnerService);
+  private readonly modalService = inject(ModalService);
 
   presentes = signal<Presente[]>([]);
   busca = signal('');
@@ -159,42 +161,65 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
   }
 
   excluirPresente(presente: Presente): void {
-    const dialogRef = this.dialog.open(ModalConfirmComponent, {
-      data: {
-        title: 'Confirmar Exclusão',
-        message: `Deseja realmente excluir o presente "${presente.nome}"?`,
-        confirmLabel: 'Excluir',
-        cancelLabel: 'Cancelar'
-      }
-    });
+    if (!this.podeExcluirPresente(presente)) {
+      return;
+    }
 
-    /*dialogRef.afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(confirmed => {
-        if (confirmed && presente.id) {
-          this.presenteService.remover(presente.id)
-            .then(() => {
-              this.dialog.open(ModalSucessComponent, {
-                data: {
-                  title: 'Presente Excluído',
-                  message: 'O presente foi removido com sucesso.',
-                  okLabel: 'Fechar'
+    this.modalService.openConfirmationModal({
+      title: 'Confirmar Exclusão',
+      message: `Deseja realmente excluir o presente "${presente.nome}"?`,
+      confirmLabel: 'Excluir',
+      cancelLabel: 'Cancelar'
+    }).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((confirmed: any) => {
+        if (confirmed) {
+          this.spinner.show();
+          this.presenteService.excluir(presente.id!)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: (response) => {
+                if (response.executouComSucesso) {
+                  this.presentes.update(presentes => presentes.filter(p => p.id !== presente.id));
+                  this.modalService.openSuccessModal({
+                    title: 'Presente Excluído',
+                    message: `O presente "${presente.nome}" foi excluído com sucesso.`
+                  });
                 }
-              });
-              this.carregarPresentes();
-            })
-            .catch(error => {
-              console.error('Erro ao excluir presente:', error);
-              this.dialog.open(ModalErrorComponent, {
-                data: {
-                  title: 'Erro ao Excluir',
-                  message: 'Não foi possível excluir o presente. Tente novamente.',
-                  okLabel: 'Fechar'
-                }
-              });
+                this.spinner.hide();
+              },
+              error: (error) => {
+                console.error('Erro ao excluir presente:', error);
+                this.spinner.hide();
+              }
             });
         }
-      });*/
+      });
+  }
+
+  private podeExcluirPresente(presente: Presente): boolean {
+    // Só permite exclusão se status for Disponível (1)
+    if (presente.status?.id !== EnumStatusPresente.Disponivel) {
+      let statusMsg = '';
+      switch (presente.status?.id) {
+        case EnumStatusPresente.Reservado:
+          statusMsg = 'está Reservado e não pode ser excluído.';
+          break;
+        case EnumStatusPresente.EmArrecadacao:
+          statusMsg = 'está em Arrecadação e não pode ser excluído.';
+          break;
+        case EnumStatusPresente.Finalizado:
+          statusMsg = 'já foi Finalizado e não pode ser excluído.';
+          break;
+        default:
+          statusMsg = 'não pode ser excluído.';
+      }
+      this.modalService.openErrorModal({
+        title: 'Exclusão não permitida',
+        message: `O presente "${presente.nome}" ${statusMsg}`
+      });
+      return false;
+    }
+    return true;
   }
 
   verContribuicoes(presente: Presente): void {

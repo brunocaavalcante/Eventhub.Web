@@ -11,6 +11,10 @@ export class PresenteService extends BaseService {
         return this.http.post<RetornoAPI<Presente[]>>(`${this.urlApi}/presentes`, evento);
     }
 
+    excluir(idPresente: number): Observable<RetornoAPI<null>> {
+        return this.http.delete<RetornoAPI<null>>(`${this.urlApi}/presentes/${idPresente}`);
+    }
+
     obterCategoriasPresentes(): Observable<RetornoAPI<CategoriaPresenteDto[]>> {
         return this.http.get<RetornoAPI<CategoriaPresenteDto[]>>(`${this.urlApi}/presentes/categorias`);
     }
