@@ -1,0 +1,93 @@
+<div class="presentes-container">
+  <!-- Header com estatísticas -->
+  <div class="presentes-header">
+    <div class="presentes-header-content">
+      <div class="presentes-header-titles">
+        <h1 class="presentes-title">Lista de Presentes</h1>
+        <p class="presentes-subtitle">Celebre conosco escolhendo um presente especial!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de ações e filtros -->
+  <div class="presentes-actions">
+    <div class="presentes-filters">
+      <mat-form-field appearance="outline" class="presentes-search">
+        <mat-label>Buscar presentes...</mat-label>
+        <input matInput [(ngModel)]="busca" placeholder="Nome ou descrição">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="presentes-filter">
+        <mat-label>Filtrar por status</mat-label>
+        <mat-select [(ngModel)]="filtroStatusModel">
+          <mat-option value="">Todos os status</mat-option>
+          <mat-option value="disponivel">Disponível</mat-option>
+          <mat-option value="parcial">Parcialmente Reservado</mat-option>
+          <mat-option value="completo">Reservado</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="presentes-buttons">
+      <button mat-button class="btn-adicionar" [routerLink]="['/presentes/cadastrar', eventoId]">
+        <mat-icon>add</mat-icon>
+        Adicionar Presente
+      </button>
+    </div>
+  </div>
+  
+  <!-- Grid de presentes -->
+  <div class="presentes-grid">
+    <!-- Disponíveis -->
+    <div class="presentes-section" *ngIf="disponiveis().length > 0">
+      <div class="section-header disponivel-header">
+        <mat-icon>check_circle</mat-icon>
+        <h2>Disponíveis ({{ disponiveis().length }})</h2>
+      </div>
+      <div class="presentes-cards">
+        <app-card-presente *ngFor="let presente of disponiveis()" [presente]="presente"></app-card-presente>
+      </div>
+    </div>
+
+    <!-- Parcialmente Reservados -->
+    <div class="presentes-section" *ngIf="parciais().length > 0">
+      <div class="section-header parcial-header">
+        <mat-icon>schedule</mat-icon>
+        <h2>Parcialmente Reservados ({{ parciais().length }})</h2>
+      </div>
+      <div class="presentes-cards">
+        <app-card-presente *ngFor="let presente of parciais()" [presente]="presente"></app-card-presente>
+      </div>
+    </div>
+
+    <!-- Reservados -->
+    <div class="presentes-section" *ngIf="reservados().length > 0">
+      <div class="section-header reservado-header">
+        <mat-icon>favorite</mat-icon>
+        <h2>Reservados ({{ reservados().length }})</h2>
+      </div>
+      <div class="presentes-cards">
+        <app-card-presente *ngFor="let presente of reservados()" [presente]="presente"></app-card-presente>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="presentes-empty" *ngIf="presentesFiltrados().length === 0">
+      <div class="empty-icon">
+        <mat-icon>card_giftcard</mat-icon>
+      </div>
+      <h2 class="empty-title">Nenhum presente encontrado</h2>
+      <p class="empty-subtitle" *ngIf="busca() || filtroStatus()">
+        Tente ajustar os filtros ou limpar a pesquisa.
+      </p>
+      <p class="empty-subtitle" *ngIf="!busca() && !filtroStatus()">
+        Comece adicionando presentes à sua lista!
+      </p>
+      <button mat-flat-button color="accent" routerLink="/presentes/cadastrar" class="btn-adicionar-empty">
+        <mat-icon>add</mat-icon>
+        Adicionar Primeiro Presente
+      </button>
+    </div>
+  </div>
+</div>

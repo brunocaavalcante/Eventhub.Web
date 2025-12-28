@@ -1,0 +1,212 @@
+@import 'variables';
+@import 'mixins';
+
+.presentes-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+// Header
+.presentes-header {
+    padding: 32px 24px;
+    border-radius: $radius-card;
+    margin-bottom: 10px;
+}
+
+.presentes-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.presentes-header-titles {
+    .presentes-title {
+        font-size: 2rem;
+        font-weight: $font-peso-bold;
+        margin: 0 0 8px 0;
+    }
+
+    .presentes-subtitle {
+        font-size: 1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+}
+
+// Actions bar
+.presentes-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.presentes-filters {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    flex-wrap: wrap;
+
+    .presentes-search {
+        min-width: 300px;
+        flex: 1;
+    }
+
+    .presentes-filter {
+        min-width: 200px;
+    }
+}
+
+// Grid sections
+.presentes-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.presentes-section {
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: $radius-card;
+        margin-bottom: 16px;
+
+        mat-icon {
+            font-size: 28px;
+            width: 28px;
+            height: 28px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        &.disponivel-header {
+            background: rgba($cor-sucesso, 0.1);
+            color: $cor-sucesso-escura;
+
+            mat-icon {
+                color: $cor-sucesso;
+            }
+        }
+
+        &.parcial-header {
+            background: rgba($cor-atencao, 0.1);
+            color: $cor-atencao-escura;
+
+            mat-icon {
+                color: $cor-atencao;
+            }
+        }
+
+        &.reservado-header {
+            background: rgba($cor-info, 0.1);
+            color: $cor-info-escura;
+
+            mat-icon {
+                color: $cor-info;
+            }
+        }
+    }
+}
+
+.presentes-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+::ng-deep .btn-adicionar{
+    @include btn-primary;
+}
+
+// Empty state
+.presentes-empty {
+    text-align: center;
+    padding: 80px 24px;
+
+    .empty-icon mat-icon {
+        font-size: 120px;
+        width: 120px;
+        height: 120px;
+        color: $cor-cinza-medio;
+        opacity: 0.5;
+    }
+
+    .empty-title {
+        font-size: 1.75rem;
+        font-weight: 500;
+        color: $cor-texto;
+        margin: 24px 0 12px 0;
+    }
+
+    .empty-subtitle {
+        font-size: 1rem;
+        color: $cor-texto-secundario;
+        margin: 0 0 32px 0;
+    }
+
+    .btn-adicionar-empty mat-icon {
+        margin-right: 8px;
+    }
+}
+
+// Menu actions
+.menu-excluir {
+    color: $cor-erro;
+
+    mat-icon {
+        color: $cor-erro;
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .presentes-header {
+        padding: 24px 16px;
+    }
+
+    .presentes-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .presentes-filters {
+        flex-direction: column;
+
+        .presentes-search {
+            min-width: auto;
+            width: 100%;
+        }
+
+        .presentes-filter {
+            min-width: auto;
+            width: 100%;
+        }
+    }
+
+    .presentes-buttons {
+        flex-direction: column;
+
+        button {
+            width: 100%;
+        }
+    }
+
+    .presentes-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .presentes-header-titles .presentes-title {
+        font-size: 1.5rem;
+    }
+}
