@@ -57,8 +57,7 @@
         <h2>Parcialmente Reservados ({{ parciais().length }})</h2>
       </div>
       <div class="presentes-cards">
-        <app-card-presente *ngFor="let presente of parciais()" (excluir)="excluirPresente(presente)"
-          [presente]="presente"></app-card-presente>
+        <app-card-presente *ngFor="let presente of parciais()" (excluir)="excluirPresente(presente)" [presente]="presente"></app-card-presente>
       </div>
     </div>
 
