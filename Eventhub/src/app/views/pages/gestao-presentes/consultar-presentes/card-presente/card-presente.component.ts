@@ -72,11 +72,6 @@ export class CardPresenteComponent {
     }
   }
 
-  editarPresente(presente: Presente): void {
-    console.log('Editar presente:', presente);
-    // TODO: Implementar navegação para página de edição
-  }
-
   verContribuicoes(presente: Presente): void {
     console.log('Ver contribuições do presente:', presente);
     // TODO: Implementar navegação para página de contribuições

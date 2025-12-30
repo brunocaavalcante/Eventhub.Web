@@ -4,7 +4,7 @@
         <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="editarPresente(presente)">
+        <button mat-menu-item [routerLink]="['/presentes/editar', presente.idEvento, presente.id]">
             <mat-icon>edit</mat-icon>
             <span>Editar</span>
         </button>
@@ -66,9 +66,9 @@
         }
     </mat-card-content>
     <mat-card-actions>
-        <button mat-button class="btn-reservar" [routerLink]="['gestao-presentes/contribuir']">
+        <button mat-button class="btn-reservar" [routerLink]="['/presentes/pagar', presente.id]">
             <mat-icon>favorite</mat-icon>
-            Presentear com Pix
+            Contribuir com Pix
         </button>
     </mat-card-actions>
 </mat-card>

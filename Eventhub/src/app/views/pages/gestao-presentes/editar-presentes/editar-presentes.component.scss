@@ -1,0 +1,48 @@
+@import 'variables';
+@import 'mixins';
+
+.container {
+    @include container(800px);
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
+    mat-icon {
+        cursor: pointer;
+    }
+
+    h1{
+        @include titulo-pagina;
+    }
+}
+
+.txt-secundario {
+    @include texto-secundario;
+    margin-bottom: 25px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    .secundary{
+        @include btn-primary($bg-color: $cor-btn-secundario, $color: $cor-primaria);
+    }
+
+    .primary{
+        @include btn-primary;
+    }
+}
+
