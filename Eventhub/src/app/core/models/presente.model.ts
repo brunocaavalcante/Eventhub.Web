@@ -6,6 +6,7 @@ export interface Presente {
     nome: string;
     descricao?: string;
     valor?: number;
+    linkProduto?: string;
     status?: StatusPresenteDto;
     categoria?: CategoriaPresenteDto;
     contribuicoes?: ContribuicaoPresente[];
@@ -23,6 +24,7 @@ export interface UpdatePresenteDto {
     nome: string;
     descricao?: string;
     valor: number;
+    linkProduto?: string;
     idCategoriaPresente: number;
     imagens?: Imagem[];
 }
@@ -31,6 +33,7 @@ export interface CreatePresenteDto {
     nome: string;
     descricao?: string;
     valor: number;
+    linkProduto?: string;
     idEvento: number;
     idCategoria: number;
     imagens?: Imagem[];

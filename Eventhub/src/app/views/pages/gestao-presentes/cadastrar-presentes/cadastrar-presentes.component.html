@@ -41,6 +41,23 @@
             </mat-error>
         </mat-form-field>
 
+        <div class="toggle-container">
+            <mat-slide-toggle formControlName="incluirLink" color="primary">
+                Incluir link de compra
+            </mat-slide-toggle>
+        </div>
+
+        @if (form.get('incluirLink')?.value) {
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Link de Compra</mat-label>
+                <input matInput formControlName="linkCompra" placeholder="https://www.exemplo.com/produto" />
+                <mat-icon matPrefix>link</mat-icon>
+                <mat-error *ngIf="displayMessage['linkCompra']">
+                    <mat-icon>error</mat-icon> {{ displayMessage['linkCompra'] }}
+                </mat-error>
+            </mat-form-field>
+        }
+
         <app-drop-zone-image (imagensChange)="onImagensChange($event)"></app-drop-zone-image>
 
         <div class="actions">

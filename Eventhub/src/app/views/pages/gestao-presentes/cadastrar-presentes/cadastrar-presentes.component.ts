@@ -11,6 +11,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { DropZoneImageComponent } from "../../../../core/components/drop-zone-image/drop-zone-image.component";
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PresenteService } from '../../../../core/services/presente.service';
 import { CategoriaPresenteDto, CreatePresenteDto } from '../../../../core/models/presente.model';
 import { TipoImagemEvento } from '../../../../core/models/imagem.model';
@@ -32,6 +33,7 @@ import { ModalService } from '../../../../core/services/modal.service';
     DropZoneImageComponent,
     NgxMaskDirective,
     MatSelectModule,
+    MatSlideToggleModule,
     RouterLink
 ],
   providers: [provideNgxMask()],
@@ -71,6 +73,10 @@ export class CadastrarPresentesComponent extends BaseComponent implements OnInit
       valor: {
         required: 'Informe o Valor do Presente',
         min: 'O Valor deve ser maior que zero'
+      },
+      linkCompra: {
+        required: 'Informe o Link de Compra',
+        pattern: 'Informe uma URL válida (ex: https://www.exemplo.com)'
       }
     };
 
@@ -80,7 +86,9 @@ export class CadastrarPresentesComponent extends BaseComponent implements OnInit
       nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       descricao: ['', [Validators.maxLength(500)]],
       categoria: ['', [Validators.required]],
-      valor: ['', [Validators.required, Validators.min(0)]]
+      valor: ['', [Validators.required, Validators.min(0)]],
+      incluirLink: [false],
+      linkCompra: ['', []]
     });
   }
 
@@ -91,6 +99,20 @@ export class CadastrarPresentesComponent extends BaseComponent implements OnInit
 
   ngAfterViewInit(): void {
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
+    this.configurarValidacaoLinkCompra();
+  }
+
+  configurarValidacaoLinkCompra(): void {
+    this.form.get('incluirLink')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((incluirLink) => {
+      const linkCompraControl = this.form.get('linkCompra');
+      if (incluirLink) {
+        linkCompraControl?.setValidators([Validators.required, Validators.pattern(/^https?:\/\/.+/)]);
+      } else {
+        linkCompraControl?.clearValidators();
+        linkCompraControl?.setValue('');
+      }
+      linkCompraControl?.updateValueAndValidity();
+    });
   }
 
   obterCategoriasPresente() {
@@ -120,6 +142,7 @@ export class CadastrarPresentesComponent extends BaseComponent implements OnInit
       valor: this.form.value.valor,
       idCategoria: this.form.value.categoria,
       idEvento: Number(this.eventoId),
+      linkProduto: this.form.value.incluirLink ? this.form.value.linkCompra : undefined,
       imagens: this.imagens.map((img, idx) => ({
         nomeArquivo: `imagem_${idx + 1}.jpg`,
         base64: Base64ImageUtil.extractBase64(img),

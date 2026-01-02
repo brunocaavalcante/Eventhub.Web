@@ -7,6 +7,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
@@ -32,6 +33,7 @@ import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
     DropZoneImageComponent,
     NgxMaskDirective,
     MatSelectModule,
+    MatSlideToggleModule,
     RouterLink
   ],
   templateUrl: './editar-presentes.component.html',
@@ -75,6 +77,10 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
       valor: {
         required: 'Informe o Valor do Presente',
         min: 'O Valor deve ser maior que zero'
+      },
+      linkCompra: {
+        required: 'Informe o Link de Compra',
+        pattern: 'Informe uma URL válida (ex: https://www.exemplo.com)'
       }
     };
 
@@ -84,7 +90,9 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
       nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       descricao: ['', [Validators.maxLength(500)]],
       categoria: ['', [Validators.required]],
-      valor: ['', [Validators.required, Validators.min(0)]]
+      valor: ['', [Validators.required, Validators.min(0)]],
+      incluirLink: [false],
+      linkCompra: ['', []]
     });
   }
 
@@ -95,6 +103,20 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
 
   ngAfterViewInit(): void {
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
+    this.configurarValidacaoLinkCompra();
+  }
+
+  configurarValidacaoLinkCompra(): void {
+    this.form.get('incluirLink')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((incluirLink) => {
+      const linkCompraControl = this.form.get('linkCompra');
+      if (incluirLink) {
+        linkCompraControl?.setValidators([Validators.required, Validators.pattern(/^https?:\/\/.+/)]);
+      } else {
+        linkCompraControl?.clearValidators();
+        linkCompraControl?.setValue('');
+      }
+      linkCompraControl?.updateValueAndValidity();
+    });
   }
 
   obterPresentePorId() {
@@ -108,7 +130,9 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
             nome: retorno.data.nome,
             descricao: retorno.data.descricao,
             categoria: retorno.data.categoria?.id,
-            valor: retorno.data.valor
+            valor: retorno.data.valor,
+            incluirLink: !!retorno.data.linkProduto,
+            linkCompra: retorno.data.linkProduto || ''
           });
           this.imagens = retorno.data.imagens || [];
         }
@@ -146,6 +170,7 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
       nome: this.form.value.nome,
       descricao: this.form.value.descricao,
       valor: this.form.value.valor,
+      linkProduto: this.form.value.incluirLink ? this.form.value.linkCompra : undefined,
       idCategoriaPresente: this.form.value.categoria,
       imagens: this.imagens
     };
