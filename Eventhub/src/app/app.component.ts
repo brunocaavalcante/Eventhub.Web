@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './views/base/layout/header/header.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { LayoutComponent } from "./views/base/layout/layout.component";
 

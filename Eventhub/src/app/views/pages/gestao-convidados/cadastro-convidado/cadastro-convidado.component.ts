@@ -105,7 +105,7 @@ export class CadastroConvidadoComponent extends BaseComponent implements OnInit,
               okLabel: 'Fechar'
             }
           }).afterClosed().subscribe(() => {
-            this.router.navigate(['/convidados', this.idEvento]);
+            this.router.navigate(['/convidados/consultar', this.idEvento]);
           });
         }
         this.spinner.hide();
@@ -127,7 +127,7 @@ export class CadastroConvidadoComponent extends BaseComponent implements OnInit,
       }
     }).afterClosed().subscribe((confirmado: boolean) => {
       if (confirmado) {
-        this.router.navigate(['/convidados', this.idEvento]);
+        this.router.navigate(['/convidados/consultar', this.idEvento]);
       }
     });
   }
