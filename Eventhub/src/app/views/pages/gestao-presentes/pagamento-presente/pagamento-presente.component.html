@@ -1,0 +1,119 @@
+<div class="container">
+  <div class="header">
+    <button mat-icon-button class="btn-voltar" (click)="cancelar()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Pagamento via Pix</h1>
+  </div>
+
+  @if(presente()) {
+  <p class="subtitulo">Contribuição para: <strong>{{ presente()!.nome }}</strong></p>
+  }
+
+  <mat-card class="card-pagamento">
+    <form [formGroup]="form">
+      <!-- Campo de Valor -->
+      <mat-form-field appearance="outline" class="campo-valor">
+        <mat-label>Qual valor você deseja contribuir?</mat-label>
+        <span matTextPrefix>R$&nbsp;</span>
+        <input 
+          matInput 
+          formControlName="valor"
+          placeholder="0,00"
+          type="text"
+          mask="separator.2"
+          thousandSeparator="."
+          separatorLimit="9999999"
+          [prefix]="''"
+        />
+        <mat-error *ngIf="displayMessage['valor']">
+          <mat-icon>error</mat-icon> {{ displayMessage['valor'] }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Mensagem de Atenção -->
+      <div class="alerta-atencao">
+        <mat-icon>warning</mat-icon>
+        <p>
+          <strong>Atenção:</strong> Quando abrir o app do seu banco, digite o valor que vai contribuir,
+          pois o QR Code é estático.
+        </p>
+      </div>
+
+      <!-- QR Code -->
+      <div class="qrcode-section">
+        <p class="qrcode-label">Escaneie o código abaixo:</p>
+        <div class="qrcode-container">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ pixCode }}" 
+               alt="QR Code PIX" 
+               class="qrcode-image" />
+        </div>
+      </div>
+
+      <!-- PIX Copia e Cola -->
+      <div class="pix-copia-cola">
+        <p class="pix-label">PIX COPIA E COLA</p>
+        <div class="pix-codigo">
+          <mat-icon class="icon-link">link</mat-icon>
+          <input 
+            type="text" 
+            [value]="pixCode" 
+            readonly 
+            class="codigo-input"
+          />
+          <button mat-button class="btn-copiar" type="button" (click)="copiarCodigoPix()">
+            COPIAR
+          </button>
+        </div>
+      </div>
+
+      <!-- Instruções -->
+      <div class="instrucoes">
+        <mat-icon class="icon-info">info</mat-icon>
+        <p>
+          Após o pagamento, anexe a imagem do comprovante para confirmar sua contribuição.
+        </p>
+      </div>
+
+      <!-- Botão Anexar Comprovante -->
+      @if(!mostrarComprovante) {
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="btn-anexar"
+        type="button"
+        (click)="anexarComprovante()">
+        <mat-icon>attach_file</mat-icon>
+        Anexar Comprovante
+      </button>
+      }
+
+      <!-- Upload de Comprovante -->
+      @if(mostrarComprovante) {
+      <div class="comprovante-section">
+        <p class="comprovante-label">Anexar Comprovante de Pagamento</p>
+        <app-drop-zone-image
+          [(imagens)]="comprovante">
+        </app-drop-zone-image>
+      </div>
+      }
+    </form>
+
+    <!-- Ações -->
+    <div class="acoes">
+      <button mat-button class="btn-cancelar" type="button" (click)="cancelar()">
+        Cancelar
+      </button>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="btn-confirmar"
+        type="button"
+        (click)="confirmarPagamento()"
+        [disabled]="!form.valid || comprovante.length === 0">
+        <mat-icon>check</mat-icon>
+        Confirmar Contribuição
+      </button>
+    </div>
+  </mat-card>
+</div>
