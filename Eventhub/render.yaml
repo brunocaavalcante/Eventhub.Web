@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: eventhub-web
+    env: static
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    staticPublishPath: ./dist/eventhub/browser
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: NODE_VERSION
+        value: 18

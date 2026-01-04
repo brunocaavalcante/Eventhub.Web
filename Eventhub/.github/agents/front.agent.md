@@ -701,7 +701,7 @@ $break-tablet: 900px;
 **Localização:** `src/app/core/utils/theme/mixins.scss`
 
 ```scss
-@import 'variables';
+@use 'variables' as *;
 
 @mixin container($max-width: 1200px) {
     display: flex;
@@ -1949,7 +1949,7 @@ $transition-slow: 0.5s ease;
 **Arquivo:** `src/app/core/utils/theme/mixins.scss`
 
 ```scss
-@import 'variables';
+@use 'variables' as *;
 
 // Container responsivo
 @mixin container($max-width: 1200px) {
