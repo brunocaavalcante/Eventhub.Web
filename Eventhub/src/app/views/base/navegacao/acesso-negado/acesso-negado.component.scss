@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables' as *;
 
 .acesso-negado-container {
     max-width: 520px;

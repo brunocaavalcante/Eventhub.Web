@@ -1,7 +1,5 @@
-@import 'variables';
-// Paleta e espaçamentos centralizados em variables.scss
+@use 'variables' as *;
 
-// 🧩 Estrutura do formulário
 .organizador-form {
     display: flex;
     flex-direction: column;

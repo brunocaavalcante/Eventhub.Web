@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables' as *;
 
 .container {
     max-width: 1200px;

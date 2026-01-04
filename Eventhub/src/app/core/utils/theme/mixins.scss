@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables' as *;
 
 
 @mixin container($max-width: 1200px) {

@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables' as *;
 
 .event-type-container {
     background: $cor-primaria-clara-1;

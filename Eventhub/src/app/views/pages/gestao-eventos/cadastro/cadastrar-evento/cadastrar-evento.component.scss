@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables' as *;
 
 .cadastro-evento-container {
     max-width: 700px;

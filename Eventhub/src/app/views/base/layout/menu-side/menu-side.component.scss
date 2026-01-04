@@ -1,4 +1,4 @@
-@import '../../../core/utils/theme/variables.scss';
+@use 'variables' as *;
 
 .side-overlay {
 	position: fixed;
