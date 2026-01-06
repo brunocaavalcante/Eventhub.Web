@@ -1,0 +1,41 @@
+### Variáveis
+@baseUrl = http://localhost:5189/api
+##@baseUrl = https://eventhub-api-lx7a.onrender.com/api
+@token = seu_token_aqui
+@idEvento = 1
+@idConvite = 1
+
+### Buscar Convite por Evento
+GET {{baseUrl}}/convite/evento/{{idEvento}}
+Authorization: Bearer {{token}}
+
+### Criar Convite
+POST {{baseUrl}}/convite
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "idEvento": 1,
+  "titulo": "Você está convidado!",
+  "mensagem": "Será uma honra contar com sua presença",
+  "dataEnvio": "2026-03-15T10:00:00",
+  "imagemConvite": "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
+  "enderecoEvento": "Rua das Flores, 123 - São Paulo",
+  "traje": "Esporte Fino"
+}
+
+### Atualizar Convite
+PUT {{baseUrl}}/convite/{{idConvite}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 1,
+  "idEvento": 1,
+  "titulo": "Você está convidado! (Atualizado)",
+  "mensagem": "Será uma honra contar com sua presença em nosso grande dia",
+  "dataEnvio": "2026-03-15T10:00:00",
+  "imagemConvite": "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
+  "enderecoEvento": "Rua das Flores, 123 - São Paulo - SP",
+  "traje": "Esporte Fino"
+}

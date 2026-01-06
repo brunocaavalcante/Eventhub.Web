@@ -1,0 +1,8 @@
+### Variáveis
+@baseUrl = http://localhost:5189/api
+##@baseUrl = https://eventhub-api-lx7a.onrender.com/api
+@token = seu_token_aqui
+
+### Obter Tipos de Evento
+GET {{baseUrl}}/tipo-eventos
+Authorization: Bearer {{token}}

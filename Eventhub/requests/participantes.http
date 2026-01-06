@@ -1,0 +1,32 @@
+### Variáveis
+@baseUrl = http://localhost:5189/api
+##@baseUrl = https://eventhub-api-lx7a.onrender.com/api
+@token = seu_token_aqui
+@idEvento = 1
+@idUsuario = 1
+
+### Buscar Participantes Confirmados
+GET {{baseUrl}}/participantes/evento/{{idEvento}}/confirmados
+Authorization: Bearer {{token}}
+
+### Obter Participante por ID Usuário
+GET {{baseUrl}}/participantes/evento/{{idEvento}}/usuario/{{idUsuario}}
+Authorization: Bearer {{token}}
+
+### Obter Convidados por ID Evento
+GET {{baseUrl}}/participantes/evento/{{idEvento}}/convidados
+Authorization: Bearer {{token}}
+
+### Cadastro de Convidado
+POST {{baseUrl}}/participantes/convidado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Maria Santos",
+  "email": "maria@exemplo.com",
+  "telefone": "(11) 98888-8888",
+  "idEvento": 1,
+  "qtdAcompanhantes": 2,
+  "observacao": "Mesa próxima aos noivos"
+}

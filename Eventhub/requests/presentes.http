@@ -1,0 +1,53 @@
+### Variáveis
+@baseUrl = http://localhost:5189/api
+##@baseUrl = https://eventhub-api-lx7a.onrender.com/api
+@token = seu_token_aqui
+@idPresente = 1
+@idEvento = 1
+
+### Cadastro de Presente
+POST {{baseUrl}}/presentes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Jogo de Panelas",
+  "descricao": "Jogo de panelas antiaderente 5 peças",
+  "valor": 450.00,
+  "idEvento": 1,
+  "idCategoria": 1,
+  "linkProduto": "https://loja.com/produto/123",
+  "imagemUrl": "https://imagens.com/panelas.jpg"
+}
+
+### Atualizar Presente
+PUT {{baseUrl}}/presentes/{{idPresente}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 1,
+  "nome": "Jogo de Panelas Premium",
+  "descricao": "Jogo de panelas antiaderente premium 7 peças",
+  "valor": 650.00,
+  "idEvento": 1,
+  "idCategoria": 1,
+  "linkProduto": "https://loja.com/produto/123",
+  "imagemUrl": "https://imagens.com/panelas-premium.jpg"
+}
+
+### Excluir Presente
+DELETE {{baseUrl}}/presentes/{{idPresente}}
+Authorization: Bearer {{token}}
+
+### Obter Presente por ID
+GET {{baseUrl}}/presentes/{{idPresente}}
+Authorization: Bearer {{token}}
+
+### Obter Categorias de Presentes
+GET {{baseUrl}}/presentes/categorias
+Authorization: Bearer {{token}}
+
+### Obter Presentes por Evento
+GET {{baseUrl}}/presentes/evento/{{idEvento}}
+Authorization: Bearer {{token}}

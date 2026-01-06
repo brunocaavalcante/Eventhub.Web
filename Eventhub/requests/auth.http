@@ -1,0 +1,31 @@
+### Variáveis
+@baseUrl = http://localhost:5189/api
+##@baseUrl = https://eventhub-api-lx7a.onrender.com/api
+@token = seu_token_aqui
+@refreshToken = seu_refresh_token_aqui
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "usuario@exemplo.com",
+  "password": "senha_encriptada"
+}
+
+### Refresh Token
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### Logout
+POST {{baseUrl}}/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "refreshToken": "{{refreshToken}}"
+}

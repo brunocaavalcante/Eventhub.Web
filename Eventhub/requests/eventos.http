@@ -1,0 +1,34 @@
+### Variáveis
+@baseUrl = http://localhost:5189/api
+##@baseUrl = https://eventhub-api-lx7a.onrender.com/api
+@token = seu_token_aqui
+@idEvento = 1
+@idUsuario = 1
+
+### Cadastro de Evento
+POST {{baseUrl}}/eventos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Casamento João e Maria",
+  "descricao": "Celebração do nosso amor",
+  "dataEvento": "2026-06-15T18:00:00",
+  "localEvento": "Salão de Festas Premium",
+  "idTipoEvento": 1,
+  "idUsuario": 1,
+  "quantidadeConvidados": 150,
+  "orcamento": 50000.00
+}
+
+### Buscar Meus Eventos
+GET {{baseUrl}}/eventos/usuario/{{idUsuario}}
+Authorization: Bearer {{token}}
+
+### Buscar Evento por ID
+GET {{baseUrl}}/eventos/{{idEvento}}
+Authorization: Bearer {{token}}
+
+### Buscar Status dos Eventos
+GET {{baseUrl}}/eventos/status
+Authorization: Bearer {{token}}

@@ -1,0 +1,16 @@
+### Variáveis
+@baseUrl = http://localhost:5189/api
+##@baseUrl = https://eventhub-api-lx7a.onrender.com/api
+@token = seu_token_aqui
+
+### Cadastro de Usuário
+POST {{baseUrl}}/usuarios
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "joao@exemplo.com",
+  "password": "senha123",
+  "telefone": "(11) 99999-9999",
+  "idPerfil": 1
+}

@@ -1,0 +1,13 @@
+### Variáveis
+@baseUrl = http://localhost:5189/api
+##@baseUrl = https://eventhub-api-lx7a.onrender.com/api
+@token = seu_token_aqui
+@idPerfil = 1
+
+### Obter Perfis Ativos
+GET {{baseUrl}}/perfis/ativos
+Authorization: Bearer {{token}}
+
+### Obter Módulos do Perfil
+GET {{baseUrl}}/perfis/{{idPerfil}}/modulos
+Authorization: Bearer {{token}}
