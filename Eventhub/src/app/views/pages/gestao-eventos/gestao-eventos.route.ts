@@ -10,4 +10,8 @@ export const routes = [
     { path: 'cadastrar/:tipo', component: CadastrarEventoComponent, canDeactivate: [pendingChangesGuard], canActivate: [authGuard] },
     { path: 'tipo-evento', component: TipoEventoComponent, canActivate: [authGuard] },
     { path: 'home/:id', component: HomeEventoComponent, canActivate: [authGuard] },
+    {
+        path: 'cadastrar-qrcode/:idEvento/:finalidade', loadComponent: () => import('./cadastrar-qrcode/cadastrar-qrcode.component')
+            .then(m => m.CadastrarQrcodeComponent), canActivate: [authGuard]
+    }
 ];

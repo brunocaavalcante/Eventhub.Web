@@ -44,7 +44,7 @@
       <div class="qrcode-section">
         <p class="qrcode-label">Escaneie o código abaixo:</p>
         <div class="qrcode-container">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ pixCode }}" 
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ pixCode() }}" 
                alt="QR Code PIX" 
                class="qrcode-image" />
         </div>
@@ -57,7 +57,7 @@
           <mat-icon class="icon-link">link</mat-icon>
           <input 
             type="text" 
-            [value]="pixCode" 
+            [value]="pixCode()" 
             readonly 
             class="codigo-input"
           />

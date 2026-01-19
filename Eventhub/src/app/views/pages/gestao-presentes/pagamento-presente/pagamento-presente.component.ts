@@ -17,6 +17,8 @@ import { DropZoneImageComponent } from '../../../../core/components/drop-zone-im
 import { MatCardModule } from '@angular/material/card';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { PixEventoService } from '../../../../core/services/pix-evento.service';
+import { FinalidadePix } from '../../../../core/utils/enums/finalidade-pix.enum';
 
 @Component({
   selector: 'app-pagamento-presente',
@@ -44,15 +46,16 @@ export class PagamentoPresenteComponent extends BaseComponent implements OnInit,
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   private readonly presenteService = inject(PresenteService);
+  private readonly pixEventoService = inject(PixEventoService);
   private readonly spinner = inject(SpinnerService);
   private readonly modalService = inject(ModalService);
   private readonly clipboard = inject(Clipboard);
   private readonly notification = inject(NotificationService);
-  
+
   presente = signal<Presente | null>(null);
   eventoId: string = '0';
   presenteId: string = '0';
-  pixCode = '00020126580014BR.GOV.BCB.PIX01365a86d189-54c8-47d8-81f6-ce7aa48bbeda5204000053039865802BR5925Bruno Cavalcante da Silva6009SAO PAULO62140510bC7C6cAriG6304DE9B';
+  pixCode = signal('');
   comprovante: string[] = [];
   mostrarComprovante = false;
 
@@ -74,11 +77,12 @@ export class PagamentoPresenteComponent extends BaseComponent implements OnInit,
   }
 
   ngOnInit(): void {
-    this.eventoId = this.acRouter.snapshot.params['eventoId'] || '0';
-    this.presenteId = this.acRouter.snapshot.params['presenteId'] || '0';
-    
+    this.eventoId = this.acRouter.snapshot.params['idEvento'] || '0';
+    this.presenteId = this.acRouter.snapshot.params['id'] || '0';
+
     if (this.presenteId !== '0') {
       this.carregarPresente();
+      this.carregarPixCode();
     }
   }
 
@@ -86,9 +90,24 @@ export class PagamentoPresenteComponent extends BaseComponent implements OnInit,
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
   }
 
+  carregarPixCode(): void {
+    this.spinner.show();
+    this.pixEventoService.buscarPixEventoFinalidade(Number(this.eventoId), FinalidadePix.Presentes)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          if (response.executouComSucesso && response.data) {
+            this.pixCode.set(response.data.qrCodePix);
+          }
+        },
+        error: (err) => console.error('Erro ao carregar código PIX:', err),
+        complete: () => this.spinner.hide()
+      });
+  }
+
   carregarPresente(): void {
     this.spinner.show();
-    
+
     this.presenteService.obterPorId(Number(this.presenteId))
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -99,13 +118,13 @@ export class PagamentoPresenteComponent extends BaseComponent implements OnInit,
         },
         error: (err) => console.error('Erro ao carregar presente:', err),
         complete: () => this.spinner.hide()
-      });    
+      });
     this.spinner.hide();
   }
 
   copiarCodigoPix(): void {
-    const copiado = this.clipboard.copy(this.pixCode);
-    
+    const copiado = this.clipboard.copy(this.pixCode());
+
     if (copiado) {
       //this.notification.showSuccess('Código PIX copiado com sucesso!');
     } else {
@@ -122,7 +141,7 @@ export class PagamentoPresenteComponent extends BaseComponent implements OnInit,
       });
       return;
     }
-    
+
     this.mostrarComprovante = true;
   }
 
@@ -144,7 +163,7 @@ export class PagamentoPresenteComponent extends BaseComponent implements OnInit,
 
     // TODO: Implementar envio de comprovante
     const valorContribuicao = this.converterMoedaBRParaNumber(this.form.get('valor')?.value);
-    
+
     console.log('Confirmar pagamento:', {
       presenteId: this.presenteId,
       valor: valorContribuicao,
@@ -154,7 +173,7 @@ export class PagamentoPresenteComponent extends BaseComponent implements OnInit,
     // Simular sucesso
     setTimeout(() => {
       this.spinner.hide();
-      
+
       this.modalService.openSuccessModal({
         title: 'Contribuição Confirmada!',
         message: 'Sua contribuição foi registrada com sucesso. Obrigado por participar!'

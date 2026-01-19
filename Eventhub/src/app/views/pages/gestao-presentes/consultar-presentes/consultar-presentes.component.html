@@ -10,7 +10,7 @@
   </div>
 
   <!-- Barra de ações e filtros -->
-  <div class="presentes-actions">
+  <div class="presentes-actions" *ngIf="presentes().length > 0">
     <div class="presentes-filters">
       <mat-form-field appearance="outline" class="presentes-search">
         <mat-label>Buscar presentes...</mat-label>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="presentes-buttons">
-      <button mat-button class="btn-adicionar" [routerLink]="['/presentes/cadastrar', eventoId]">
+      <button mat-button class="btn-adicionar" (click)="adicionarPresente()">
         <mat-icon>add</mat-icon>
         Adicionar Presente
       </button>
@@ -84,7 +84,7 @@
       <p class="empty-subtitle" *ngIf="!busca() && !filtroStatus()">
         Comece adicionando presentes à sua lista!
       </p>
-      <button mat-flat-button color="accent" routerLink="/presentes/cadastrar" class="btn-adicionar-empty">
+      <button mat-flat-button *ngIf="presentes().length == 0" color="accent" (click)="adicionarPresente()" class="btn-adicionar-empty">
         <mat-icon>add</mat-icon>
         Adicionar Primeiro Presente
       </button>

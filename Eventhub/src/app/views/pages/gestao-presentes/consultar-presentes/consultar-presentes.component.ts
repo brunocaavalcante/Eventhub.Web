@@ -2,7 +2,7 @@ import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,6 +20,9 @@ import { SpinnerService } from '../../../../core/services/spinner.service';
 import { CardPresenteComponent } from './card-presente/card-presente.component';
 import { ModalService } from '../../../../core/services/modal.service';
 import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
+import { PixEventoService } from '../../../../core/services/pix-evento.service';
+import { FinalidadePix } from '../../../../core/utils/enums/finalidade-pix.enum';
+import { PixEventoDto } from '../../../../core/models/pix-evento.model';
 
 @Component({
   selector: 'app-consultar-presentes',
@@ -27,7 +30,6 @@ import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente
   imports: [
     CommonModule,
     FormsModule,
-    RouterLink,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
@@ -39,18 +41,21 @@ import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente
     MatProgressBarModule,
     MatDialogModule,
     CardPresenteComponent
-  ],
+],
   templateUrl: './consultar-presentes.component.html',
   styleUrl: './consultar-presentes.component.scss'
 })
 export class ConsultarPresentesComponent extends BaseComponent implements OnInit {
   private readonly acRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly presenteService = inject(PresenteService);
+  private readonly pixEventoService = inject(PixEventoService);
   private readonly spinner = inject(SpinnerService);
   private readonly modalService = inject(ModalService);
 
   presentes = signal<Presente[]>([]);
+  pix = signal<PixEventoDto | null>(null);
   busca = signal('');
   filtroStatus = signal<string>('');
   filtroCategoria = signal<string>('');
@@ -96,6 +101,7 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
   ngOnInit(): void {
     this.eventoId = this.acRoute.snapshot.paramMap.get('idEvento') || '0';
     this.carregarPresentes();
+    this.carregarPixPresente();
   }
 
   carregarPresentes(): void {
@@ -113,6 +119,25 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
         },
         error: (error) => {
           console.error('Erro ao carregar presentes:', error);
+          this.spinner.hide();
+        }
+      });
+  }
+
+  carregarPixPresente(): void {
+    this.spinner.show();
+    this.pixEventoService.buscarPixEventoFinalidade(Number(this.eventoId), FinalidadePix.Presentes)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          if (response.executouComSucesso) {
+            console.log('PIX do presente carregado:', response.data);
+            this.pix.set(response.data || null);
+          }
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error('Erro ao carregar PIX do presente:', error);
           this.spinner.hide();
         }
       });
@@ -152,6 +177,15 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
       case 2: return 'status-parcial';
       case 3: return 'status-completo';
       default: return '';
+    }
+  }
+
+  adicionarPresente(): void {
+    if (this.pix() === null) {
+      this.router.navigate([`/eventos/cadastrar-qrcode/${this.eventoId}/${FinalidadePix.Presentes}`]);
+    } 
+    else {
+      this.router.navigate([`presentes/cadastrar/${this.eventoId}`]);
     }
   }
 

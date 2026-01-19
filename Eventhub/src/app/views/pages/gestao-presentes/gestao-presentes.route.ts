@@ -7,6 +7,6 @@ import { PagamentoPresenteComponent } from "./pagamento-presente/pagamento-prese
 export const routes = [
     { path: ':idEvento', component: ConsultarPresentesComponent, canActivate: [authGuard] },
     { path: 'cadastrar/:idEvento', component: CadastrarPresentesComponent, canActivate: [authGuard] },
-    { path: 'pagar/:id', component: PagamentoPresenteComponent, canActivate: [authGuard] },
+    { path: 'pagar/:idEvento/:id', component: PagamentoPresenteComponent, canActivate: [authGuard] },
     { path: 'editar/:idEvento/:id', component: EditarPresentesComponent, canActivate: [authGuard] }
 ];
