@@ -57,11 +57,12 @@
             <div class="contribuicao-label">
                 <div>Cota compartilhada</div>
                 <div class="contribuicao-valor">
-                    R$ 1.200,00 / R$ 3.000,00
+                   {{ retornaSomaContribuicoes() | currencyBr }} / {{ presente.valor | currencyBr }}
                 </div>
             </div>
-            <mat-progress-bar color="primary" mode="determinate" [value]="50"></mat-progress-bar>
-            <div class="contribuicoes">2 contribuidores</div>
+            <mat-progress-bar color="primary" mode="determinate" [value]="calcularProgresso()"></mat-progress-bar>
+            <div class="contribuicoes">{{ (presente.contribuicoes.length > 1 ? presente.contribuicoes.length + '
+                contribuintes' : '1 contribuinte') }} </div>
         </div>
         }
     </mat-card-content>

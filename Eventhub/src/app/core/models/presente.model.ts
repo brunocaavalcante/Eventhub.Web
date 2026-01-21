@@ -1,3 +1,4 @@
+import { ContribuicaoPresenteDto } from "./contribuicao-pix.model";
 import { Imagem } from "./imagem.model";
 
 export interface Presente {
@@ -9,14 +10,8 @@ export interface Presente {
     linkProduto?: string;
     status?: StatusPresenteDto;
     categoria?: CategoriaPresenteDto;
-    contribuicoes?: ContribuicaoPresente[];
+    contribuicoes?: ContribuicaoPresenteDto[];
     imagens?: Imagem[];
-}
-
-export interface ContribuicaoPresente {
-    convidadoId: string;
-    valor: number;
-    dataContribuicao?: Date | string;
 }
 
 export interface UpdatePresenteDto {

@@ -58,10 +58,25 @@ export class CardPresenteComponent {
     }
   }
 
+  calcularProgresso(): number {
+    if (!this.presente.valor || this.presente.valor === 0) {
+      return 0;
+    }
+    const totalContribuido = this.retornaSomaContribuicoes();
+    return Math.min((totalContribuido / this.presente.valor) * 100, 100);
+  }
+
+  retornaSomaContribuicoes(): number {
+    if (!this.presente.contribuicoes || this.presente.contribuicoes.length === 0) {
+      return 0;
+    }
+    return this.presente.contribuicoes.reduce((soma, contribuicao) => soma + contribuicao.valor, 0);
+  }
+
   previousImage(): void {
     if (this.hasMultipleImages) {
-      this.currentImageIndex = this.currentImageIndex === 0 
-        ? this.imagens.length - 1 
+      this.currentImageIndex = this.currentImageIndex === 0
+        ? this.imagens.length - 1
         : this.currentImageIndex - 1;
     }
   }

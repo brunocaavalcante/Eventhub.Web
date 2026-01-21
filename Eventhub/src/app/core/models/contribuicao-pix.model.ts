@@ -12,8 +12,6 @@ export interface ContribuicaoPresenteDto {
     id: number;
     idPresente: number;
     idParticipante: number;
-    idStatusContribuicao: number;
     valor: number;
-    formaPagamento: string;
-    dataCadastro: Date;
+    dataCadastro: Date | string;
 }
