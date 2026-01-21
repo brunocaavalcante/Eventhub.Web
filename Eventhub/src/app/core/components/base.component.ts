@@ -17,8 +17,8 @@ export abstract class BaseComponent {
     /**
      * Busca o usuário logado usando UsuarioService
      */
-    protected async obterUsuarioLogado(): Promise<UsuarioInfoDTO | null> {
-        return await this.userService.obterUsuarioLogado();
+    protected obterUsuarioLogado(): UsuarioInfoDTO | null {
+        return this.userService.obterUsuarioLogado();
     }
 
     protected configurarMensagensValidacaoBase(validationMessages: ValidationMessages) {

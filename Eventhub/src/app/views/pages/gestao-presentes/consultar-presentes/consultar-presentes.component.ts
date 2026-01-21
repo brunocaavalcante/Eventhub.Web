@@ -90,11 +90,11 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
     this.presentesFiltrados().filter(p => p.status?.id === 1)
   );
 
-  parciais = computed(() =>
+  reservados = computed(() =>
     this.presentesFiltrados().filter(p => p.status?.id === 2)
   );
 
-  reservados = computed(() =>
+  emArrecadacao = computed(() =>
     this.presentesFiltrados().filter(p => p.status?.id === 3)
   );
 

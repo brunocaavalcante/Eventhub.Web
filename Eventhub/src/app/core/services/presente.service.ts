@@ -3,12 +3,17 @@ import { BaseService } from "./base.service";
 import { CategoriaPresenteDto, CreatePresenteDto, Presente, UpdatePresenteDto } from "../models/presente.model";
 import { RetornoAPI } from "../models/retorno-api.model";
 import { Observable } from "rxjs";
+import { ContribuicaoPresenteDto, CreateContribuicaoPresenteDto } from "../models/contribuicao-pix.model";
 
 @Injectable({ providedIn: 'root' })
 export class PresenteService extends BaseService {
 
     cadastro(presente: CreatePresenteDto): Observable<RetornoAPI<Presente[]>> {
         return this.http.post<RetornoAPI<Presente[]>>(`${this.urlApi}/presentes`, presente);
+    }
+
+    contribuir(contribuicao: CreateContribuicaoPresenteDto): Observable<RetornoAPI<ContribuicaoPresenteDto>> {
+        return this.http.post<RetornoAPI<ContribuicaoPresenteDto>>(`${this.urlApi}/presentes/contribuicoes`, contribuicao);
     }
 
     atualizar(presente: UpdatePresenteDto): Observable<RetornoAPI<Presente[]>> {

@@ -19,6 +19,9 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { PixEventoService } from '../../../../core/services/pix-evento.service';
 import { FinalidadePix } from '../../../../core/utils/enums/finalidade-pix.enum';
+import { CreateContribuicaoPresenteDto } from '../../../../core/models/contribuicao-pix.model';
+import { Imagem, TipoImagemEvento } from '../../../../core/models/imagem.model';
+import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 
 @Component({
   selector: 'app-pagamento-presente',
@@ -126,7 +129,7 @@ export class PagamentoPresenteComponent extends BaseComponent implements OnInit,
     const copiado = this.clipboard.copy(this.pixCode());
 
     if (copiado) {
-      //this.notification.showSuccess('Código PIX copiado com sucesso!');
+      this.notification.showSuccess('Código PIX copiado com sucesso!');
     } else {
       this.notification.showError('Erro ao copiar código PIX');
     }
@@ -161,38 +164,47 @@ export class PagamentoPresenteComponent extends BaseComponent implements OnInit,
 
     this.spinner.show();
 
-    // TODO: Implementar envio de comprovante
-    const valorContribuicao = this.converterMoedaBRParaNumber(this.form.get('valor')?.value);
+    const usuario = this.obterUsuarioLogado();
 
-    console.log('Confirmar pagamento:', {
-      presenteId: this.presenteId,
-      valor: valorContribuicao,
-      comprovante: this.comprovante[0]
+    const contribuicao: CreateContribuicaoPresenteDto = {
+      idPresente: this.presenteId ? Number(this.presenteId) : 0,
+      idParticipante: usuario ? Number(usuario.id) : 0,
+      valor: this.form.value.valor,
+      formaPagamento: 'Pix',
+      comprovante: {
+        nomeArquivo: `comprovante_${this.presenteId}_${Date.now()}.jpg`,
+        base64: Base64ImageUtil.extractBase64(this.comprovante[0]),
+        tipoImagem: TipoImagemEvento.Comprovante
+      }
+    };
+
+    this.presenteService.contribuir(contribuicao).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (response) => {
+        if (response.executouComSucesso) {
+
+          this.modalService.openSuccessModal({
+            title: 'Contribuição Confirmada!',
+            message: 'Sua contribuição foi registrada com sucesso. Obrigado por participar!'
+          }).subscribe(() => { this.router.navigate(['/presentes', this.eventoId]); });
+        }
+        this.spinner.hide();
+      },
+      error: (err) => {
+        this.spinner.hide();
+        console.error('Erro ao confirmar pagamento:', err);
+      }
     });
-
-    // Simular sucesso
-    setTimeout(() => {
-      this.spinner.hide();
-
-      this.modalService.openSuccessModal({
-        title: 'Contribuição Confirmada!',
-        message: 'Sua contribuição foi registrada com sucesso. Obrigado por participar!'
-      }).subscribe(() => {
-        this.router.navigate(['/presentes', this.eventoId]);
-      });
-    }, 1500);
   }
 
   cancelar(): void {
-    this.router.navigate(['/presentes', this.eventoId]);
-  }
-
-  private converterMoedaBRParaNumber(valor: string): number {
-    if (!valor) return 0;
-    return parseFloat(
-      valor.replace(/R\$\s?/g, '')
-        .replace(/\./g, '')
-        .replace(',', '.')
-    ) || 0;
+    this.modalService.openConfirmationModal({
+      title: 'Cancelar Contribuição',
+      message: 'Tem certeza de que deseja cancelar? As informações inseridas serão perdidas.',
+      cancelLabel: 'Não, continuar'
+    }).subscribe((result) => {
+      if (result) {
+        this.router.navigate(['/presentes', this.eventoId]);
+      }
+    });
   }
 }

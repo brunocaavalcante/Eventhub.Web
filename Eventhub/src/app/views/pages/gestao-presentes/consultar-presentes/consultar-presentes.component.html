@@ -50,14 +50,14 @@
       </div>
     </div>
 
-    <!-- Parcialmente Reservados -->
-    <div class="presentes-section" *ngIf="parciais().length > 0">
+    <!-- Em Arrecadação -->
+    <div class="presentes-section" *ngIf="emArrecadacao().length > 0">
       <div class="section-header parcial-header">
         <mat-icon>schedule</mat-icon>
-        <h2>Parcialmente Reservados ({{ parciais().length }})</h2>
+        <h2>Em Arrecadação ({{ emArrecadacao().length }})</h2>
       </div>
       <div class="presentes-cards">
-        <app-card-presente *ngFor="let presente of parciais()" (excluir)="excluirPresente(presente)" [presente]="presente"></app-card-presente>
+        <app-card-presente *ngFor="let presente of emArrecadacao()" (excluir)="excluirPresente(presente)" [presente]="presente"></app-card-presente>
       </div>
     </div>
 
