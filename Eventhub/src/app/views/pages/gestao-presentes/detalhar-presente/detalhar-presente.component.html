@@ -1,0 +1,102 @@
+<div class="detalhar-presente-container">
+    <!-- Header com Voltar -->
+    <div class="header-voltar">
+        <button mat-button class="btn-voltar" (click)="voltar()">
+            <mat-icon>arrow_back</mat-icon>
+            Voltar para Lista de Presentes
+        </button>
+    </div>
+
+    @if (presente(); as present) {
+    <div class="presente-detalhe">
+        <!-- Card com Imagem e Informações -->
+        <mat-card class="presente-card">
+            <div class="presente-info">
+                <!-- Carrossel de Imagens -->
+                <div class="presente-imagem">
+                    @if (hasImages) {
+                    <div class="carousel">
+                        <img [src]="currentImage" [alt]="present.nome" class="carousel-image">
+
+                        @if (hasMultipleImages) {
+                        <button mat-icon-button class="carousel-btn carousel-btn-prev" (click)="previousImage()">
+                            <mat-icon>chevron_left</mat-icon>
+                        </button>
+                        <button mat-icon-button class="carousel-btn carousel-btn-next" (click)="nextImage()">
+                            <mat-icon>chevron_right</mat-icon>
+                        </button>
+
+                        <div class="carousel-indicators">
+                            @for (img of imagens; track $index) {
+                            <span class="indicator" [class.active]="$index === currentImageIndex"
+                                (click)="goToImage($index)">
+                            </span>
+                            }
+                        </div>
+                        }
+                    </div>
+                    } @else {
+                    <div class="no-image">
+                        <mat-icon>card_giftcard</mat-icon>
+                    </div>
+                    }
+                </div>
+
+                <!-- Informações do Presente -->
+                <div class="presente-dados">
+                    <div class="presente-titulo-valor">
+                        <h2 class="presente-nome">{{ present.nome }}</h2>
+                        <span class="presente-valor">{{ present.valor | currencyBr }}</span>
+                    </div>
+
+                    @if (present.descricao) {
+                    <div class="presente-descricao">
+                        <p>{{ present.descricao }}</p>
+                    </div>
+                    }
+
+                    @if(present.linkProduto) {
+                    <div class="presente-link-compra">
+                        <a [href]="present.linkProduto" target="_blank" rel="noopener">
+                            <mat-icon>shopping_cart</mat-icon>
+                            Link de compra do presente
+                        </a>
+                    </div>
+                    }
+
+                    <div class="valores-container">
+                        <div class="valor-card arrecadado">
+                            <div class="valor-label">
+                                <mat-icon>check_circle</mat-icon>
+                                TOTAL ARRECADADO
+                            </div>
+                            <div class="valor-montante">{{ totalArrecadado | currencyBr }}</div>
+                        </div>
+
+                        <div class="valor-card restante">
+                            <div class="valor-label">
+                                <mat-icon>favorite</mat-icon>
+                                VALOR RESTANTE
+                            </div>
+                            <div class="valor-montante">{{ valorRestante | currencyBr }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+
+        <!-- Lista de Contribuições -->
+        <div class="contribuicoes-section">
+            <div class="contribuicoes-header">
+                <mat-icon>format_list_bulleted</mat-icon>
+                <h3>Lista de Contribuições</h3>
+            </div>
+            
+            <app-tabela-generica 
+                [config]="configTabela()" 
+                [dados]="contribuicoesFiltradas()">
+            </app-tabela-generica>
+        </div>
+    </div>
+    }
+</div>
