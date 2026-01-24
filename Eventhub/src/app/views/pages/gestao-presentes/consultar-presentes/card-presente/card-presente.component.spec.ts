@@ -42,8 +42,7 @@ describe('CardPresenteComponent', () => {
       }
     ],
     contribuicoes: [
-      { convidadoId: '1', valor: 1000 },
-      { convidadoId: '2', valor: 2000 }
+      { id: 1, idPresente: 1, idParticipante: 1, valor: 2000, dataCadastro: new Date() }
     ]
   };
 
@@ -144,24 +143,17 @@ describe('CardPresenteComponent', () => {
     jest.restoreAllMocks();
   });
 
-  it('deve chamar editarPresente ao clicar em editar', () => {
-    const spy = jest.spyOn(component, 'editarPresente');
+  it('deve navegar para detalhes ao clicar em ver detalhes', () => {
     const items = openMenuAndGetItems();
-    items[0].triggerEventHandler('click', null);
-    expect(spy).toHaveBeenCalledWith(mockPresente);
-  });
-
-  it('deve chamar verContribuicoes ao clicar em ver contribuições', () => {
-    const spy = jest.spyOn(component, 'verContribuicoes');
-    const items = openMenuAndGetItems();
-    items[1].triggerEventHandler('click', null);
-    expect(spy).toHaveBeenCalledWith(mockPresente);
+    const linkElement = items[1].nativeElement;
+    expect(linkElement.getAttribute('ng-reflect-router-link')).toContain('/presentes/detalhes');
   });
 
   it('deve chamar excluirPresente ao clicar em excluir', () => {
     const spy = jest.spyOn(component, 'excluirPresente');
     const items = openMenuAndGetItems();
-    items[2].triggerEventHandler('click', null);
+    items[2].nativeElement.click();
+    fixture.detectChanges();
     expect(spy).toHaveBeenCalledWith(mockPresente);
   });
 });
