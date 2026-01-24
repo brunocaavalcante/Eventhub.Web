@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BaseService } from "./base.service";
-import { CategoriaPresenteDto, CreatePresenteDto, Presente, UpdatePresenteDto } from "../models/presente.model";
+import { CategoriaPresenteDto, CreatePresenteDto, Presente, PresenteDetalhesDto, UpdatePresenteDto } from "../models/presente.model";
 import { RetornoAPI } from "../models/retorno-api.model";
 import { Observable } from "rxjs";
 import { ContribuicaoPresenteDto, CreateContribuicaoPresenteDto } from "../models/contribuicao-pix.model";
@@ -34,5 +34,9 @@ export class PresenteService extends BaseService {
 
     obterPresentesPorEvento(idEvento: string): Observable<RetornoAPI<Presente[]>> {
         return this.http.get<RetornoAPI<Presente[]>>(`${this.urlApi}/presentes/evento/${idEvento}`);
+    }
+
+    obterDetalhesPorId(idPresente: number): Observable<RetornoAPI<PresenteDetalhesDto>> {
+        return this.http.get<RetornoAPI<PresenteDetalhesDto>>(`${this.urlApi}/presentes/${idPresente}/detalhes`);
     }
 }

@@ -43,3 +43,31 @@ export interface StatusPresenteDto {
     id: number;
     descricao: string;
 }
+
+export interface PresenteDetalhesDto {
+    id: number;
+    idEvento: number;
+    nome: string;
+    descricao?: string;
+    valor: number;
+    linkProduto?: string;
+    status: StatusPresenteDto;
+    categoria: CategoriaPresenteDto;
+    contribuicoes: ContribuicaoDetalhesDto[];
+    imagens?: Imagem[];
+}
+
+export interface ContribuicaoDetalhesDto {
+    id: number;
+    valor: number;
+    dataCadastro: Date | string;
+    status: string;
+    participante: ParticipanteContribuicaoDto;
+}
+
+export interface ParticipanteContribuicaoDto {
+    id: number;
+    nome: string;
+    email?: string;
+    foto?: string;
+}
