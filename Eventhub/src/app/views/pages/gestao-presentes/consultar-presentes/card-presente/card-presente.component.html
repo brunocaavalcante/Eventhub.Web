@@ -8,9 +8,9 @@
             <mat-icon>edit</mat-icon>
             <span>Editar</span>
         </button>
-        <button mat-menu-item (click)="verContribuicoes(presente)">
-            <mat-icon>people</mat-icon>
-            <span>Ver Contribuições</span>
+        <button mat-menu-item [routerLink]="['/presentes/detalhes', presente.idEvento, presente.id]">
+            <mat-icon>visibility</mat-icon>
+            <span>Ver Detalhes</span>
         </button>
         <button mat-menu-item (click)="excluirPresente(presente)" class="menu-excluir">
             <mat-icon>delete</mat-icon>

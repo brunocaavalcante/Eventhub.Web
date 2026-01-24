@@ -87,11 +87,6 @@ export class CardPresenteComponent {
     }
   }
 
-  verContribuicoes(presente: Presente): void {
-    console.log('Ver contribuições do presente:', presente);
-    // TODO: Implementar navegação para página de contribuições
-  }
-
   excluirPresente(presente: Presente): void {
     this.excluir.emit(presente);
   }
