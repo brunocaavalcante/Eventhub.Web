@@ -1,0 +1,242 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.tabela-container {
+  @include card;
+  padding: 0;
+}
+
+.tabela-header {
+  padding: 20px 0px;
+  border-bottom: 1px solid rgba($cor-cinza-medio, 0.2);
+
+  .filtro-field {
+    width: 100%;
+  }
+}
+
+.desktop-table {
+  overflow-x: auto;
+  overflow-y: auto;
+
+  @media (max-width: $break-tablet) {
+    display: none;
+  }
+}
+
+.tabela {
+  width: 100%;
+
+  th {
+    color: $cor-texto-secundario;
+    font-weight: $font-peso-bold;
+    font-size: 0.875rem;
+    padding: 16px 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba($cor-cinza-medio, 0.1);
+    color: $cor-texto;
+  }
+
+  tr:hover {
+    background-color: rgba($cor-primaria-clara, 0.3);
+    transition: background-color $transition-fast;
+  }
+
+  .celula-imagem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid $cor-primaria-clara;
+    }
+
+    .avatar-icone {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: $cor-cinza-claro;
+      @include flex-center;
+      border: 2px solid $cor-primaria-clara;
+
+      mat-icon {
+        color: $cor-texto-secundario;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    span {
+      font-weight: $font-peso-medium;
+    }
+  }
+
+  .status-text {
+    font-weight: $font-peso-bold;
+    font-size: 0.875rem;
+
+    &.status-validado, &.status-pago, &.status-ativo {
+      color: $cor-sucesso;
+    }
+
+    &.status-pendente, &.status-aguardando, &.status-em-analise {
+      color: $cor-atencao;
+    }
+
+    &.status-cancelado, &.status-inativo {
+      color: $cor-erro;
+    }
+  }
+
+  .no-data {
+    @include flex-center;
+    flex-direction: column;
+    padding: 60px 24px !important;
+    text-align: center;
+    color: $cor-texto-secundario;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    p {
+      font-size: 1rem;
+      margin: 0;
+    }
+  }
+}
+
+.mobile-tiles {
+  display: none;
+  overflow-y: auto;
+  padding: 12px;
+  gap: 12px;
+
+  @media (max-width: $break-tablet) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tile-card {
+    background: $cor-branco;
+    border: 1px solid rgba($cor-cinza-medio, 0.15);
+    border-radius: $radius;
+    padding: 16px;
+    box-shadow: $sombra-card-leve;
+    transition: box-shadow $transition-fast, transform $transition-fast;
+
+    &:active {
+      transform: scale(0.98);
+      box-shadow: 0 1px 4px rgba($cor-primaria, 0.08);
+    }
+  }
+
+  .tile-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tile-avatar {
+    flex-shrink: 0;
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid $cor-primaria-clara;
+    }
+
+    .avatar-icone {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: $cor-cinza-claro;
+      @include flex-center;
+      border: 2px solid $cor-primaria-clara;
+
+      mat-icon {
+        color: $cor-texto-secundario;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  .tile-info {
+    flex: 1;
+    min-width: 0;
+
+    .tile-principal {
+      font-weight: $font-peso-bold;
+      font-size: 1rem;
+      color: $cor-texto;
+      margin-bottom: 4px;
+      @include text-truncate;
+    }
+
+    .tile-detalhe {
+      font-size: 0.875rem;
+      color: $cor-texto-secundario;
+      @include text-truncate;
+
+      .status-text {
+        font-weight: $font-peso-bold;
+        
+        &.status-validado, &.status-pago, &.status-ativo {
+          color: $cor-sucesso;
+        }
+
+        &.status-pendente, &.status-aguardando {
+          color: $cor-atencao;
+        }
+
+        &.status-cancelado, &.status-inativo {
+          color: $cor-erro;
+        }
+      }
+    }
+  }
+
+  .tile-menu {
+    flex-shrink: 0;
+    color: $cor-texto-secundario;
+  }
+
+  .no-data-mobile {
+    @include flex-center;
+    flex-direction: column;
+    padding: 60px 24px;
+    text-align: center;
+    color: $cor-texto-secundario;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    p {
+      font-size: 1rem;
+      margin: 0;
+    }
+  }
+}
