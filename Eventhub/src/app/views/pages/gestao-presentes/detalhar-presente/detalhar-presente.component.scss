@@ -167,6 +167,7 @@
         font-weight: 500;
         color: $cor-primaria;
         white-space: nowrap;
+        margin-top: 8px;
     }
 }
 
@@ -272,6 +273,46 @@
         &:hover {
             color: $cor-primaria-escura;
         }
+    }
+}
+
+.presente-status {
+    display: inline-block;
+    padding: 3px 6px;
+    border-radius: 12px;
+    @include font-size($font-small);
+    font-weight: $font-peso-medium;
+    text-align: center;
+    width: auto !important;
+
+    &.status-disponivel {
+        background-color: $cor-sucesso-clara;
+        color: $cor-sucesso-escura;
+        border: 1px solid $cor-sucesso-escura;
+    }
+
+    &.status-reservado {
+        background-color: $cor-atencao-clara;
+        color: $cor-atencao-escura;
+        border: 1px solid $cor-atencao-escura;
+    }
+
+    &.status-em-arrecadacao {
+        background-color: $cor-primaria-clara;
+        color: $cor-primaria;
+        border: 1px solid $cor-primaria;
+    }
+
+    &.status-finalizado {
+        background-color: $cor-cinza-claro;
+        color: $cor-cinza-medio;
+        border: 1px solid $cor-cinza-medio;
+    }
+
+    &.status-cancelado {
+        background-color: $cor-vermelho-claro;
+        color: $cor-vermelho;
+        border: 1px solid $cor-vermelho;
     }
 }
 

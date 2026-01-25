@@ -12,13 +12,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { PresenteService } from '../../../../core/services/presente.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
-import { ContribuicaoDetalhesDto, PresenteDetalhesDto } from '../../../../core/models/presente.model';
+import { ContribuicaoDetalhesDto, PresenteDetalhesDto, StatusPresenteDto } from '../../../../core/models/presente.model';
 import { CurrencyBrPipe } from '../../../../core/utils/pipes/currency-br.pipe';
 import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 import { DateUtils } from '../../../../core/utils/date.utils';
 import { finalize } from 'rxjs';
 import { TabelaGenericaComponent } from '../../../../core/components/tabela-generica/tabela-generica.component';
 import { ConfigTabela } from '../../../../core/components/tabela-generica/tabela-generica.model';
+import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
 
 @Component({
   selector: 'app-detalhar-presente',
@@ -115,7 +116,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
     colunaPrincipalMobile: 'participante.nome',
     colunaStatusMobile: 'status'
   }));
-  
+
   idEvento!: string;
   idPresente!: string;
 
@@ -127,7 +128,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
 
   carregarDetalhes(): void {
     this.spinner.show();
-    
+
     this.presenteService.obterDetalhesPorId(Number(this.idPresente))
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -195,7 +196,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
     }
   }
 
- 
+
   formatarData(data: Date | string): string {
     return DateUtils.formatarDataBR(data);
   }
@@ -216,6 +217,22 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
 
   editarPresente(): void {
     this.router.navigate(['/presentes/editar', this.idEvento, this.idPresente]);
+  }
+  
+  getStatusClass(status: StatusPresenteDto): string {
+    switch (status.id) {
+      case EnumStatusPresente.Disponivel:
+        return 'status-disponivel';
+      case EnumStatusPresente.Finalizado:
+      case EnumStatusPresente.Reservado:
+        return 'status-confirmado';
+      case EnumStatusPresente.EmArrecadacao:
+        return 'status-em-arrecadacao';
+      case EnumStatusPresente.Cancelado:
+        return 'status-cancelado';
+      default:
+        return '';
+    }
   }
 }
 

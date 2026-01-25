@@ -2,5 +2,6 @@ export enum EnumStatusPresente {
     Disponivel = 1,
     Reservado = 2,
     EmArrecadacao = 3,
-    Finalizado = 4
+    Finalizado = 4,
+    Cancelado = 5
 }
