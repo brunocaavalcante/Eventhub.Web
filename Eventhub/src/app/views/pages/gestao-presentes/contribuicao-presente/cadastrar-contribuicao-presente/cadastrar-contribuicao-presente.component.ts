@@ -4,27 +4,27 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { BaseComponent } from '../../../../core/components/base.component';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { BaseComponent } from '../../../../../core/components/base.component';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { PresenteService } from '../../../../core/services/presente.service';
-import { Presente } from '../../../../core/models/presente.model';
+import { PresenteService } from '../../../../../core/services/presente.service';
+import { Presente } from '../../../../../core/models/presente.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SpinnerService } from '../../../../core/services/spinner.service';
-import { ModalService } from '../../../../core/services/modal.service';
-import { DropZoneImageComponent } from '../../../../core/components/drop-zone-image/drop-zone-image.component';
+import { SpinnerService } from '../../../../../core/services/spinner.service';
+import { ModalService } from '../../../../../core/services/modal.service';
+import { DropZoneImageComponent } from '../../../../../core/components/drop-zone-image/drop-zone-image.component';
 import { MatCardModule } from '@angular/material/card';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { NotificationService } from '../../../../core/services/notification.service';
-import { PixEventoService } from '../../../../core/services/pix-evento.service';
-import { FinalidadePix } from '../../../../core/utils/enums/finalidade-pix.enum';
-import { CreateContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
-import { Imagem, TipoImagemEvento } from '../../../../core/models/imagem.model';
-import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
+import { NotificationService } from '../../../../../core/services/notification.service';
+import { PixEventoService } from '../../../../../core/services/pix-evento.service';
+import { FinalidadePix } from '../../../../../core/utils/enums/finalidade-pix.enum';
+import { CreateContribuicaoPresenteDto } from '../../../../../core/models/contribuicao-presente.model';
+import { Imagem, TipoImagemEvento } from '../../../../../core/models/imagem.model';
+import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
 
 @Component({
-  selector: 'app-pagamento-presente',
+  selector: 'app-cadastrar-contribuicao-presente',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -37,10 +37,10 @@ import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
     DropZoneImageComponent
   ],
   providers: [provideNgxMask()],
-  templateUrl: './pagamento-presente.component.html',
-  styleUrl: './pagamento-presente.component.scss'
+  templateUrl: './cadastrar-contribuicao-presente.component.html',
+  styleUrl: './cadastrar-contribuicao-presente.component.scss'
 })
-export class PagamentoPresenteComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class CadastrarContribuicaoPresenteComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements!: ElementRef[];
 
   form: FormGroup;

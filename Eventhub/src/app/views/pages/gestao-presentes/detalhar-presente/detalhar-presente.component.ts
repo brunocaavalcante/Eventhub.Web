@@ -20,10 +20,9 @@ import { finalize } from 'rxjs';
 import { TabelaGenericaComponent } from '../../../../core/components/tabela-generica/tabela-generica.component';
 import { ConfigTabela } from '../../../../core/components/tabela-generica/tabela-generica.model';
 import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
-import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } from '../cancelar-contribuicao-presente/cancelar-contribuicao-presente.component';
 import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
 import { CancelarContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
-import { EnumStatusContribuicao } from '../../../../core/utils/enums/status-contribuicao.enum';
+import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } from '../contribuicao-presente/cancelar-contribuicao-presente/cancelar-contribuicao-presente.component';
 
 @Component({
   selector: 'app-detalhar-presente',

@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoData } from './cancelar-contribuicao-presente.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ContribuicaoDetalhesDto } from '../../../../core/models/presente.model';
-import { UsuarioService } from '../../../../core/services/usuario.service';
+import { ContribuicaoDetalhesDto } from '../../../../../core/models/presente.model';
+import { UsuarioService } from '../../../../../core/services/usuario.service';
 
 describe('CancelarContribuicaoPresenteComponent', () => {
   let component: CancelarContribuicaoPresenteComponent;

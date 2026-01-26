@@ -6,9 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { BaseComponent } from '../../../../core/components/base.component';
-import { ContribuicaoDetalhesDto } from '../../../../core/models/presente.model';
-import { CurrencyBrPipe } from '../../../../core/utils/pipes/currency-br.pipe';
+import { BaseComponent } from '../../../../../core/components/base.component';
+import { ContribuicaoDetalhesDto } from '../../../../../core/models/presente.model';
+import { CurrencyBrPipe } from '../../../../../core/utils/pipes/currency-br.pipe';
 
 export interface CancelarContribuicaoData {
   contribuicao: ContribuicaoDetalhesDto;
