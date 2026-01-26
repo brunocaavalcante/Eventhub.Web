@@ -41,6 +41,18 @@ export class DateUtils {
         return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     }
 
+    /**
+     * Formata uma data para o formato brasileiro 'DD/MM/YYYY'.
+     */
+    static formatarDataBR(data: any): string {
+        const d = DateUtils.toDate(data);
+        if (!d) return '';
+        const dia = d.getDate().toString().padStart(2, '0');
+        const mes = (d.getMonth() + 1).toString().padStart(2, '0');
+        const ano = d.getFullYear();
+        return `${dia}/${mes}/${ano}`;
+    }
+
     static combineDateAndTime(date: Date | string | null, time: string | null): Date | null {
         if (!date) return null;
         const result = new Date(date);

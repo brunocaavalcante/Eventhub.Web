@@ -7,7 +7,8 @@
   </div>
 
   @if(presente()) {
-  <p class="subtitulo">Contribuição para: <strong>{{ presente()!.nome }}</strong></p>
+  <p class="subtitulo">Contribuição para: <strong>{{ presente()!.nome }}</strong>, valor do presente {{
+    presente()!.valor | currency:'BRL' }}</p>
   }
 
   <mat-card class="card-pagamento">
@@ -15,17 +16,8 @@
       <!-- Campo de Valor -->
       <mat-form-field appearance="outline" class="campo-valor">
         <mat-label>Qual valor você deseja contribuir?</mat-label>
-        <span matTextPrefix>R$&nbsp;</span>
-        <input 
-          matInput 
-          formControlName="valor"
-          placeholder="0,00"
-          type="text"
-          mask="separator.2"
-          thousandSeparator="."
-          separatorLimit="9999999"
-          [prefix]="''"
-        />
+        <span matTextPrefix>R$&nbsp;</span> <input matInput formControlName="valor" placeholder="0,00" type="text"
+          mask="separator.2" thousandSeparator="." separatorLimit="9999999" [prefix]="''" />
         <mat-error *ngIf="displayMessage['valor']">
           <mat-icon>error</mat-icon> {{ displayMessage['valor'] }}
         </mat-error>
@@ -44,9 +36,8 @@
       <div class="qrcode-section">
         <p class="qrcode-label">Escaneie o código abaixo:</p>
         <div class="qrcode-container">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ pixCode }}" 
-               alt="QR Code PIX" 
-               class="qrcode-image" />
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ pixCode() }}" alt="QR Code PIX"
+            class="qrcode-image" />
         </div>
       </div>
 
@@ -55,12 +46,7 @@
         <p class="pix-label">PIX COPIA E COLA</p>
         <div class="pix-codigo">
           <mat-icon class="icon-link">link</mat-icon>
-          <input 
-            type="text" 
-            [value]="pixCode" 
-            readonly 
-            class="codigo-input"
-          />
+          <input type="text" [value]="pixCode()" readonly class="codigo-input" />
           <button mat-button class="btn-copiar" type="button" (click)="copiarCodigoPix()">
             COPIAR
           </button>
@@ -77,12 +63,7 @@
 
       <!-- Botão Anexar Comprovante -->
       @if(!mostrarComprovante) {
-      <button 
-        mat-raised-button 
-        color="primary" 
-        class="btn-anexar"
-        type="button"
-        (click)="anexarComprovante()">
+      <button mat-raised-button color="primary" class="btn-anexar" type="button" (click)="anexarComprovante()">
         <mat-icon>attach_file</mat-icon>
         Anexar Comprovante
       </button>
@@ -92,8 +73,7 @@
       @if(mostrarComprovante) {
       <div class="comprovante-section">
         <p class="comprovante-label">Anexar Comprovante de Pagamento</p>
-        <app-drop-zone-image
-          [(imagens)]="comprovante">
+        <app-drop-zone-image [(imagens)]="comprovante">
         </app-drop-zone-image>
       </div>
       }
@@ -104,12 +84,7 @@
       <button mat-button class="btn-cancelar" type="button" (click)="cancelar()">
         Cancelar
       </button>
-      <button 
-        mat-raised-button 
-        color="primary" 
-        class="btn-confirmar"
-        type="button"
-        (click)="confirmarPagamento()"
+      <button mat-raised-button color="primary" class="btn-confirmar" type="button" (click)="confirmarPagamento()"
         [disabled]="!form.valid || comprovante.length === 0">
         <mat-icon>check</mat-icon>
         Confirmar Contribuição

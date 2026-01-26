@@ -1,3 +1,4 @@
+import { ContribuicaoPresenteDto } from "./contribuicao-presente.model";
 import { Imagem } from "./imagem.model";
 
 export interface Presente {
@@ -9,14 +10,8 @@ export interface Presente {
     linkProduto?: string;
     status?: StatusPresenteDto;
     categoria?: CategoriaPresenteDto;
-    contribuicoes?: ContribuicaoPresente[];
+    contribuicoes?: ContribuicaoPresenteDto[];
     imagens?: Imagem[];
-}
-
-export interface ContribuicaoPresente {
-    convidadoId: string;
-    valor: number;
-    dataContribuicao?: Date | string;
 }
 
 export interface UpdatePresenteDto {
@@ -47,4 +42,32 @@ export interface CategoriaPresenteDto {
 export interface StatusPresenteDto {
     id: number;
     descricao: string;
+}
+
+export interface PresenteDetalhesDto {
+    id: number;
+    idEvento: number;
+    nome: string;
+    descricao?: string;
+    valor: number;
+    linkProduto?: string;
+    status: StatusPresenteDto;
+    categoria: CategoriaPresenteDto;
+    contribuicoes: ContribuicaoDetalhesDto[];
+    imagens?: Imagem[];
+}
+
+export interface ContribuicaoDetalhesDto {
+    id: number;
+    valor: number;
+    dataCadastro: Date | string;
+    status: string;
+    participante: ParticipanteContribuicaoDto;
+}
+
+export interface ParticipanteContribuicaoDto {
+    id: number;
+    nome: string;
+    email?: string;
+    foto?: string;
 }

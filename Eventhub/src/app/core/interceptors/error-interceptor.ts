@@ -27,7 +27,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           break;
           
         case 404:
-          modalService.openNotFoundModal(recurso);
+          //TODO: Verificar necessidade deve exibir em rotas não encontradas
+          //modalService.openNotFoundModal(recurso);
           break;
           
         case 408:

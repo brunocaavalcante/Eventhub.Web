@@ -8,9 +8,9 @@
             <mat-icon>edit</mat-icon>
             <span>Editar</span>
         </button>
-        <button mat-menu-item (click)="verContribuicoes(presente)">
-            <mat-icon>people</mat-icon>
-            <span>Ver Contribuições</span>
+        <button mat-menu-item [routerLink]="['/presentes/detalhes', presente.idEvento, presente.id]">
+            <mat-icon>visibility</mat-icon>
+            <span>Ver Detalhes</span>
         </button>
         <button mat-menu-item (click)="excluirPresente(presente)" class="menu-excluir">
             <mat-icon>delete</mat-icon>
@@ -57,16 +57,17 @@
             <div class="contribuicao-label">
                 <div>Cota compartilhada</div>
                 <div class="contribuicao-valor">
-                    R$ 1.200,00 / R$ 3.000,00
+                   {{ retornaSomaContribuicoes() | currencyBr }} / {{ presente.valor | currencyBr }}
                 </div>
             </div>
-            <mat-progress-bar color="primary" mode="determinate" [value]="50"></mat-progress-bar>
-            <div class="contribuicoes">2 contribuidores</div>
+            <mat-progress-bar color="primary" mode="determinate" [value]="calcularProgresso()"></mat-progress-bar>
+            <div class="contribuicoes">{{ (presente.contribuicoes.length > 1 ? presente.contribuicoes.length + '
+                contribuintes' : '1 contribuinte') }} </div>
         </div>
         }
     </mat-card-content>
     <mat-card-actions>
-        <button mat-button class="btn-reservar" [routerLink]="['/presentes/pagar', presente.id]">
+        <button mat-button class="btn-reservar" [routerLink]="['/presentes/pagar', presente.idEvento, presente.id]">
             <mat-icon>favorite</mat-icon>
             Contribuir com Pix
         </button>

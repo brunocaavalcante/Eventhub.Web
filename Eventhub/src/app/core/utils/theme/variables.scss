@@ -1,5 +1,5 @@
 $cor-primaria: #f04299;
-$cor-primaria-clara: #fde6f2;
+$cor-primaria-clara: #f0dbe6;
 $cor-primaria-clara-1: #fcf8fa;
 $cor-primaria-clara-2: #fff0f6;
 $cor-primaria-escura: #d81b60;
@@ -17,6 +17,7 @@ $cor-preto: #222;
 $cor-verde: #1a7a3c;
 $cor-amarelo: #e6a100;
 $cor-vermelho: #d32f2f;
+$cor-vermelho-claro: #fcebea;
 $cor-azul: #1976d2;
 $cor-atencao: #ff9800;
 $cor-atencao-clara: #fff4e5;
@@ -39,17 +40,23 @@ $btn-min-width: 150px;
 $radius: 12px;
 $radius-card: 16px;
 $radius-btn: 8px;
+$radius-input: 8px;
 $gap: 18px;
+$gap-sm: 12px;
+$gap-lg: 24px;
 $gap-card: 14px;
 $gap-mobile: 10px;
 
 // Fontes
 $font-titulo: 1.8rem;
 $font-titulo-mobile: 1.3rem;
+$font-body: 1rem;
 $font-texto-secundario: 1rem;
 $font-texto-secundario-mobile: 0.9rem;
 $font-desc: 0.9rem;
 $font-desc-mobile: 0.8rem;
+$font-small: 0.875rem;
+$font-media: 1rem;
 $font-padrao: 0.77rem;
 $font-btn: 1rem;
 $font-btn-mobile: 0.65rem;
@@ -68,3 +75,12 @@ $break-tablet: 900px;
 // Outros
 $input-border: 1px solid $cor-cinza-borda;
 $input-bg: $cor-branco;
+
+$padding: 24px;
+$padding-sm: 12px;
+$padding-lg: 32px;
+
+// Transições
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;

@@ -1,0 +1,156 @@
+<div class="tabela-container">
+  @if (config().placeholder) {
+  <div class="tabela-header">
+    <mat-form-field appearance="outline" class="filtro-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [placeholder]="config().placeholder!" (input)="aplicarFiltro($event)">
+    </mat-form-field>
+  </div>
+  }
+
+  <!-- Desktop Table -->
+  <div class="desktop-table" [style.max-height]="config().alturaMaxima || 'none'">
+    <table mat-table [dataSource]="dadosFiltrados()" class="tabela">
+      @for (coluna of config().colunas; track coluna.chave) {
+      <ng-container [matColumnDef]="coluna.chave">
+        <th mat-header-cell *matHeaderCellDef [style.width]="coluna.largura" 
+            [style.text-align]="coluna.alinhamento || 'left'">
+          {{ coluna.titulo }}
+        </th>
+        <td mat-cell *matCellDef="let linha" [style.text-align]="coluna.alinhamento || 'left'">
+          @switch (coluna.tipo) {
+            @case ('imagem') {
+              <div class="celula-imagem">
+                @if (ehImagem(resolverImagem(linha, coluna.chave, coluna.iconeAvatarPadrao))) {
+                  <img [src]="resolverImagem(linha, coluna.chave, coluna.iconeAvatarPadrao)" 
+                       [alt]="formatarCelula(linha, coluna)" class="avatar">
+                } @else {
+                  <div class="avatar-icone">
+                    <mat-icon>{{ resolverImagem(linha, coluna.chave, coluna.iconeAvatarPadrao) }}</mat-icon>
+                  </div>
+                }
+                <span>{{ formatarCelula(linha, coluna) }}</span>
+              </div>
+            }
+            @case ('status') {
+              <span [class]="'status-text ' + obterClasseStatus(obterValor(linha, coluna.chave), coluna.configStatus)">
+                {{ obterValor(linha, coluna.chave) }}
+              </span>
+            }
+            @default {
+              {{ formatarCelula(linha, coluna) }}
+            }
+          }
+        </td>
+      </ng-container>
+      }
+
+      @if (config().acoes?.length) {
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>AÇÕES</th>
+        <td mat-cell *matCellDef="let linha">
+          @if (temMuitasAcoes(linha)) {
+            <button mat-icon-button [matMenuTriggerFor]="menuAcoes">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menuAcoes="matMenu">
+              @for (acao of obterAcoesVisiveis(linha); track $index) {
+                <button mat-menu-item (click)="acao.handler(linha)">
+                  <mat-icon>{{ acao.icon }}</mat-icon>
+                  <span>{{ acao.label }}</span>
+                </button>
+              }
+            </mat-menu>
+          } @else {
+            @for (acao of config().acoes; track $index) {
+              @if (acaoVisivel(acao, linha)) {
+                <button mat-icon-button [ngClass]="acao.style || ''"
+                        [matTooltip]="acao.label"
+                        (click)="acao.handler(linha)">
+                  <mat-icon>{{ acao.icon }}</mat-icon>
+                </button>
+              }
+            }
+          }
+        </td>
+      </ng-container>
+      }
+
+      <tr mat-header-row *matHeaderRowDef="colunasExibidas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunasExibidas;"></tr>
+
+      @if (dadosFiltrados().length === 0) {
+      <tr class="mat-row">
+        <td class="mat-cell no-data" [attr.colspan]="colunasExibidas.length">
+          <mat-icon>{{ config().estadoVazio?.icone || 'info' }}</mat-icon>
+          <p>{{ config().estadoVazio?.mensagem || 'Nenhum dado encontrado' }}</p>
+        </td>
+      </tr>
+      }
+    </table>
+  </div>
+
+  <!-- Mobile Tiles -->
+  <div class="mobile-tiles" [style.max-height]="config().alturaMaxima || 'none'">
+    @if (dadosFiltrados().length === 0) {
+    <div class="no-data-mobile">
+      <mat-icon>{{ config().estadoVazio?.icone || 'info' }}</mat-icon>
+      <p>{{ config().estadoVazio?.mensagem || 'Nenhum dado encontrado' }}</p>
+    </div>
+    } @else {
+      @for (linha of dadosFiltrados(); track $index) {
+      <div class="tile-card">
+        <div class="tile-content">
+          @if (config().colunaImagemMobile) {
+            <div class="tile-avatar">
+              @if (ehImagem(resolverImagem(linha, config().colunaImagemMobile!, 'person'))) {
+                <img [src]="resolverImagem(linha, config().colunaImagemMobile!, 'person')" 
+                     [alt]="'Avatar'" class="avatar">
+              } @else {
+                <div class="avatar-icone">
+                  <mat-icon>{{ resolverImagem(linha, config().colunaImagemMobile!, 'person') }}</mat-icon>
+                </div>
+              }
+            </div>
+          }
+
+          <div class="tile-info">
+            @if (config().colunaPrincipalMobile) {
+              <div class="tile-principal">{{ obterValor(linha, config().colunaPrincipalMobile!) }}</div>
+            }
+            @for (coluna of config().colunas; track coluna.chave) {
+              @if (!coluna.ocultoMobile && coluna.chave !== config().colunaImagemMobile && 
+                   coluna.chave !== config().colunaPrincipalMobile) {
+                @if (coluna.tipo === 'status' || coluna.chave === config().colunaStatusMobile) {
+                  <div class="tile-detalhe">
+                    {{ coluna.titulo }}: 
+                    <span [class]="'status-text ' + obterClasseStatus(obterValor(linha, coluna.chave), coluna.configStatus)">
+                      {{ formatarCelula(linha, coluna) }}
+                    </span>
+                  </div>
+                } @else {
+                  <div class="tile-detalhe">{{ coluna.titulo }}: {{ formatarCelula(linha, coluna) }}</div>
+                }
+              }
+            }
+          </div>
+
+          @if (config().acoes?.length) {
+            <button mat-icon-button class="tile-menu" [matMenuTriggerFor]="menuAcoesMobile">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menuAcoesMobile="matMenu">
+              @for (acao of obterAcoesVisiveis(linha); track $index) {
+                <button mat-menu-item (click)="acao.handler(linha)">
+                  <mat-icon>{{ acao.icon }}</mat-icon>
+                  <span>{{ acao.label }}</span>
+                </button>
+              }
+            </mat-menu>
+          }
+        </div>
+      </div>
+      }
+    }
+  </div>
+</div>

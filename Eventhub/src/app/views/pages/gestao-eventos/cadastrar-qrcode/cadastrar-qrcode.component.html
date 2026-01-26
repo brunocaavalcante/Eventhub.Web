@@ -1,0 +1,82 @@
+<div class="container">
+    <div class="nao-cadastrado" *ngIf="!cadastrarPix()">
+        <div class="header">
+            <div class="icon">
+                <mat-icon>card_giftcard</mat-icon>
+            </div>
+            <h2>Nenhum QR Code Pix cadastrado</h2>
+            <p class="subtitle">Parece que você ainda não cadastrou um QR Code Pix para receber presentes. Para começar
+                a receber contribuições, clique no botão abaixo para cadastrar seu QR Code Pix estático.
+            </p>
+            <button mat-button (click)="cadastrarPix.set(true)">
+                <mat-icon>add</mat-icon>
+                Cadastrar QR Code Pix
+            </button>
+        </div>
+    </div>
+    <div class="card-cadastro" *ngIf="cadastrarPix()">
+        <div class="header">
+            <div class="icon">
+                <mat-icon>card_giftcard</mat-icon>
+            </div>
+            <h2>Cadastrar QR Code Estático</h2>
+            <p class="subtitle">Insira o código do seu QR Code Pix para receber presentes diretamente em sua conta.</p>
+        </div>
+
+        <form [formGroup]="form" class="form">
+            <!-- Campo Código PIX -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Código do QR Code Estático</mat-label>
+                <textarea matInput formControlName="codigoPix" rows="4"
+                    placeholder="Cole aqui código Pix copia e cola (ex: 00020126...)"></textarea>
+                <mat-hint>Geralmente começa com "000201"</mat-hint>
+                <mat-error *ngIf="displayMessage['codigoPix']">
+                    <mat-icon>error</mat-icon> {{ displayMessage['codigoPix'] }}
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Campo Nome Completo / Razão Social -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nome Completo / Razão Social</mat-label>
+                <mat-icon matPrefix>person</mat-icon>
+                <input matInput formControlName="nomeBeneficiario" placeholder="Nome do titular da conta" />
+                <mat-error *ngIf="displayMessage['nomeBeneficiario']">
+                    <mat-icon>error</mat-icon> {{ displayMessage['nomeBeneficiario'] }}
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Seção de Ajuda -->
+            <div class="help-section">
+                <div class="help-header">
+                    <mat-icon>help_outline</mat-icon>
+                    <strong>Como obter o código?</strong>
+                </div>
+                <p class="help-text">
+                    Cole aqui o código Pix (payload) do seu QR Code estático gerado no aplicativo do seu banco. Este
+                    código é usado para criar um QR Code visual para seus convidados, que poderão digitar o valor que
+                    desejam contribuir diretamente no aplicativo bancário.
+                </p>
+            </div>
+
+            <!-- Aviso de Segurança -->
+            <div class="security-notice">
+                <mat-icon>shield</mat-icon>
+                <p>
+                    Seus dados estão seguros e serão utilizados apenas para gerar o código de pagamento para os seus
+                    convidados.
+                </p>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="actions">
+                <button type="button" mat-stroked-button class="btn-cancelar" (click)="cancelar()">
+                    Cancelar
+                </button>
+                <button type="submit" mat-raised-button class="btn-salvar" (click)="salvar()" [disabled]="form.invalid">
+                    <mat-icon>save</mat-icon>
+                    Salvar QR Code Pix
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

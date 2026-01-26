@@ -12,6 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CurrencyBrPipe } from '../../../../../core/utils/pipes/currency-br.pipe';
 import { RouterModule } from "@angular/router";
 import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
+import { EnumStatusContribuicao } from '../../../../../core/utils/enums/status-contribuicao.enum';
 
 @Component({
   selector: 'app-card-presente',
@@ -58,10 +59,29 @@ export class CardPresenteComponent {
     }
   }
 
+  calcularProgresso(): number {
+    if (!this.presente.valor || this.presente.valor === 0) {
+      return 0;
+    }
+    const totalContribuido = this.retornaSomaContribuicoes();
+    return Math.min((totalContribuido / this.presente.valor) * 100, 100);
+  }
+
+  retornaSomaContribuicoes(): number {
+    if (!this.presente.contribuicoes || this.presente.contribuicoes.length === 0) {
+      return 0;
+    }
+    return this.presente.contribuicoes
+      .filter(contribuicao => {
+        return contribuicao.status === EnumStatusContribuicao.Confirmado.toString();
+      })
+      .reduce((soma, contribuicao) => soma + contribuicao.valor, 0);
+  }
+
   previousImage(): void {
     if (this.hasMultipleImages) {
-      this.currentImageIndex = this.currentImageIndex === 0 
-        ? this.imagens.length - 1 
+      this.currentImageIndex = this.currentImageIndex === 0
+        ? this.imagens.length - 1
         : this.currentImageIndex - 1;
     }
   }
@@ -70,11 +90,6 @@ export class CardPresenteComponent {
     if (index >= 0 && index < this.imagens.length) {
       this.currentImageIndex = index;
     }
-  }
-
-  verContribuicoes(presente: Presente): void {
-    console.log('Ver contribuições do presente:', presente);
-    // TODO: Implementar navegação para página de contribuições
   }
 
   excluirPresente(presente: Presente): void {

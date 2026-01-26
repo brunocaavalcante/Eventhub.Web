@@ -1,14 +1,23 @@
 import { Injectable } from "@angular/core";
 import { BaseService } from "./base.service";
-import { CategoriaPresenteDto, CreatePresenteDto, Presente, UpdatePresenteDto } from "../models/presente.model";
+import { CategoriaPresenteDto, CreatePresenteDto, Presente, PresenteDetalhesDto, UpdatePresenteDto } from "../models/presente.model";
 import { RetornoAPI } from "../models/retorno-api.model";
 import { Observable } from "rxjs";
+import { CancelarContribuicaoPresenteDto, ContribuicaoPresenteDto, CreateContribuicaoPresenteDto } from "../models/contribuicao-presente.model";
 
 @Injectable({ providedIn: 'root' })
 export class PresenteService extends BaseService {
 
     cadastro(presente: CreatePresenteDto): Observable<RetornoAPI<Presente[]>> {
         return this.http.post<RetornoAPI<Presente[]>>(`${this.urlApi}/presentes`, presente);
+    }
+
+    contribuir(contribuicao: CreateContribuicaoPresenteDto): Observable<RetornoAPI<ContribuicaoPresenteDto>> {
+        return this.http.post<RetornoAPI<ContribuicaoPresenteDto>>(`${this.urlApi}/contribuicaopresente`, contribuicao);
+    }
+
+    cancelarContribuicao(model: CancelarContribuicaoPresenteDto): Observable<RetornoAPI<null>> {
+        return this.http.post<RetornoAPI<null>>(`${this.urlApi}/contribuicaopresente/cancelar`, model);
     }
 
     atualizar(presente: UpdatePresenteDto): Observable<RetornoAPI<Presente[]>> {
@@ -29,5 +38,9 @@ export class PresenteService extends BaseService {
 
     obterPresentesPorEvento(idEvento: string): Observable<RetornoAPI<Presente[]>> {
         return this.http.get<RetornoAPI<Presente[]>>(`${this.urlApi}/presentes/evento/${idEvento}`);
+    }
+
+    obterDetalhesPorId(idPresente: number): Observable<RetornoAPI<PresenteDetalhesDto>> {
+        return this.http.get<RetornoAPI<PresenteDetalhesDto>>(`${this.urlApi}/presentes/${idPresente}/detalhes`);
     }
 }

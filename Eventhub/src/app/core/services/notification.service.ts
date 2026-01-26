@@ -20,8 +20,20 @@ export class NotificationService {
             }
         }
 
-        // fallback simples
-        // eslint-disable-next-line no-alert
+        window.alert(text);
+    }
+
+    showSuccess(message: string): void {
+        const text = message || 'Operação realizada com sucesso.';
+        if (this.snackBar) {
+            try {
+                this.snackBar.open(text, 'Fechar', { duration: 3000 });
+                return;
+            } catch (e) {
+                // fallback para alert
+            }
+        }
+
         window.alert(text);
     }
 }

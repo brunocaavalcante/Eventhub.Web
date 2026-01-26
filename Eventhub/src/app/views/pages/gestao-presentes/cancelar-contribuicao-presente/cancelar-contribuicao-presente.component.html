@@ -1,0 +1,54 @@
+<div class="cancelar-contribuicao-modal">
+    <div class="modal-header">
+        <h2 mat-dialog-title>Cancelar Contribuição</h2>
+        <button mat-icon-button mat-dialog-close class="btn-close">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-dialog-content class="modal-content">
+        <div class="info-contribuicao">
+            <div class="info-row">
+                <span class="label">Convidado</span>
+                <span class="valor">{{ contribuicao.participante.nome }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Valor da Contribuição</span>
+                <span class="valor valor-destaque">{{ contribuicao.valor | currencyBr }}</span>
+            </div>
+        </div>
+
+        <div class="aviso-irreversivel">
+            <mat-icon>error</mat-icon>
+            <div class="aviso-texto">
+                <strong>AÇÃO IRREVERSÍVEL</strong>
+                <p>Ao confirmar, esta contribuição será excluída do total arrecadado e não poderá ser restaurada.</p>
+            </div>
+        </div>
+
+        <form [formGroup]="form" class="form-cancelamento">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Justificativa do Cancelamento *</mat-label>
+                <textarea 
+                    matInput 
+                    formControlName="justificativa"
+                    rows="4"
+                    placeholder="Informe o motivo para o cancelamento desta contribuição...">
+                </textarea>
+                <mat-error *ngIf="displayMessage['justificativa']">
+                    <mat-icon>error</mat-icon> {{ displayMessage['justificativa'] }}
+                </mat-error>
+            </mat-form-field>
+            <p class="campo-obrigatorio-info">Este campo é obrigatório para manter o histórico do evento.</p>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="modal-actions">
+        <button mat-stroked-button (click)="cancelar()" class="btn-voltar">
+            Voltar
+        </button>
+        <button mat-flat-button (click)="confirmar()" class="btn-confirmar">
+            Confirmar Cancelamento
+        </button>
+    </mat-dialog-actions>
+</div>
