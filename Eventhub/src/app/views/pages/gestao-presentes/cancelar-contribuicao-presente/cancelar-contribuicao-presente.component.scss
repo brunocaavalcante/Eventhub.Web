@@ -1,0 +1,204 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.cancelar-contribuicao-modal {
+    display: flex;
+    flex-direction: column;
+    min-width: 500px;
+    max-width: 600px;
+
+    @media (max-width: $break-mobile) {
+        min-width: 90vw;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid $cor-cinza-borda;
+
+    h2 {
+        font-size: 1.25rem;
+        font-weight: $font-peso-bold;
+        color: $cor-texto;
+        margin: 0;
+    }
+
+    .btn-close {
+        color: $cor-cinza-medio;
+
+        &:hover {
+            color: $cor-texto;
+            background-color: rgba($cor-cinza-medio, 0.1);
+        }
+    }
+}
+
+.modal-content {
+    padding: 24px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-contribuicao {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid $cor-cinza-borda;
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .label {
+            font-size: $font-body;
+            color: $cor-texto-secundario;
+            font-weight: $font-peso-normal;
+        }
+
+        .valor {
+            font-size: $font-body;
+            color: $cor-texto;
+            font-weight: $font-peso-medium;
+
+            &.valor-destaque {
+                color: $cor-primaria;
+                font-size: 1.1rem;
+                font-weight: $font-peso-bold;
+            }
+        }
+    }
+}
+
+.aviso-irreversivel {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background-color: $cor-vermelho-claro;
+    border-left: 4px solid $cor-vermelho;
+    border-radius: $radius-input;
+
+    mat-icon {
+        color: $cor-vermelho;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+    }
+
+    .aviso-texto {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        strong {
+            font-size: $font-small;
+            font-weight: $font-peso-bold;
+            color: $cor-vermelho;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            font-size: $font-small;
+            color: darken($cor-vermelho, 5%);
+            margin: 0;
+            line-height: 1.4;
+        }
+    }
+}
+
+.form-cancelamento {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .full-width {
+        width: 100%;
+    }
+
+    mat-form-field {
+        ::ng-deep {
+            .mat-mdc-form-field-error-wrapper {
+                padding: 0;
+            }
+
+            .mat-mdc-form-field-bottom-align {
+                gap: 4px;
+            }
+
+            textarea.mat-mdc-input-element {
+                resize: vertical;
+                min-height: 80px;
+            }
+        }
+
+        mat-error {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: $font-small;
+
+            mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+
+    .campo-obrigatorio-info {
+        font-size: $font-small;
+        color: $cor-texto-secundario;
+        margin: 0;
+        font-style: italic;
+    }
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px !important;
+    border-top: 1px solid $cor-cinza-borda;
+
+    button {
+        min-width: 120px;
+        height: 40px;
+        font-weight: $font-peso-medium;
+        border-radius: $radius-btn;
+        transition: all $transition-fast;
+
+        @media (max-width: $break-mobile) {
+            min-width: 100px;
+            font-size: $font-small;
+        }
+    }
+
+    .btn-voltar {
+        color: $cor-cinza-medio;
+        border-color: $cor-cinza-medio;
+
+        &:hover {
+            background-color: rgba($cor-cinza-medio, 0.1);
+        }
+    }
+
+    .btn-confirmar {
+        background-color: $cor-vermelho;
+        color: $cor-branco;
+
+        &:hover:not(:disabled) {
+            background-color: darken($cor-vermelho, 8%);
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+}
