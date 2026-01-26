@@ -3,7 +3,7 @@ import { BaseService } from "./base.service";
 import { CategoriaPresenteDto, CreatePresenteDto, Presente, PresenteDetalhesDto, UpdatePresenteDto } from "../models/presente.model";
 import { RetornoAPI } from "../models/retorno-api.model";
 import { Observable } from "rxjs";
-import { ContribuicaoPresenteDto, CreateContribuicaoPresenteDto } from "../models/contribuicao-pix.model";
+import { CancelarContribuicaoPresenteDto, ContribuicaoPresenteDto, CreateContribuicaoPresenteDto } from "../models/contribuicao-presente.model";
 
 @Injectable({ providedIn: 'root' })
 export class PresenteService extends BaseService {
@@ -13,7 +13,11 @@ export class PresenteService extends BaseService {
     }
 
     contribuir(contribuicao: CreateContribuicaoPresenteDto): Observable<RetornoAPI<ContribuicaoPresenteDto>> {
-        return this.http.post<RetornoAPI<ContribuicaoPresenteDto>>(`${this.urlApi}/presentes/contribuicoes`, contribuicao);
+        return this.http.post<RetornoAPI<ContribuicaoPresenteDto>>(`${this.urlApi}/contribuicaopresente`, contribuicao);
+    }
+
+    cancelarContribuicao(model: CancelarContribuicaoPresenteDto): Observable<RetornoAPI<null>> {
+        return this.http.post<RetornoAPI<null>>(`${this.urlApi}/contribuicaopresente/cancelar`, model);
     }
 
     atualizar(presente: UpdatePresenteDto): Observable<RetornoAPI<Presente[]>> {

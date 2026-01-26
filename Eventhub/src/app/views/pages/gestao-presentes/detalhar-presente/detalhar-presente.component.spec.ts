@@ -34,12 +34,14 @@ describe('DetalharPresenteComponent', () => {
     }],
     contribuicoes: [
       {
-        id: 1, valor: 300, dataCadastro: '2024-01-01', status: 'Confirmado',
-        participante: { nome: 'João', foto: '', id: 0 }
+        id: 1, valor: 300, dataCadastro: '2024-01-01',
+        participante: { nome: 'João', foto: '', id: 0 },
+        status: 'Confirmado'
       },
       {
-        id: 2, valor: 200, dataCadastro: '2024-01-02', status: 'Pendente',
-        participante: { nome: 'Maria', foto: '', id: 0 }
+        id: 2, valor: 200, dataCadastro: '2024-01-02',
+        participante: { nome: 'Maria', foto: '', id: 0 },
+        status: 'Confirmado'  
       }
     ],
     categoria: { id: 0, nome: 'Teste' }

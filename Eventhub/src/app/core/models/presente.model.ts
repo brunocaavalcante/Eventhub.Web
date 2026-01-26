@@ -1,4 +1,4 @@
-import { ContribuicaoPresenteDto } from "./contribuicao-pix.model";
+import { ContribuicaoPresenteDto } from "./contribuicao-presente.model";
 import { Imagem } from "./imagem.model";
 
 export interface Presente {

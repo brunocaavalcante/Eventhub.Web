@@ -19,7 +19,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { PixEventoService } from '../../../../core/services/pix-evento.service';
 import { FinalidadePix } from '../../../../core/utils/enums/finalidade-pix.enum';
-import { CreateContribuicaoPresenteDto } from '../../../../core/models/contribuicao-pix.model';
+import { CreateContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
 import { Imagem, TipoImagemEvento } from '../../../../core/models/imagem.model';
 import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 

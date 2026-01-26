@@ -20,6 +20,10 @@ import { finalize } from 'rxjs';
 import { TabelaGenericaComponent } from '../../../../core/components/tabela-generica/tabela-generica.component';
 import { ConfigTabela } from '../../../../core/components/tabela-generica/tabela-generica.model';
 import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
+import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } from '../cancelar-contribuicao-presente/cancelar-contribuicao-presente.component';
+import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
+import { CancelarContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
+import { EnumStatusContribuicao } from '../../../../core/utils/enums/status-contribuicao.enum';
 
 @Component({
   selector: 'app-detalhar-presente',
@@ -94,9 +98,8 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
       {
         label: 'Cancelar contribuição',
         icon: 'cancel',
-        handler: (contrib) => {
-          this.router.navigate(['/presentes', this.idEvento, 'detalhar', this.idPresente, 'contribuicoes', contrib.id, 'cancelar']);
-        }
+        visivel: (contrib) => contrib.status.toLowerCase() !== 'cancelado',
+        handler: (contrib) => this.cancelarContribuicao(contrib)
       },
       {
         label: 'Confirmar contribuição',
@@ -166,8 +169,13 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
 
   get totalArrecadado(): number {
     const presente = this.presente();
+
     if (!presente?.contribuicoes) return 0;
-    return presente.contribuicoes.reduce((total, contrib) => total + contrib.valor, 0);
+    return presente.contribuicoes
+      .filter(contrib => {
+        return contrib.status.toLocaleLowerCase() == "confirmado"
+      })
+      .reduce((total, contrib) => total + contrib.valor, 0);
   }
 
   get valorRestante(): number {
@@ -215,10 +223,48 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
     this.location.back();
   }
 
+  cancelarContribuicao(contribuicao: ContribuicaoDetalhesDto): void {
+    const dialogRef = this.dialog.open(CancelarContribuicaoPresenteComponent, {
+      width: '600px',
+      maxWidth: '90vw',
+      disableClose: true,
+      data: { contribuicao }
+    });
+
+    dialogRef.afterClosed().subscribe((result: CancelarContribuicaoResult) => {
+      if (result?.confirmado) {
+        this.spinner.show();
+        const model: CancelarContribuicaoPresenteDto = {
+          idContribuicao: contribuicao.id,
+          justificativa: result.justificativa!
+        };
+        this.presenteService.cancelarContribuicao(model)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: (response) => {
+              this.spinner.hide();
+              console.log(response);
+              if (response.executouComSucesso) {
+                this.dialog.open(ModalSucessComponent, {
+                  data: { title: 'Contribuição Cancelada', message: 'A contribuição foi cancelada com sucesso.' }
+                })
+                .afterClosed().subscribe(() => {
+                  this.carregarDetalhes();
+                });
+              }
+            },
+            error: (err) => {
+              console.error('Erro ao cancelar contribuição:', err);
+              this.spinner.hide();
+            }
+          });
+      }
+    });
+  }
+
   editarPresente(): void {
     this.router.navigate(['/presentes/editar', this.idEvento, this.idPresente]);
   }
-  
   getStatusClass(status: StatusPresenteDto): string {
     switch (status.id) {
       case EnumStatusPresente.Disponivel:

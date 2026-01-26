@@ -12,6 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CurrencyBrPipe } from '../../../../../core/utils/pipes/currency-br.pipe';
 import { RouterModule } from "@angular/router";
 import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
+import { EnumStatusContribuicao } from '../../../../../core/utils/enums/status-contribuicao.enum';
 
 @Component({
   selector: 'app-card-presente',
@@ -70,7 +71,11 @@ export class CardPresenteComponent {
     if (!this.presente.contribuicoes || this.presente.contribuicoes.length === 0) {
       return 0;
     }
-    return this.presente.contribuicoes.reduce((soma, contribuicao) => soma + contribuicao.valor, 0);
+    return this.presente.contribuicoes
+      .filter(contribuicao => {
+        return contribuicao.status === EnumStatusContribuicao.Confirmado.toString();
+      })
+      .reduce((soma, contribuicao) => soma + contribuicao.valor, 0);
   }
 
   previousImage(): void {
