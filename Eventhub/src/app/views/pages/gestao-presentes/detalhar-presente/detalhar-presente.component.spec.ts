@@ -10,6 +10,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
 import { PresenteDetalhesDto } from '../../../../core/models/presente.model';
 import { TipoImagemEvento } from '../../../../core/models/imagem.model';
+import { UsuarioService } from '../../../../core/services/usuario.service';
+import { EnumStatusContribuicao } from '../../../../core/utils/enums/status-contribuicao.enum';
 
 describe('DetalharPresenteComponent', () => {
   let component: DetalharPresenteComponent;
@@ -27,24 +29,30 @@ describe('DetalharPresenteComponent', () => {
     valor: 1000,
     linkProduto: 'https://exemplo.com',
     status: { id: EnumStatusPresente.Disponivel, descricao: 'Disponível' },
-    imagens: [{
-      base64: 'data:image/png;base64,abc123',
-      nomeArquivo: '',
-      tipoImagem: TipoImagemEvento.Capa
-    }],
+    imagens: [
+      {
+        base64: 'data:image/png;base64,abc123',
+        nomeArquivo: '',
+        tipoImagem: TipoImagemEvento.Capa,
+      },
+    ],
     contribuicoes: [
       {
-        id: 1, valor: 300, dataCadastro: '2024-01-01',
+        id: 1,
+        valor: 300,
+        dataCadastro: '2024-01-01',
         participante: { nome: 'João', foto: '', id: 0 },
-        status: 'Confirmado'
+        status: { id: EnumStatusContribuicao.Confirmado, descricao: 'Confirmado' },
       },
       {
-        id: 2, valor: 200, dataCadastro: '2024-01-02',
+        id: 2,
+        valor: 200,
+        dataCadastro: '2024-01-02',
         participante: { nome: 'Maria', foto: '', id: 0 },
-        status: 'Confirmado'  
-      }
+        status: { id: EnumStatusContribuicao.Confirmado, descricao: 'Confirmado' },
+      },
     ],
-    categoria: { id: 0, nome: 'Teste' }
+    categoria: { id: 0, nome: 'Teste' },
   };
 
   beforeEach(async () => {
@@ -60,7 +68,8 @@ describe('DetalharPresenteComponent', () => {
         { provide: PresenteService, useValue: mockPresenteService },
         { provide: SpinnerService, useValue: mockSpinnerService },
         { provide: Location, useValue: mockLocation },
-        { provide: Router, useValue: mockRouter }
+        { provide: Router, useValue: mockRouter },
+        { provide: UsuarioService, useValue: {} }
       ]
     }).compileComponents();
 
@@ -167,7 +176,7 @@ describe('DetalharPresenteComponent', () => {
 
   it('deve voltar para página anterior', () => {
     component.voltar();
-    expect(mockLocation.back).toHaveBeenCalled();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/presentes', component.idEvento]);
   });
 
   it('deve navegar para editar presente', () => {

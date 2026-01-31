@@ -3,7 +3,7 @@ import { BaseService } from "./base.service";
 import { CategoriaPresenteDto, CreatePresenteDto, Presente, PresenteDetalhesDto, UpdatePresenteDto } from "../models/presente.model";
 import { RetornoAPI } from "../models/retorno-api.model";
 import { Observable } from "rxjs";
-import { CancelarContribuicaoPresenteDto, ContribuicaoPresenteDto, CreateContribuicaoPresenteDto } from "../models/contribuicao-presente.model";
+import { CancelarContribuicaoPresenteDto, ContribuicaoPresenteDto, CreateContribuicaoPresenteDto, StatusContribuicaoPresenteDto, UpdateContribuicaoPresenteDto } from "../models/contribuicao-presente.model";
 
 @Injectable({ providedIn: 'root' })
 export class PresenteService extends BaseService {
@@ -42,5 +42,13 @@ export class PresenteService extends BaseService {
 
     obterDetalhesPorId(idPresente: number): Observable<RetornoAPI<PresenteDetalhesDto>> {
         return this.http.get<RetornoAPI<PresenteDetalhesDto>>(`${this.urlApi}/presentes/${idPresente}/detalhes`);
+    }
+
+    obterStatusContribuicaoPresente(): Observable<RetornoAPI<StatusContribuicaoPresenteDto[]>> {
+        return this.http.get<RetornoAPI<StatusContribuicaoPresenteDto[]>>(`${this.urlApi}/contribuicaopresente/status`);
+    }
+
+    atualizarContribuicao(contribuicao: UpdateContribuicaoPresenteDto): Observable<RetornoAPI<ContribuicaoPresenteDto>> {
+        return this.http.put<RetornoAPI<ContribuicaoPresenteDto>>(`${this.urlApi}/contribuicaopresente/${contribuicao.id}`, contribuicao);
     }
 }

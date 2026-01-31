@@ -1,0 +1,87 @@
+<div class="container">
+  <header class="header">
+    <button class="btn-voltar" (click)="voltarParaDetalhes()" type="button">
+      <mat-icon>arrow_back</mat-icon>
+      Voltar para Detalhes do Presente
+    </button>
+  </header>
+
+  <div class="card-editar">
+    <div class="card-header">
+      <div class="icon-wrapper">
+        <mat-icon>edit</mat-icon>
+      </div>
+      <h1>Editar Contribuição</h1>
+    </div>
+
+    <div class="info-section">
+      <div class="info-item">
+        <mat-icon>person</mat-icon>
+        <span class="label">Convidado:</span>
+        <span class="value">{{ nomeConvidado }}</span>
+      </div>
+      <div class="info-item">
+        <mat-icon>card_giftcard</mat-icon>
+        <span class="label">Presente:</span>
+        <span class="value">{{ nomePresente }}</span>
+      </div>
+    </div>
+
+    <form [formGroup]="form" class="form-content">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="field-half">
+          <mat-label>Valor doado (R$)</mat-label>
+          <input matInput formControlName="valor" type="text" mask="separator.2" thousandSeparator="." decimalMarker=","
+            prefix="R$ " placeholder="R$ 0,00" />
+          <mat-error *ngIf="form.get('valor')?.hasError('required')">
+            <mat-icon>error</mat-icon> Campo obrigatório
+          </mat-error>
+          <mat-error *ngIf="form.get('valor')?.hasError('min')">
+            <mat-icon>error</mat-icon> Valor deve ser maior que zero
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field-half">
+          <mat-label>Data da contribuição</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dataContribuicao" placeholder="Selecione a data" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="form.get('dataContribuicao')?.hasError('required')">
+            <mat-icon>error</mat-icon> Campo obrigatório
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <label class="status-label">Status da Contribuição</label>
+        <div class="status-buttons">
+          <button *ngFor="let option of statusOptions()" type="button" class="status-btn"
+            [class.active]="form.get('status')?.value === option.id" (click)="selecionarStatus(option)">
+            {{ option.descricao }}
+          </button>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <mat-icon>info</mat-icon>
+        <div class="info-text">
+          <p>
+            <strong>Alterar o status para Validado</strong> enviará
+            automaticamente um agradecimento ao convidado. O status
+            <strong>Cancelado</strong> libera o valor da meta novamente.
+          </p>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancelar" (click)="cancelar()">
+          CANCELAR
+        </button>
+        <button type="button" class="btn-salvar" (click)="confirmarAtualizacao()" [disabled]="form.invalid">
+          <mat-icon>save</mat-icon>
+          SALVAR
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

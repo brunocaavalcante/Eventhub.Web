@@ -1,4 +1,4 @@
-import { ContribuicaoPresenteDto } from "./contribuicao-presente.model";
+import { ContribuicaoPresenteDto, StatusContribuicaoPresenteDto } from "./contribuicao-presente.model";
 import { Imagem } from "./imagem.model";
 
 export interface Presente {
@@ -61,7 +61,7 @@ export interface ContribuicaoDetalhesDto {
     id: number;
     valor: number;
     dataCadastro: Date | string;
-    status: string;
+    status: StatusContribuicaoPresenteDto;
     participante: ParticipanteContribuicaoDto;
 }
 

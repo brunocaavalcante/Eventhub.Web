@@ -1,0 +1,275 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.container {
+  @include container(900px);
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.btn-voltar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: $cor-primaria;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: $radius-btn;
+  transition: all $transition-fast;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: $cor-primaria-clara;
+  }
+}
+
+.card-editar {
+  @include card;
+  padding: 32px;
+
+  @media (max-width: $break-mobile) {
+    padding: 20px;
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid $cor-cinza-borda;
+
+  .icon-wrapper {
+    @include flex-center;
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(
+      135deg,
+      $cor-primaria-clara 0%,
+      $cor-primaria-clara-2 100%
+    );
+    border-radius: 50%;
+
+    mat-icon {
+      color: $cor-primaria;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  h1 {
+    @include font-size($font-titulo);
+    font-weight: $font-peso-bold;
+    color: $cor-texto;
+    margin: 0;
+  }
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding: 16px;
+  background: $cor-cinza-claro;
+  border-radius: $radius;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  mat-icon {
+    color: $cor-cinza-medio;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .label {
+    font-weight: $font-peso-medium;
+    color: $cor-texto-secundario;
+    @include font-size(0.95rem);
+  }
+
+  .value {
+    font-weight: $font-peso-bold;
+    color: $cor-texto;
+    @include font-size(1rem);
+  }
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  @media (max-width: $break-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field-half {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+
+  ::ng-deep {
+    .mat-mdc-text-field-wrapper {
+      background-color: $cor-branco;
+    }
+
+    .mat-mdc-form-field-error {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-label {
+  @include font-size(1rem);
+  font-weight: $font-peso-medium;
+  color: $cor-texto;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.status-btn {
+  padding: 10px 24px;
+  border: 2px solid $cor-cinza-borda;
+  background: $cor-branco;
+  color: $cor-texto-secundario;
+  @include font-size(0.95rem);
+  font-weight: $font-peso-medium;
+  border-radius: $radius-btn;
+  cursor: pointer;
+  transition: all $transition-fast;
+  min-width: 120px;
+
+  &:hover {
+    border-color: $cor-primaria;
+    color: $cor-primaria;
+  }
+
+  &.active {
+    background: $cor-primaria;
+    border-color: $cor-primaria;
+    color: $cor-branco;
+    box-shadow: 0 2px 8px rgba($cor-primaria, 0.3);
+  }
+}
+
+.info-box {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: $cor-info-clara;
+  border-left: 4px solid $cor-info;
+  border-radius: $radius;
+
+  mat-icon {
+    color: $cor-info;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .info-text {
+    flex: 1;
+
+    p {
+      margin: 0;
+      color: $cor-info-escura;
+      font-size: 0.95rem;
+      line-height: 1.5;
+
+      strong {
+        font-weight: $font-peso-bold;
+      }
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid $cor-cinza-borda;
+
+  @media (max-width: $break-mobile) {
+    flex-direction: column;
+  }
+}
+
+.btn-cancelar {
+  @include btn-secondary;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: $break-mobile) {
+    width: 100%;
+  }
+}
+
+.btn-salvar {
+  @include btn-primary;
+  display: flex;
+  gap: 8px;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: $break-mobile) {
+    width: 100%;
+  }
+}
