@@ -1,5 +1,4 @@
-@use 'variables' as *;
-
+@use "variables" as *;
 
 @mixin container($max-width: 1200px) {
   display: flex;
@@ -27,6 +26,10 @@
   }
 }
 
+@mixin btn-secondary {
+  @include btn-primary($bg-color: $cor-btn-secundario, $color: $cor-primaria);
+}
+
 @mixin btn-primary($bg-color: $cor-primaria, $color: $cor-branco) {
   background: $bg-color;
   color: $color !important;
@@ -36,11 +39,15 @@
   padding: 10px 22px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   box-shadow: $sombra-card-leve;
-  border: none;
+  border: 1.5px solid $cor-primaria;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    color 0.2s;
   height: 55px;
   position: relative;
   top: -10px;
@@ -128,7 +135,7 @@
   border-radius: $radius-card;
   box-shadow: $sombra-card;
   transition: box-shadow $transition-normal;
-  
+
   &:hover {
     box-shadow: 0 4px 20px rgba($cor-primaria, 0.12);
   }

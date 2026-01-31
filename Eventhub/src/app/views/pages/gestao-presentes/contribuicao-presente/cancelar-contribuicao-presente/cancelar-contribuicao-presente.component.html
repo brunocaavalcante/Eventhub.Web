@@ -29,8 +29,8 @@
         <form [formGroup]="form" class="form-cancelamento">
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Justificativa do Cancelamento *</mat-label>
-                <textarea 
-                    matInput 
+                <textarea
+                    matInput
                     formControlName="justificativa"
                     rows="4"
                     placeholder="Informe o motivo para o cancelamento desta contribuição...">
@@ -45,10 +45,10 @@
 
     <mat-dialog-actions class="modal-actions">
         <button mat-stroked-button (click)="cancelar()" class="btn-voltar">
-            Voltar
+            FECHAR
         </button>
         <button mat-flat-button (click)="confirmar()" class="btn-confirmar">
-            Confirmar Cancelamento
+           CONFIRMAR
         </button>
     </mat-dialog-actions>
 </div>

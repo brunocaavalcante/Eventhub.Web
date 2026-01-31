@@ -16,7 +16,7 @@
                 <div class="presente-imagem">
                     @if (hasImages) {
                     <div class="carousel">
-                        <img [src]="currentImage" [alt]="present.nome" class="carousel-image">
+                        <img [src]="currentImage" alt="{{ present.nome }}" [title]="present.nome" class="carousel-image"/>
 
                         @if (hasMultipleImages) {
                         <button mat-icon-button class="carousel-btn carousel-btn-prev" (click)="previousImage()">

@@ -43,7 +43,7 @@ form{
     gap: 10px;
 
     .secundary{
-        @include btn-primary($bg-color: $cor-btn-secundario, $color: $cor-primaria);
+        @include btn-secondary;
     }
 
     .primary{

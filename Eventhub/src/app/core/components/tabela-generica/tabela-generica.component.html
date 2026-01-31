@@ -3,7 +3,7 @@
   <div class="tabela-header">
     <mat-form-field appearance="outline" class="filtro-field">
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput [placeholder]="config().placeholder!" (input)="aplicarFiltro($event)">
+      <input title="search" matInput [placeholder]="config().placeholder!" (input)="aplicarFiltro($event)">
     </mat-form-field>
   </div>
   }
@@ -13,7 +13,7 @@
     <table mat-table [dataSource]="dadosFiltrados()" class="tabela">
       @for (coluna of config().colunas; track coluna.chave) {
       <ng-container [matColumnDef]="coluna.chave">
-        <th mat-header-cell *matHeaderCellDef [style.width]="coluna.largura" 
+        <th mat-header-cell *matHeaderCellDef [style.width]="coluna.largura"
             [style.text-align]="coluna.alinhamento || 'left'">
           {{ coluna.titulo }}
         </th>
@@ -22,8 +22,8 @@
             @case ('imagem') {
               <div class="celula-imagem">
                 @if (ehImagem(resolverImagem(linha, coluna.chave, coluna.iconeAvatarPadrao))) {
-                  <img [src]="resolverImagem(linha, coluna.chave, coluna.iconeAvatarPadrao)" 
-                       [alt]="formatarCelula(linha, coluna)" class="avatar">
+                  <img [src]="resolverImagem(linha, coluna.chave, coluna.iconeAvatarPadrao)"
+                       alt="{{ formatarCelula(linha, coluna) }}" class="avatar">
                 } @else {
                   <div class="avatar-icone">
                     <mat-icon>{{ resolverImagem(linha, coluna.chave, coluna.iconeAvatarPadrao) }}</mat-icon>
@@ -104,8 +104,8 @@
           @if (config().colunaImagemMobile) {
             <div class="tile-avatar">
               @if (ehImagem(resolverImagem(linha, config().colunaImagemMobile!, 'person'))) {
-                <img [src]="resolverImagem(linha, config().colunaImagemMobile!, 'person')" 
-                     [alt]="'Avatar'" class="avatar">
+                <img [src]="resolverImagem(linha, config().colunaImagemMobile!, 'person')"
+                     alt="Avatar" class="avatar">
               } @else {
                 <div class="avatar-icone">
                   <mat-icon>{{ resolverImagem(linha, config().colunaImagemMobile!, 'person') }}</mat-icon>
@@ -119,11 +119,11 @@
               <div class="tile-principal">{{ obterValor(linha, config().colunaPrincipalMobile!) }}</div>
             }
             @for (coluna of config().colunas; track coluna.chave) {
-              @if (!coluna.ocultoMobile && coluna.chave !== config().colunaImagemMobile && 
+              @if (!coluna.ocultoMobile && coluna.chave !== config().colunaImagemMobile &&
                    coluna.chave !== config().colunaPrincipalMobile) {
                 @if (coluna.tipo === 'status' || coluna.chave === config().colunaStatusMobile) {
                   <div class="tile-detalhe">
-                    {{ coluna.titulo }}: 
+                    {{ coluna.titulo }}:
                     <span [class]="'status-text ' + obterClasseStatus(obterValor(linha, coluna.chave), coluna.configStatus)">
                       {{ formatarCelula(linha, coluna) }}
                     </span>
