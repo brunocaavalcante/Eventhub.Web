@@ -21,3 +21,15 @@ export interface CancelarContribuicaoPresenteDto {
     idContribuicao: number;
     justificativa: string;
 }
+
+export interface UpdateContribuicaoPresenteDto {
+    id: number;
+    valor: number;
+    status?: StatusContribuicaoPresenteDto;
+    justificativa?: string;
+}
+
+export interface StatusContribuicaoPresenteDto {
+    id: number;
+    descricao: string;
+}

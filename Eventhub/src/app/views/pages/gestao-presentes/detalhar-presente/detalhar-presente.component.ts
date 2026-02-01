@@ -20,10 +20,9 @@ import { finalize } from 'rxjs';
 import { TabelaGenericaComponent } from '../../../../core/components/tabela-generica/tabela-generica.component';
 import { ConfigTabela } from '../../../../core/components/tabela-generica/tabela-generica.model';
 import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
-import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } from '../cancelar-contribuicao-presente/cancelar-contribuicao-presente.component';
 import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
 import { CancelarContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
-import { EnumStatusContribuicao } from '../../../../core/utils/enums/status-contribuicao.enum';
+import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } from '../contribuicao-presente/cancelar-contribuicao-presente/cancelar-contribuicao-presente.component';
 
 @Component({
   selector: 'app-detalhar-presente',
@@ -77,7 +76,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
         tipo: 'data'
       },
       {
-        chave: 'status',
+        chave: 'status.descricao',
         titulo: 'STATUS',
         tipo: 'status'
       }
@@ -92,13 +91,13 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
         label: 'Editar contribuição',
         icon: 'edit',
         handler: (contrib) => {
-          this.router.navigate(['/presentes', this.idEvento, 'detalhar', this.idPresente, 'contribuicoes', contrib.id, 'editar']);
+          this.router.navigate(['/presentes/editar-contribuicao', this.idEvento, this.idPresente, contrib.id]);
         }
       },
       {
         label: 'Cancelar contribuição',
         icon: 'cancel',
-        visivel: (contrib) => contrib.status.toLowerCase() !== 'cancelado',
+        visivel: (contrib) => contrib.status?.descricao?.toLowerCase() !== 'cancelado',
         handler: (contrib) => this.cancelarContribuicao(contrib)
       },
       {
@@ -117,7 +116,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
     alturaMaxima: '600px',
     colunaImagemMobile: 'participante.foto',
     colunaPrincipalMobile: 'participante.nome',
-    colunaStatusMobile: 'status'
+    colunaStatusMobile: 'status.descricao'
   }));
 
   idEvento!: string;
@@ -173,7 +172,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
     if (!presente?.contribuicoes) return 0;
     return presente.contribuicoes
       .filter(contrib => {
-        return contrib.status.toLocaleLowerCase() == "confirmado"
+        return contrib.status?.descricao?.toLowerCase() == "confirmado"
       })
       .reduce((total, contrib) => total + contrib.valor, 0);
   }
@@ -220,7 +219,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
   }
 
   voltar(): void {
-    this.location.back();
+    this.router.navigate(['/presentes', this.idEvento]);
   }
 
   cancelarContribuicao(contribuicao: ContribuicaoDetalhesDto): void {
@@ -265,6 +264,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
   editarPresente(): void {
     this.router.navigate(['/presentes/editar', this.idEvento, this.idPresente]);
   }
+
   getStatusClass(status: StatusPresenteDto): string {
     switch (status.id) {
       case EnumStatusPresente.Disponivel:

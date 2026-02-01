@@ -35,13 +35,13 @@ import { ConfigTabela } from './tabela-generica.model';
 export class TabelaGenericaComponent<T = any> {
   config = input.required<ConfigTabela<T>>();
   dados = input.required<T[]>();
-  
+
   filtro = signal('');
-  
+
   dadosFiltrados = computed(() => {
     const termo = this.filtro().toLowerCase();
     if (!termo) return this.dados();
-    
+
     return this.dados().filter(item => {
       return this.config().colunas.some(col => {
         const valor = this.obterValor(item, col.chave);
@@ -61,9 +61,9 @@ export class TabelaGenericaComponent<T = any> {
 
   formatarCelula(linha: T, coluna: any): string {
     const valor = this.obterValor(linha, coluna.chave);
-    
+
     if (coluna.formatador) return coluna.formatador(valor, linha);
-    
+
     switch (coluna.tipo) {
       case 'moeda':
         return new CurrencyBrPipe().transform(valor);
@@ -79,7 +79,7 @@ export class TabelaGenericaComponent<T = any> {
   resolverImagem(linha: T, chave: string, iconePadrao = 'person'): string {
     const valor = this.obterValor(linha, chave);
     if (!valor) return iconePadrao;
-    
+
     const resolvida = Base64ImageUtil.resolveImageSource(valor);
     return resolvida || iconePadrao;
   }
@@ -89,8 +89,9 @@ export class TabelaGenericaComponent<T = any> {
   }
 
   obterClasseStatus(valor: string, config?: { [chave: string]: string }): string {
-    if (!config) return `status-${valor.toLowerCase()}`;
-    return config[valor] || `status-${valor.toLowerCase()}`;
+    if (!valor) return '';
+    if (!config) return `status-${valor?.toLowerCase()}`;
+    return config[valor] || `status-${valor?.toLowerCase()}`;
   }
 
   aplicarFiltro(event: Event): void {
