@@ -23,6 +23,9 @@ import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente
 import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
 import { CancelarContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
 import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } from '../contribuicao-presente/cancelar-contribuicao-presente/cancelar-contribuicao-presente.component';
+import { VisualizarComprovanteModalComponent } from '../visualizar-comprovante-modal/visualizar-comprovante-modal.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-detalhar-presente',
@@ -35,6 +38,8 @@ import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } fro
     MatFormFieldModule,
     MatInputModule,
     MatChipsModule,
+    MatSelectModule,
+    MatBadgeModule,
     RouterModule,
     CurrencyBrPipe,
     TabelaGenericaComponent
@@ -53,6 +58,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
   presente = signal<PresenteDetalhesDto | null>(null);
   contribuicoesFiltradas = signal<ContribuicaoDetalhesDto[]>([]);
   filtroNome = signal('');
+  filtroStatus = signal<string>('todos');
   currentImageIndex = 0;
 
   configTabela = computed<ConfigTabela<ContribuicaoDetalhesDto>>(() => ({
@@ -85,6 +91,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
       {
         label: 'Ver comprovante',
         icon: 'receipt',
+        visivel: (contrib) => contrib.comprovante != null,
         handler: (contrib) => this.verComprovante(contrib)
       },
       {
@@ -140,13 +147,50 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
         next: (response) => {
           if (response.executouComSucesso && response.data) {
             this.presente.set(response.data);
-            this.contribuicoesFiltradas.set(response.data.contribuicoes || []);
+            this.atualizarContribuicoesFiltradas();
           }
         },
         error: (err) => {
           console.error('Erro ao carregar detalhes do presente:', err);
         }
       });
+  }
+
+  atualizarContribuicoesFiltradas(): void {
+    const presente = this.presente();
+    if (!presente?.contribuicoes) {
+      this.contribuicoesFiltradas.set([]);
+      return;
+    }
+
+    const status = this.filtroStatus();
+    let contribuicoes = presente.contribuicoes;
+
+    if (status !== 'todos') {
+      contribuicoes = contribuicoes.filter(c =>
+        c.status?.descricao?.toLowerCase() === status.toLowerCase()
+      );
+    }
+
+    this.contribuicoesFiltradas.set(contribuicoes);
+  }
+
+  contarPorStatus(status: string): number {
+    const presente = this.presente();
+    if (!presente?.contribuicoes) return 0;
+
+    if (status === 'todos') {
+      return presente.contribuicoes.length;
+    }
+
+    return presente.contribuicoes.filter(c =>
+      c.status?.descricao?.toLowerCase() === status.toLowerCase()
+    ).length;
+  }
+
+  onFiltroStatusChange(novoStatus: string): void {
+    this.filtroStatus.set(novoStatus);
+    this.atualizarContribuicoesFiltradas();
   }
 
   get imagens(): string[] {
@@ -214,8 +258,24 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
   }
 
   verComprovante(contribuicao: ContribuicaoDetalhesDto): void {
-    console.log('Ver comprovante:', contribuicao);
-    // TODO: Implementar visualização de comprovante
+    if (!contribuicao.comprovante) {
+      console.warn('Contribuição não possui comprovante');
+      return;
+    }
+
+    this.dialog.open(VisualizarComprovanteModalComponent, {
+      width: '90vw',
+      height: '90vh',
+      maxWidth: '1200px',
+      maxHeight: '90vh',
+      disableClose: false,
+      panelClass: 'modal-fullscreen',
+      data: {
+        comprovante: contribuicao.comprovante,
+        nomeConvidado: contribuicao.participante.nome,
+        valorContribuicao: contribuicao.valor
+      }
+    });
   }
 
   voltar(): void {

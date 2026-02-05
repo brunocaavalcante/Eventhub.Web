@@ -131,7 +131,6 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
       .subscribe({
         next: (response) => {
           if (response.executouComSucesso) {
-            console.log('PIX do presente carregado:', response.data);
             this.pix.set(response.data || null);
           }
           this.spinner.hide();
@@ -183,7 +182,7 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
   adicionarPresente(): void {
     if (this.pix() === null) {
       this.router.navigate([`/eventos/cadastrar-qrcode/${this.eventoId}/${FinalidadePix.Presentes}`]);
-    } 
+    }
     else {
       this.router.navigate([`presentes/cadastrar/${this.eventoId}`]);
     }

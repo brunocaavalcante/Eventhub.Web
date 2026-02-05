@@ -73,7 +73,7 @@ export class CardPresenteComponent {
     }
     return this.presente.contribuicoes
       .filter(contribuicao => {
-        return contribuicao.status === EnumStatusContribuicao.Confirmado.toString();
+        return contribuicao.idStatusContribuicao === EnumStatusContribuicao.Confirmado;
       })
       .reduce((soma, contribuicao) => soma + contribuicao.valor, 0);
   }

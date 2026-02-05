@@ -21,7 +21,7 @@
     <mat-card-header class="presente-imagem">
         <!-- Carrossel de Imagens -->
         <div class="carousel" *ngIf="hasImages; else noImage">
-            <img [src]="currentImage" [alt]="presente.nome" class="carousel-image">
+            <img [src]="currentImage" alt="{{presente.nome}}" class="carousel-image">
 
             <button *ngIf="hasMultipleImages" mat-icon-button class="carousel-btn carousel-btn-prev"
                 (click)="previousImage()">

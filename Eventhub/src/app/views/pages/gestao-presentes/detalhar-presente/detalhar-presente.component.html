@@ -96,6 +96,39 @@
                 <h3>Lista de Contribuições</h3>
             </div>
 
+            <!-- Filtro por Status -->
+            <div class="filtro-status-container">
+                <mat-form-field class="filtro-status-field" appearance="outline">
+                    <mat-label>Filtrar por status</mat-label>
+                    <mat-select [value]="filtroStatus()" (selectionChange)="onFiltroStatusChange($event.value)">
+                        <mat-option value="todos">
+                            <span class="option-content">
+                                Todos
+                                <span class="badge">{{ contarPorStatus('todos') }}</span>
+                            </span>
+                        </mat-option>
+                        <mat-option value="pendente">
+                            <span class="option-content">
+                                Pendente
+                                <span class="badge badge-pendente">{{ contarPorStatus('pendente') }}</span>
+                            </span>
+                        </mat-option>
+                        <mat-option value="confirmado">
+                            <span class="option-content">
+                                Confirmado
+                                <span class="badge badge-confirmado">{{ contarPorStatus('confirmado') }}</span>
+                            </span>
+                        </mat-option>
+                        <mat-option value="cancelado">
+                            <span class="option-content">
+                                Cancelado
+                                <span class="badge badge-cancelado">{{ contarPorStatus('cancelado') }}</span>
+                            </span>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
             <app-tabela-generica [config]="configTabela()" [dados]="contribuicoesFiltradas()">
             </app-tabela-generica>
         </div>
