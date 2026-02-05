@@ -95,8 +95,23 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
         handler: (contrib) => this.verComprovante(contrib)
       },
       {
+        label: 'Confirmar contribuição',
+        icon: 'check_circle',
+        visivel: (contrib) => {
+          const status = contrib.status?.descricao?.toLowerCase();
+          return status !== 'confirmado' && status !== 'cancelado';
+        },
+        handler: (contrib) => {
+          this.router.navigate(['/presentes', this.idEvento, 'detalhar', this.idPresente, 'contribuicoes', contrib.id, 'confirmar']);
+        }
+      },
+      {
         label: 'Editar contribuição',
         icon: 'edit',
+        visivel: (contrib) => {
+          const status = contrib.status?.descricao?.toLowerCase();
+          return status !== 'cancelado';
+        },
         handler: (contrib) => {
           this.router.navigate(['/presentes/editar-contribuicao', this.idEvento, this.idPresente, contrib.id]);
         }
@@ -104,15 +119,11 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
       {
         label: 'Cancelar contribuição',
         icon: 'cancel',
-        visivel: (contrib) => contrib.status?.descricao?.toLowerCase() !== 'cancelado',
+        visivel: (contrib) => {
+          const status = contrib.status?.descricao?.toLowerCase();
+          return status !== 'cancelado';
+        },
         handler: (contrib) => this.cancelarContribuicao(contrib)
-      },
-      {
-        label: 'Confirmar contribuição',
-        icon: 'check_circle',
-        handler: (contrib) => {
-          this.router.navigate(['/presentes', this.idEvento, 'detalhar', this.idPresente, 'contribuicoes', contrib.id, 'confirmar']);
-        }
       }
     ],
     placeholder: 'Filtrar por nome...',

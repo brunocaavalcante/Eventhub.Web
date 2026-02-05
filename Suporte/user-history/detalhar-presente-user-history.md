@@ -161,3 +161,95 @@ GET /presentes/{id}/detalhes
 
 - **Detalhes**: `/presentes/detalhes/:idEvento/:id`
 - **Requer autenticação**: Sim (`authGuard`)
+## 6. Regras de Negócio
+
+### RN-001: Cálculo do Total Arrecadado
+- O total arrecadado deve somar APENAS as contribuições com status "Validado", "Pago" ou "Ativo" (case-insensitive)
+- Contribuições pendentes ou canceladas não devem ser contabilizadas
+- **Validação:** `status.descricao.toLowerCase() !== 'pendente' && status.descricao.toLowerCase() !== 'cancelado'`
+
+### RN-002: Cálculo do Valor Restante
+- O valor restante é calculado como: `Valor Total do Presente - Total Arrecadado`
+- Se o valor restante for negativo (arrecadação excedeu meta), deve exibir R$ 0,00
+- **Fórmula:** `Math.max(0, presente.valor - totalArrecadado)`
+
+### RN-003: Visibilidade da Ação "Ver Comprovante"
+- A ação "Ver comprovante" deve ser exibida SOMENTE quando a contribuição possui comprovante anexado
+- **Validação:** `contrib.comprovante != null`
+- **Justificativa:** Não faz sentido mostrar botão para visualizar algo que não existe
+- **Ícone:** `receipt`
+
+### RN-004: Visibilidade da Ação "Confirmar Contribuição"
+- A ação "Confirmar contribuição" deve ser exibida SOMENTE para contribuições que NÃO estão confirmadas E NÃO estão canceladas
+- **Validação:** `status !== 'confirmado' && status !== 'cancelado'`
+- **Justificativa:** 
+  - Não faz sentido confirmar algo já confirmado
+  - Não faz sentido confirmar algo cancelado
+  - Deve aparecer apenas para contribuições pendentes
+- **Ícone:** `check_circle`
+
+### RN-005: Visibilidade da Ação "Editar Contribuição"
+- A ação "Editar contribuição" deve ser exibida para todas contribuições EXCETO as canceladas
+- **Validação:** `status !== 'cancelado'`
+- **Justificativa:** 
+  - Pode editar contribuições pendentes
+  - Pode editar contribuições já confirmadas (para correções)
+  - NÃO pode editar contribuições canceladas (já foram invalidadas)
+- **Ícone:** `edit`
+
+### RN-006: Visibilidade da Ação "Cancelar Contribuição"
+- A ação "Cancelar contribuição" deve ser exibida para todas contribuições EXCETO as já canceladas
+- **Validação:** `status !== 'cancelado'`
+- **Justificativa:** 
+  - Pode cancelar contribuições pendentes
+  - Pode cancelar contribuições confirmadas
+  - NÃO pode cancelar algo já cancelado (redundante)
+- **Ícone:** `cancel`
+
+### RN-007: Ordenação das Ações na Tabela
+- As ações na coluna "Ações" devem seguir a seguinte ordem:
+  1. Ver comprovante (visualização)
+  2. Confirmar contribuição (ação primária positiva)
+  3. Editar contribuição (modificação)
+  4. Cancelar contribuição (ação destrutiva)
+- **Justificativa:** Segue padrão UX de colocar ações destrutivas por último, priorizando visualização e confirmação
+
+### RN-008: Filtro de Contribuições
+- O filtro deve buscar em nome e email do participante
+- A busca deve ser case-insensitive
+- O filtro deve ser aplicado em tempo real (a cada tecla digitada)
+- Se nenhuma contribuição corresponder, exibir mensagem "Nenhuma contribuição encontrada"
+
+### RN-009: Exibição de Ações (Desktop vs Mobile)
+- **Desktop com até 3 ações:** Exibir ícones diretamente com tooltip
+- **Desktop com mais de 3 ações:** Exibir menu suspenso (three dots)
+- **Mobile:** Sempre exibir menu suspenso, independente da quantidade de ações
+- **Nota:** A visibilidade das ações é dinâmica baseada no status de cada contribuição
+
+## 7. Histórico de Alterações
+
+### Versão 1.1 - 05/02/2026
+**Alteração:** Refinamento das regras de visibilidade das ações na tabela de contribuições
+
+**Detalhamento:**
+- Adicionada RN-003 a RN-007: Regras específicas de visibilidade para cada ação
+- Implementada lógica condicional para exibir ações baseadas no status da contribuição
+- Estabelecida ordem padrão das ações seguindo boas práticas de UX
+
+**Motivo:** 
+- Inconsistências lógicas identificadas durante implementação da funcionalidade de visualização de comprovante
+- Necessidade de documentar regras que não estavam explícitas na versão anterior
+- Melhorar clareza e coerência das regras de negócio para facilitar manutenção futura
+
+**Impacto:**
+- Melhoria na experiência do usuário ao ocultar ações irrelevantes
+- Redução de erros ao tentar executar ações impossíveis (ex: confirmar algo já confirmado)
+- Código mais manutenível e alinhado com a documentação
+
+### Versão 1.0 - Data inicial
+**Alteração:** Versão inicial do documento
+
+**Detalhamento:**
+- Critérios de aceite para visualização de detalhes do presente
+- Estrutura da interface e tabela de contribuições
+- Integração com API
