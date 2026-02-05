@@ -1,33 +1,15 @@
 {
-    // Debug configurations for Angular app in Eventhub folder
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Chrome (Angular)",
-            "type": "chrome",
+            "name": "Launch Edge",
             "request": "launch",
-            "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}/Eventhub",
-            "preLaunchTask": "ng serve",
-            "sourceMapPathOverrides": {
-                "webpack:/*": "${webRoot}/*",
-                "/*": "${webRoot}/*"
-            }
-        },
-        {
-            "name": "Attach to Chrome",
-            "type": "chrome",
-            "request": "attach",
-            "port": 9222,
-            "webRoot": "${workspaceFolder}/Eventhub"
-        },
-        {
-            "name": "Launch Edge (Angular)",
             "type": "msedge",
-            "request": "launch",
             "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}/Eventhub",
-            "preLaunchTask": "ng serve"
+            "webRoot": "${workspaceFolder}/Eventhub"
         }
     ]
 }
