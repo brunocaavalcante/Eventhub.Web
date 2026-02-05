@@ -63,6 +63,7 @@ export interface ContribuicaoDetalhesDto {
     dataCadastro: Date | string;
     status: StatusContribuicaoPresenteDto;
     participante: ParticipanteContribuicaoDto;
+    comprovante?: Imagem;
 }
 
 export interface ParticipanteContribuicaoDto {
