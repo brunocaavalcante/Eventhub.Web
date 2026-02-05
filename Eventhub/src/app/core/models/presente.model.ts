@@ -64,6 +64,7 @@ export interface ContribuicaoDetalhesDto {
     status: StatusContribuicaoPresenteDto;
     participante: ParticipanteContribuicaoDto;
     comprovante?: Imagem;
+    justificativa?: string;
 }
 
 export interface ParticipanteContribuicaoDto {

@@ -4,8 +4,8 @@
 
 ### 1.1 Cenário 1: Visualizar Detalhes Completos do Presente
 
-**DADO** que o usuário está na lista de presentes  
-**QUANDO** o usuário clica em "Ver Detalhes" no menu de um presente  
+**DADO** que o usuário está na lista de presentes
+**QUANDO** o usuário clica em "Ver Detalhes" no menu de um presente
 **ENTÃO** o sistema redireciona para a página de detalhes exibindo:
 - Carrossel de imagens do presente (com navegação se houver múltiplas imagens)
 - Nome do presente
@@ -32,8 +32,8 @@
 
 ### 1.2 Cenário 2: Filtrar Contribuições por Nome
 
-**DADO** que o usuário está na página de detalhes do presente  
-**QUANDO** o usuário digita um termo no campo "Filtrar por nome..."  
+**DADO** que o usuário está na página de detalhes do presente
+**QUANDO** o usuário digita um termo no campo "Filtrar por nome..."
 **ENTÃO** o sistema filtra a lista de contribuições exibindo apenas os participantes cujo nome ou email contém o termo digitado (case-insensitive)
 
 #### 1.2.1 Informações adicionais
@@ -45,8 +45,8 @@
 
 ### 1.3 Cenário 3: Navegar no Carrossel de Imagens
 
-**DADO** que o usuário está visualizando um presente com múltiplas imagens  
-**QUANDO** o usuário clica nas setas de navegação ou nos indicadores  
+**DADO** que o usuário está visualizando um presente com múltiplas imagens
+**QUANDO** o usuário clica nas setas de navegação ou nos indicadores
 **ENTÃO** o sistema altera a imagem exibida mantendo a transição suave
 
 #### 1.3.1 Informações adicionais
@@ -58,19 +58,19 @@
 
 ### 1.4 Cenário 4: Acessar Ações da Contribuição
 
-**DADO** que o usuário está visualizando as contribuições  
-**QUANDO** o usuário interage com a coluna de ações  
+**DADO** que o usuário está visualizando as contribuições
+**QUANDO** o usuário interage com a coluna de ações
 **ENTÃO** o sistema permite executar ações disponíveis para cada contribuição
 
 #### 1.4.1 Informações adicionais
-- **Desktop com até 3 ações**: 
+- **Desktop com até 3 ações**:
   - Ícones exibidos diretamente na linha
   - Tooltip ao passar o mouse mostrando a descrição da ação
 - **Desktop com mais de 3 ações**:
   - Ícone de menu (three dots vertical)
   - Ao clicar, exibe menu suspenso com todas as ações
   - Cada item do menu mostra ícone + descrição
-- **Mobile**: 
+- **Mobile**:
   - Sempre exibe ícone de menu (three dots vertical)
   - Ao clicar, exibe menu suspenso com ícone + descrição das ações
   - Funciona independente da quantidade de ações
@@ -79,8 +79,8 @@
 
 ### 1.5 Cenário 5: Voltar para Lista de Presentes
 
-**DADO** que o usuário está na página de detalhes  
-**QUANDO** o usuário clica em "Voltar para Lista de Presentes"  
+**DADO** que o usuário está na página de detalhes
+**QUANDO** o usuário clica em "Voltar para Lista de Presentes"
 **ENTÃO** o sistema retorna à página anterior (lista de presentes do evento)
 
 #### 1.5.1 Informações adicionais
@@ -89,8 +89,8 @@
 
 ### 1.6 Cenário 6: Presente sem Contribuições
 
-**DADO** que um presente não possui contribuições ainda  
-**QUANDO** o usuário visualiza os detalhes  
+**DADO** que um presente não possui contribuições ainda
+**QUANDO** o usuário visualiza os detalhes
 **ENTÃO** o sistema exibe:
 - Total arrecadado: R$ 0,00
 - Valor restante: igual ao valor total do presente
@@ -179,19 +179,29 @@ GET /presentes/{id}/detalhes
 - **Justificativa:** Não faz sentido mostrar botão para visualizar algo que não existe
 - **Ícone:** `receipt`
 
-### RN-004: Visibilidade da Ação "Confirmar Contribuição"
+### RN-004: Visibilidade da Ação "Ver Justificativa de Cancelamento"
+- A ação "Ver justificativa" deve ser exibida SOMENTE quando a contribuição está cancelada E possui justificativa de cancelamento
+- **Validação:** `status === 'cancelado' && !!contrib.justificativaCancelamento`
+- **Justificativa:**
+  - Permite auditoria e transparência sobre o motivo do cancelamento
+  - Só aparece quando há informação relevante para exibir
+  - Contribui para rastreabilidade das operações
+- **Ícone:** `info`
+- **Comportamento:** Abre modal exibindo título "Justificativa de Cancelamento" e o texto da justificativa
+
+### RN-005: Visibilidade da Ação "Confirmar Contribuição"
 - A ação "Confirmar contribuição" deve ser exibida SOMENTE para contribuições que NÃO estão confirmadas E NÃO estão canceladas
 - **Validação:** `status !== 'confirmado' && status !== 'cancelado'`
-- **Justificativa:** 
+- **Justificativa:**
   - Não faz sentido confirmar algo já confirmado
   - Não faz sentido confirmar algo cancelado
   - Deve aparecer apenas para contribuições pendentes
 - **Ícone:** `check_circle`
 
-### RN-005: Visibilidade da Ação "Editar Contribuição"
+### RN-006: Visibilidade da Ação "Editar Contribuição"
 - A ação "Editar contribuição" deve ser exibida para todas contribuições EXCETO as canceladas
 - **Validação:** `status !== 'cancelado'`
-- **Justificativa:** 
+- **Justificativa:**
   - Pode editar contribuições pendentes
   - Pode editar contribuições já confirmadas (para correções)
   - NÃO pode editar contribuições canceladas (já foram invalidadas)
@@ -200,33 +210,53 @@ GET /presentes/{id}/detalhes
 ### RN-006: Visibilidade da Ação "Cancelar Contribuição"
 - A ação "Cancelar contribuição" deve ser exibida para todas contribuições EXCETO as já canceladas
 - **Validação:** `status !== 'cancelado'`
-- **Justificativa:** 
+- **Justificativa:**
   - Pode cancelar contribuições pendentes
   - Pode cancelar contribuições confirmadas
   - NÃO pode cancelar algo já cancelado (redundante)
 - **Ícone:** `cancel`
 
-### RN-007: Ordenação das Ações na Tabela
+### RN-008: Ordenação das Ações na Tabela
 - As ações na coluna "Ações" devem seguir a seguinte ordem:
-  1. Ver comprovante (visualização)
-  2. Confirmar contribuição (ação primária positiva)
-  3. Editar contribuição (modificação)
-  4. Cancelar contribuição (ação destrutiva)
-- **Justificativa:** Segue padrão UX de colocar ações destrutivas por último, priorizando visualização e confirmação
+  1. Ver comprovante (visualização de documento)
+  2. Ver justificativa (visualização de cancelamento)
+  3. Confirmar contribuição (ação primária positiva)
+  4. Editar contribuição (modificação)
+  5. Cancelar contribuição (ação destrutiva)
+- **Justificativa:** Segue padrão UX de colocar ações destrutivas por último, priorizando visualizações e confirmação
 
-### RN-008: Filtro de Contribuições
+### RN-009: Filtro de Contribuições
 - O filtro deve buscar em nome e email do participante
 - A busca deve ser case-insensitive
 - O filtro deve ser aplicado em tempo real (a cada tecla digitada)
 - Se nenhuma contribuição corresponder, exibir mensagem "Nenhuma contribuição encontrada"
 
-### RN-009: Exibição de Ações (Desktop vs Mobile)
+### RN-010: Exibição de Ações (Desktop vs Mobile)
 - **Desktop com até 3 ações:** Exibir ícones diretamente com tooltip
 - **Desktop com mais de 3 ações:** Exibir menu suspenso (three dots)
 - **Mobile:** Sempre exibir menu suspenso, independente da quantidade de ações
 - **Nota:** A visibilidade das ações é dinâmica baseada no status de cada contribuição
 
 ## 7. Histórico de Alterações
+
+### Versão 1.2 - 05/02/2026
+**Alteração:** Implementação da funcionalidade de visualização de justificativa de cancelamento
+
+**Detalhamento:**
+- Adicionada RN-004: Regra de visibilidade para ação "Ver justificativa"
+- Adicionado campo `justificativaCancelamento` no modelo `ContribuicaoDetalhesDto`
+- Implementado método `verJustificativaCancelamento()` que exibe modal com a justificativa
+- Atualizada RN-008: Ordenação das ações incluindo a nova ação "Ver justificativa"
+
+**Motivo:**
+- Necessidade de auditoria e transparência sobre cancelamentos de contribuições
+- Permitir que organizadores revisitem os motivos de cancelamentos passados
+- Melhorar rastreabilidade das operações no sistema
+
+**Impacto:**
+- Maior transparência nas operações de cancelamento
+- Facilitação de auditoria e prestação de contas
+- Melhoria na experiência do usuário ao fornecer contexto sobre contribuições canceladas
 
 ### Versão 1.1 - 05/02/2026
 **Alteração:** Refinamento das regras de visibilidade das ações na tabela de contribuições
@@ -236,7 +266,7 @@ GET /presentes/{id}/detalhes
 - Implementada lógica condicional para exibir ações baseadas no status da contribuição
 - Estabelecida ordem padrão das ações seguindo boas práticas de UX
 
-**Motivo:** 
+**Motivo:**
 - Inconsistências lógicas identificadas durante implementação da funcionalidade de visualização de comprovante
 - Necessidade de documentar regras que não estavam explícitas na versão anterior
 - Melhorar clareza e coerência das regras de negócio para facilitar manutenção futura

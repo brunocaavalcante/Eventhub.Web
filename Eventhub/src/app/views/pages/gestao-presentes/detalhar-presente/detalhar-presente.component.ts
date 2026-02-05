@@ -95,6 +95,15 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
         handler: (contrib) => this.verComprovante(contrib)
       },
       {
+        label: 'Ver justificativa',
+        icon: 'info',
+        visivel: (contrib) => {
+          const status = contrib.status?.descricao?.toLowerCase();
+          return status === 'cancelado' && !!contrib.justificativa;
+        },
+        handler: (contrib) => this.verJustificativaCancelamento(contrib)
+      },
+      {
         label: 'Confirmar contribuição',
         icon: 'check_circle',
         visivel: (contrib) => {
@@ -285,6 +294,23 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
         comprovante: contribuicao.comprovante,
         nomeConvidado: contribuicao.participante.nome,
         valorContribuicao: contribuicao.valor
+      }
+    });
+  }
+
+  verJustificativaCancelamento(contribuicao: ContribuicaoDetalhesDto): void {
+    if (!contribuicao.justificativa) {
+      console.warn('Contribuição não possui justificativa de cancelamento');
+      return;
+    }
+
+    this.dialog.open(ModalSucessComponent, {
+      width: '600px',
+      maxWidth: '90vw',
+      data: {
+        title: 'Justificativa de Cancelamento',
+        message: contribuicao.justificativa,
+        showIcon: false
       }
     });
   }

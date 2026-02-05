@@ -1,12 +1,14 @@
 <div class="modal-success-card">
-    <div class="modal-success-icon">
-        <mat-icon>check</mat-icon>
-    </div>
+  @if(data?.showIcon) {
+  <div class="modal-success-icon">
+    <mat-icon>check</mat-icon>
+  </div>
+  }
 
-    <h2 class="modal-success-title">{{ title }}</h2>
-    <p class="modal-success-message">{{ message }}</p>
+  <h2 class="modal-success-title">{{ title }}</h2>
+  <p class="modal-success-message">{{ message }}</p>
 
-    <div class="modal-success-actions">
-        <button mat-raised-button color="primary" class="ok-btn" (click)="close()">{{ okLabel }}</button>
-    </div>
+  <div class="modal-success-actions">
+    <button mat-raised-button color="primary" class="ok-btn" (click)="close()">{{ okLabel }}</button>
+  </div>
 </div>
