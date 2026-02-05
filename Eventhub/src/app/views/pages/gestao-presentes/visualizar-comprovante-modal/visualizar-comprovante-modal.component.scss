@@ -1,0 +1,302 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+.modal-container {
+  position: relative;
+  width: 90vw;
+  max-width: 1200px;
+  height: 90vh;
+  background: $cor-branco;
+  border-radius: $radius-card;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: $break-mobile) {
+    width: 95vw;
+    height: 95vh;
+  }
+}
+
+.btn-fechar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  color: $cor-texto;
+  cursor: pointer;
+}
+
+.modal-header {
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid $cor-cinza-borda;
+  background: $cor-primaria-clara-2;
+
+  @media (max-width: $break-mobile) {
+    padding: 24px 20px 16px;
+  }
+}
+
+.modal-title {
+  @include titulo-pagina;
+  margin: 0 0 12px;
+  color: $cor-primaria;
+
+  @media (max-width: $break-mobile) {
+    font-size: 1.2rem;
+  }
+}
+
+.modal-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: $font-media;
+  color: $cor-texto-secundario;
+
+  @media (max-width: $break-mobile) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: $font-small;
+  }
+}
+
+.convidado-nome {
+  font-weight: $font-peso-bold;
+  color: $cor-texto;
+  font-size: 1.1rem;
+
+  @media (max-width: $break-mobile) {
+    font-size: 1rem;
+  }
+}
+
+.separador {
+  color: $cor-cinza-medio;
+  font-size: 1.2rem;
+
+  @media (max-width: $break-mobile) {
+    display: none;
+  }
+}
+
+.valor-contribuicao {
+  color: $cor-sucesso;
+  font-weight: $font-peso-bold;
+  font-size: 1.1rem;
+
+  @media (max-width: $break-mobile) {
+    font-size: 1rem;
+  }
+}
+
+.imagem-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  background: $cor-cinza-claro;
+  padding: 20px;
+  position: relative;
+}
+
+.comprovante-imagem {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: $radius;
+  box-shadow: $sombra-card;
+  transition: transform $transition-normal;
+  opacity: 0;
+
+  &.loaded {
+    opacity: 1;
+    animation: imageAppear 0.3s ease;
+  }
+
+  @keyframes imageAppear {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.loading-spinner {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: $cor-cinza-medio;
+
+  .spinner-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: $font-media;
+  }
+}
+
+.erro-imagem {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: $cor-erro;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+  }
+
+  p {
+    margin: 0;
+    font-size: $font-media;
+  }
+}
+
+.modal-actions {
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-top: 1px solid $cor-cinza-borda;
+  background: $cor-branco;
+
+  @media (max-width: $break-mobile) {
+    padding: 16px 20px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}
+
+.btn-zoom,
+.btn-download {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  transition: all $transition-fast;
+  @include font-size($font-small);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: $break-mobile) {
+    min-width: auto;
+    flex: 1;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.btn-zoom {
+  background: $cor-branco;
+  color: $cor-primaria;
+  border: 1px solid $cor-primaria;
+
+  &:hover:not(:disabled) {
+    background: $cor-primaria-clara-2;
+  }
+}
+
+.btn-download {
+  background: $cor-primaria;
+  color: $cor-branco;
+
+  &:hover:not(:disabled) {
+    background: $cor-primaria-escura;
+  }
+}
+
+.zoom-indicator {
+  font-size: $font-media;
+  font-weight: $font-peso-bold;
+  color: $cor-texto;
+  min-width: 60px;
+  text-align: center;
+
+  @media (max-width: $break-mobile) {
+    width: 100%;
+    order: -1;
+    font-size: $font-small;
+  }
+}
