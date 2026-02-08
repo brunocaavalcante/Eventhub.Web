@@ -21,7 +21,13 @@ describe('CadastroConvidadoComponent', () => {
   };
 
   beforeEach(async () => {
-    convidadoServiceMock = { cadastro: jest.fn().mockResolvedValue({}) };
+    convidadoServiceMock = {
+      cadastroConvidado: jest.fn().mockReturnValue({
+        pipe: jest.fn().mockReturnValue({
+          subscribe: jest.fn()
+        })
+      })
+    };
     routerMock = { navigate: jest.fn() };
     dialogMock = { open: jest.fn(() => ({ afterClosed: () => ({ subscribe: jest.fn() }) })) };
     spinnerMock = { show: jest.fn(), hide: jest.fn() };
@@ -64,14 +70,27 @@ describe('CadastroConvidadoComponent', () => {
     component.form.patchValue({ nome: 'Teste', email: 'a@a.com', telefone: '(11) 96449-0371' });
     component.idEvento = '1';
     await component.adicionarConvidado();
-    expect(convidadoServiceMock.cadastro).toHaveBeenCalled();
+    expect(convidadoServiceMock.cadastroConvidado).toHaveBeenCalled();
   });
 
   it('deve abrir modal de sucesso e navegar após cadastro', async () => {
-    const dialogSpy = jest.spyOn(dialogMock, 'open').mockReturnValue({ afterClosed: () => ({ subscribe: (fn: any) => fn() }) } as any);
+    // Mock do service retornando sucesso
+    convidadoServiceMock.cadastroConvidado = jest.fn().mockReturnValue({
+      pipe: jest.fn().mockReturnValue({
+        subscribe: jest.fn((observer: any) => {
+          observer.next({ executouComSucesso: true, data: {} });
+        })
+      })
+    });
+
+    const dialogSpy = jest.spyOn(dialogMock, 'open').mockReturnValue({
+      afterClosed: () => ({ subscribe: (fn: any) => fn() })
+    } as any);
+
     component.form.patchValue({ nome: 'Teste', email: 'a@a.com', telefone: '(11) 96449-0371' });
     component.idEvento = '1';
-    await component.adicionarConvidado();
+    component.adicionarConvidado();
+
     expect(dialogSpy).toHaveBeenCalled();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/convidados/consultar', '1']);
   });

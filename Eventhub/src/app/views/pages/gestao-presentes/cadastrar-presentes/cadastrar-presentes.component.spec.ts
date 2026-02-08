@@ -44,8 +44,8 @@ describe('CadastrarPresentesComponent', () => {
 
   beforeEach(async () => {
     const presenteServiceMock = {
-      obterCategoriasPresentes: jest.fn(),
-      cadastro: jest.fn()
+      obterCategoriasPresentes: jest.fn().mockReturnValue(of(mockRetornoCategoriasSuccess)),
+      cadastro: jest.fn().mockReturnValue(of(mockRetornoCadastroSuccess))
     };
 
     const spinnerServiceMock = {
@@ -54,8 +54,8 @@ describe('CadastrarPresentesComponent', () => {
     };
 
     const modalServiceMock = {
-      openSuccessModal: jest.fn(),
-      openConfirmationModal: jest.fn()
+      openSuccessModal: jest.fn().mockReturnValue(of(true)),
+      openConfirmationModal: jest.fn().mockReturnValue(of(true))
     };
 
     const usuarioServiceMock = {
