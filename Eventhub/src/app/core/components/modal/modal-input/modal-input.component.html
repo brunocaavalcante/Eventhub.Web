@@ -1,0 +1,40 @@
+<div class="modal-input">
+  <div class="modal-header">
+    <h2 mat-dialog-title>{{ data.title }}</h2>
+    <button mat-icon-button mat-dialog-close class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <p class="modal-message" [innerHTML]="data.message"></p>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ data.inputLabel }}</mat-label>
+      <textarea *ngIf="data.inputType === 'textarea'" matInput [(ngModel)]="inputValue"
+        [placeholder]="data.inputPlaceholder || ''" [required]="data.inputRequired ?? false"
+        [minlength]="data.inputMinLength || 0" [maxlength]="data.inputMaxLength || 5000" rows="4"
+        (ngModelChange)="onInputChange()">
+          </textarea>
+      <input *ngIf="data.inputType !== 'textarea'" matInput [(ngModel)]="inputValue"
+        [placeholder]="data.inputPlaceholder || ''" [required]="data.inputRequired ?? false"
+        [minlength]="data.inputMinLength || 0" [maxlength]="data.inputMaxLength || 500"
+        (ngModelChange)="onInputChange()">
+      <mat-hint *ngIf="data.inputMinLength">
+        {{ inputValue().length }} / {{ data.inputMinLength }} caracteres mínimos
+      </mat-hint>
+      <mat-error *ngIf="showError()">
+        {{ errorMessage() }}
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close class="btn-cancel">
+      {{ data.cancelLabel || 'Cancelar' }}
+    </button>
+    <button mat-raised-button color="warn" [disabled]="!isValid()" (click)="onConfirm()" class="btn-confirm">
+      {{ data.confirmLabel || 'Confirmar' }}
+    </button>
+  </mat-dialog-actions>
+</div>

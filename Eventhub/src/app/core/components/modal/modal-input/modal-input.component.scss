@@ -1,0 +1,57 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.modal-input {
+  width: auto;
+  padding: 20px;
+  min-width: 400px;
+
+  @media (max-width: 600px) {
+    min-width: 280px;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .close-button {
+    margin-right: -12px;
+  }
+}
+
+.modal-message {
+  margin-bottom: 24px;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-dialog-actions {
+  margin-top: 16px;
+  padding: 0;
+  gap: 8px;
+}
+
+.btn-cancel {
+  margin-right: 8px;
+}
+
+.btn-confirm {
+  &:disabled {
+    background-color: rgba(0, 0, 0, 0.12) !important;
+    color: rgba(0, 0, 0, 0.26) !important;
+  }
+}

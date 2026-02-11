@@ -4,7 +4,7 @@
     </div>
 
     <h2 class="modal-confirm-title">{{ title }}</h2>
-    <p class="modal-confirm-message">{{ message }}</p>
+    <div class="modal-confirm-message" [innerHTML]="message"></div>
 
     <div class="modal-confirm-actions">
         <button mat-button class="cancel-btn" (click)="cancel()">{{ cancelLabel }}</button>
