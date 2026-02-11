@@ -16,7 +16,7 @@ import { DropZoneImageComponent } from '../../../../core/components/drop-zone-im
 import { Imagem, TipoImagemEvento } from '../../../../core/models/imagem.model';
 import { CategoriaPresenteDto,  UpdatePresenteDto } from '../../../../core/models/presente.model';
 import { ModalService } from '../../../../core/services/modal.service';
-import { PresenteService } from '../../../../core/services/presente.service';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 

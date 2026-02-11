@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { provideNgxMask } from 'ngx-mask';
 import { EditarPresentesComponent } from './editar-presentes.component';
-import { PresenteService } from '../../../../core/services/presente.service';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { TipoImagemEvento } from '../../../../core/models/imagem.model';

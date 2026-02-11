@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CadastrarPresentesComponent } from './cadastrar-presentes.component';
-import { PresenteService } from '../../../../core/services/presente.service';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { Router } from '@angular/router';

@@ -14,7 +14,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BaseComponent } from '../../../../core/components/base.component';
-import { PresenteService } from '../../../../core/services/presente.service';
 import { Presente } from '../../../../core/models/presente.model';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { CardPresenteComponent } from './card-presente/card-presente.component';
@@ -23,6 +22,7 @@ import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente
 import { PixEventoService } from '../../../../core/services/pix-evento.service';
 import { FinalidadePix } from '../../../../core/utils/enums/finalidade-pix.enum';
 import { PixEventoDto } from '../../../../core/models/pix-evento.model';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
 
 @Component({
   selector: 'app-consultar-presentes',
@@ -41,7 +41,7 @@ import { PixEventoDto } from '../../../../core/models/pix-evento.model';
     MatProgressBarModule,
     MatDialogModule,
     CardPresenteComponent
-],
+  ],
   templateUrl: './consultar-presentes.component.html',
   styleUrl: './consultar-presentes.component.scss'
 })
@@ -60,6 +60,7 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
   filtroStatus = signal<string>('');
   filtroCategoria = signal<string>('');
   eventoId = '';
+  idParticipanteLogado = signal<number | undefined>(undefined);
 
   // Computed properties para filtros
   presentesFiltrados = computed(() => {
@@ -98,10 +99,16 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
     this.presentesFiltrados().filter(p => p.status?.id === 3)
   );
 
+
+
   ngOnInit(): void {
     this.eventoId = this.acRoute.snapshot.paramMap.get('idEvento') || '0';
     this.carregarPresentes();
     this.carregarPixPresente();
+    const usuarioLogado = this.obterUsuarioLogado();
+    if (usuarioLogado) {
+      this.idParticipanteLogado.set(usuarioLogado.id);
+    }
   }
 
   carregarPresentes(): void {
@@ -270,6 +277,126 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
 
   get filtroCategoriaModel() {
     return this.filtroCategoria();
+  }
+
+  reservarPresente(presente: Presente): void {
+    if (!presente.id || !this.idParticipanteLogado()) {
+      this.modalService.openErrorModal({
+        title: 'Erro',
+        message: 'Não foi possível reservar o presente. Tente novamente.'
+      });
+      return;
+    }
+
+    this.modalService.openConfirmationModal({
+      title: 'Confirmar Reserva',
+      message: `
+        <p>Deseja reservar o presente: "${presente.nome}", valor: ${this.formatarMoeda(presente.valor || 0)}? O organizador será notificado.</p>
+         ${presente.linkProduto ? `<strong>Link:</strong> <a href="${presente.linkProduto}" target="_blank">${presente.linkProduto}</a><br/>` : ''}
+      `,
+      confirmLabel: 'Sim, Reservar',
+      cancelLabel: 'Cancelar'
+    }).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((confirmed: any) => {
+        if (confirmed) {
+          this.confirmarReserva(presente);
+        }
+      });
+  }
+
+  private confirmarReserva(presente: Presente): void {
+    this.spinner.show();
+    this.presenteService.reservarPresente({
+      idPresente: presente.id!,
+      idParticipante: this.idParticipanteLogado()!
+    }).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          if (response.executouComSucesso) {
+            this.carregarPresentes();
+            this.modalService.openSuccessModal({
+              title: 'Presente Reservado!',
+              message: 'Presente reservado com sucesso! O organizador foi notificado.'
+            });
+          } else {
+            this.modalService.openErrorModal({
+              title: 'Erro ao Reservar',
+              message: response.erros?.join(', ') || 'Não foi possível reservar o presente.'
+            });
+          }
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error('Erro ao reservar presente:', error);
+          this.modalService.openErrorModal({
+            title: 'Erro ao Reservar',
+            message: error.error?.erros?.join(', ') || 'Não foi possível reservar o presente. Tente novamente.'
+          });
+          this.spinner.hide();
+        }
+      });
+  }
+
+  cancelarReserva(presente: Presente): void {
+    if (!presente.id || !this.idParticipanteLogado()) {
+      this.modalService.openErrorModal({
+        title: 'Erro',
+        message: 'Não foi possível cancelar a reserva. Tente novamente.'
+      });
+      return;
+    }
+
+    this.modalService.openInputModal({
+      title: 'Cancelar Reserva',
+      message: `Tem certeza que deseja cancelar a reserva do presente "${presente.nome}"?`,
+      inputLabel: 'Motivo do cancelamento *',
+      inputPlaceholder: 'Informe o motivo do cancelamento (mínimo 10 caracteres)',
+      inputType: 'textarea',
+      confirmLabel: 'Sim, Cancelar',
+      cancelLabel: 'Voltar',
+      inputRequired: true,
+      inputMinLength: 10,
+      inputMaxLength: 500
+    }, { width: '700px' }).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((justificativa: string | null) => {
+        if (justificativa) {
+          this.confirmarCancelamentoReserva(presente, justificativa);
+        }
+      });
+  }
+
+  private confirmarCancelamentoReserva(presente: Presente, justificativa: string): void {
+    this.spinner.show();
+    this.presenteService.cancelarReserva({
+      idPresente: presente.id!,
+      idParticipante: this.idParticipanteLogado()!,
+      justificativa
+    }).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          if (response.executouComSucesso) {
+            this.carregarPresentes();
+            this.modalService.openSuccessModal({
+              title: 'Reserva Cancelada',
+              message: 'Reserva cancelada com sucesso. O presente voltou a ficar disponível.'
+            });
+          } else {
+            this.modalService.openErrorModal({
+              title: 'Erro ao Cancelar',
+              message: response.erros?.join(', ') || 'Não foi possível cancelar a reserva.'
+            });
+          }
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error('Erro ao cancelar reserva:', error);
+          this.modalService.openErrorModal({
+            title: 'Erro ao Cancelar',
+            message: error.error?.erros?.join(', ') || 'Não foi possível cancelar a reserva. Tente novamente.'
+          });
+          this.spinner.hide();
+        }
+      });
   }
 
   set filtroCategoriaModel(value: string) {

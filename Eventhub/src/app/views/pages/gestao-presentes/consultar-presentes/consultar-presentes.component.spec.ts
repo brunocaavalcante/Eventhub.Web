@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConsultarPresentesComponent } from './consultar-presentes.component';
 import { UsuarioService } from '../../../../core/services/usuario.service';
-import { PresenteService } from '../../../../core/services/presente.service';
 import { PixEventoService } from '../../../../core/services/pix-evento.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Presente } from '../../../../core/models/presente.model';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
 
 describe('ConsultarPresentesComponent', () => {
   let component: ConsultarPresentesComponent;
@@ -16,17 +16,19 @@ describe('ConsultarPresentesComponent', () => {
   let mockPixService: jest.Mocked<any>;
   let mockModalService: jest.Mocked<any>;
   let mockRouter: jest.Mocked<any>;
+  let mockUsuarioService: jest.Mocked<any>;
 
   beforeEach(async () => {
     mockPresenteService = { obterPresentesPorEvento: jest.fn(() => of({ executouComSucesso: true, data: [] })), excluir: jest.fn(() => of({ executouComSucesso: true })) };
     mockPixService = { buscarPixEventoFinalidade: jest.fn(() => of({ executouComSucesso: true, data: null })) };
     mockModalService = { openConfirmationModal: jest.fn(() => of(true)), openSuccessModal: jest.fn(), openErrorModal: jest.fn() };
     mockRouter = { navigate: jest.fn() };
+    mockUsuarioService = { obterUsuarioLogado: jest.fn(() => ({ id: 123, nome: 'Teste', email: 'teste@teste.com' })) };
 
     await TestBed.configureTestingModule({
       imports: [ConsultarPresentesComponent],
       providers: [
-        { provide: UsuarioService, useValue: {} },
+        { provide: UsuarioService, useValue: mockUsuarioService },
         { provide: PresenteService, useValue: mockPresenteService },
         { provide: PixEventoService, useValue: mockPixService },
         { provide: SpinnerService, useValue: { show: jest.fn(), hide: jest.fn() } },

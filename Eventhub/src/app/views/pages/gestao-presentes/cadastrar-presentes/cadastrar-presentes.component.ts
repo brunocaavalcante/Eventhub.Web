@@ -12,7 +12,7 @@ import { DropZoneImageComponent } from "../../../../core/components/drop-zone-im
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { PresenteService } from '../../../../core/services/presente.service';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
 import { CategoriaPresenteDto, CreatePresenteDto } from '../../../../core/models/presente.model';
 import { TipoImagemEvento } from '../../../../core/models/imagem.model';
 import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';

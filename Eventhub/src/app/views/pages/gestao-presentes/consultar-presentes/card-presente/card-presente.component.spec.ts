@@ -16,7 +16,7 @@ import { TipoImagemEvento } from '../../../../../core/models/imagem.model';
 describe('CardPresenteComponent', () => {
   let component: CardPresenteComponent;
   let fixture: ComponentFixture<CardPresenteComponent>;
-  
+
   const mockActivatedRoute: any = {
     snapshot: {
       paramMap: {}
@@ -66,7 +66,7 @@ describe('CardPresenteComponent', () => {
 
     fixture = TestBed.createComponent(CardPresenteComponent);
     component = fixture.componentInstance;
-    component.presente = mockPresente;
+    fixture.componentRef.setInput('presente', mockPresente);
     fixture.detectChanges();
   });
 
@@ -155,5 +155,97 @@ describe('CardPresenteComponent', () => {
     items[2].nativeElement.click();
     fixture.detectChanges();
     expect(spy).toHaveBeenCalledWith(mockPresente);
+  });
+
+  describe('Funcionalidades de Reserva', () => {
+    it('podeReservar deve retornar true para presente disponível sem contribuições', () => {
+      const presenteSemContribuicoes: Presente = {
+        ...mockPresente,
+        status: { id: 1, descricao: 'Disponível' },
+        contribuicoes: []
+      };
+      fixture.componentRef.setInput('presente', presenteSemContribuicoes);
+      fixture.componentRef.setInput('idParticipanteLogado', 123);
+      fixture.detectChanges();
+
+      expect(component.podeReservar()).toBe(true);
+    });
+
+    it('podeReservar deve retornar false para presente com contribuições', () => {
+      const presenteComContribuicoes: Presente = {
+        ...mockPresente,
+        status: { id: 1, descricao: 'Disponível' },
+        contribuicoes: [{ id: 1, idPresente: 1, idParticipante: 1, valor: 1000, dataCadastro: new Date() }]
+      };
+      fixture.componentRef.setInput('presente', presenteComContribuicoes);
+      fixture.componentRef.setInput('idParticipanteLogado', 123);
+      fixture.detectChanges();
+
+      expect(component.podeReservar()).toBe(false);
+    });
+
+    it('podeReservar deve retornar false para presente reservado', () => {
+      const presenteReservado: Presente = {
+        ...mockPresente,
+        status: { id: 2, descricao: 'Reservado' },
+        contribuicoes: []
+      };
+      fixture.componentRef.setInput('presente', presenteReservado);
+      fixture.componentRef.setInput('idParticipanteLogado', 123);
+      fixture.detectChanges();
+
+      expect(component.podeReservar()).toBe(false);
+    });
+
+    it('podeCancelarReserva deve retornar true quando usuário reservou o presente', () => {
+      const presenteReservadoPorMim: Presente = {
+        ...mockPresente,
+        status: { id: 2, descricao: 'Reservado' },
+        idParticipanteReservou: 123
+      };
+      fixture.componentRef.setInput('presente', presenteReservadoPorMim);
+      fixture.componentRef.setInput('idParticipanteLogado', 123);
+      fixture.detectChanges();
+
+      expect(component.podeCancelarReserva()).toBe(true);
+    });
+
+    it('podeCancelarReserva deve retornar false quando outro usuário reservou', () => {
+      const presenteReservadoPorOutro: Presente = {
+        ...mockPresente,
+        status: { id: 2, descricao: 'Reservado' },
+        idParticipanteReservou: 456
+      };
+      fixture.componentRef.setInput('presente', presenteReservadoPorOutro);
+      fixture.componentRef.setInput('idParticipanteLogado', 123);
+      fixture.detectChanges();
+
+      expect(component.podeCancelarReserva()).toBe(false);
+    });
+
+    it('estaReservadoPorOutro deve retornar true quando reservado por outro', () => {
+      const presenteReservadoPorOutro: Presente = {
+        ...mockPresente,
+        status: { id: 2, descricao: 'Reservado' },
+        idParticipanteReservou: 456
+      };
+      fixture.componentRef.setInput('presente', presenteReservadoPorOutro);
+      fixture.componentRef.setInput('idParticipanteLogado', 123);
+      fixture.detectChanges();
+
+      expect(component.estaReservadoPorOutro()).toBe(true);
+    });
+
+    it('deve emitir evento ao chamar reservarPresente', () => {
+      const spy = jest.spyOn(component.reservar, 'emit');
+      component.reservarPresente();
+      expect(spy).toHaveBeenCalledWith(mockPresente);
+    });
+
+    it('deve emitir evento ao chamar cancelarReservaPresente', () => {
+      const spy = jest.spyOn(component.cancelarReserva, 'emit');
+      component.cancelarReservaPresente();
+      expect(spy).toHaveBeenCalledWith(mockPresente);
+    });
   });
 });

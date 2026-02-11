@@ -28,8 +28,7 @@ mat-card {
     right: 8px;
     z-index: 10;
     background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(4px);
-    
+
     &:hover {
         background: rgba(255, 255, 255, 1);
     }
@@ -65,6 +64,24 @@ mat-card {
         padding: 1px 8px;
         @include font-size(0.8rem);
         color: $cor-verde;
+    }
+
+    .badge-reservado {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        border: 1px solid $cor-cinza-medio;
+        border-radius: 12px;
+        padding: 2px 10px;
+        @include font-size(0.75rem);
+        color: $cor-cinza-medio;
+        background: rgba($cor-cinza-claro, 0.3);
+
+        mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+        }
     }
 }
 
@@ -178,6 +195,14 @@ mat-card-actions {
         width: 95%;
         height: 40px !important;
         @include btn-primary;
+    }
+
+    .btn-reservar {
+       @include btn-secondary;
+    }
+
+    .btn-cancelar-reserva {
+        @include btn-outline-error;
     }
 }
 

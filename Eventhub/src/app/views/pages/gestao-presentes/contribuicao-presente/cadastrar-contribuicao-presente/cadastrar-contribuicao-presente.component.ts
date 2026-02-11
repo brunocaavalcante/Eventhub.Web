@@ -8,7 +8,7 @@ import { BaseComponent } from '../../../../../core/components/base.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { PresenteService } from '../../../../../core/services/presente.service';
+import { PresenteService } from '../../../../../core/services/presente/presente.service';
 import { Presente } from '../../../../../core/models/presente.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SpinnerService } from '../../../../../core/services/spinner.service';

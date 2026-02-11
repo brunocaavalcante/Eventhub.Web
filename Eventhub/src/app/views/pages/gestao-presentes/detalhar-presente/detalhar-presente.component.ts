@@ -10,7 +10,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseComponent } from '../../../../core/components/base.component';
-import { PresenteService } from '../../../../core/services/presente.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { ContribuicaoDetalhesDto, PresenteDetalhesDto, StatusPresenteDto } from '../../../../core/models/presente.model';
 import { CurrencyBrPipe } from '../../../../core/utils/pipes/currency-br.pipe';
@@ -26,6 +25,7 @@ import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } fro
 import { VisualizarComprovanteModalComponent } from '../visualizar-comprovante-modal/visualizar-comprovante-modal.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatBadgeModule } from '@angular/material/badge';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
 
 @Component({
   selector: 'app-detalhar-presente',
