@@ -174,7 +174,8 @@ export class CadastrarContribuicaoPresenteComponent extends BaseComponent implem
       comprovante: {
         nomeArquivo: `comprovante_${this.presenteId}_${Date.now()}.jpg`,
         base64: Base64ImageUtil.extractBase64(this.comprovante[0]),
-        tipoImagem: TipoImagemEvento.Comprovante
+        tipoImagem: TipoImagemEvento.Comprovante,
+        tipoArquivo: 'image/jpeg'
       }
     };
 

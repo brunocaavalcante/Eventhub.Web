@@ -146,7 +146,8 @@ export class CadastrarPresentesComponent extends BaseComponent implements OnInit
       imagens: this.imagens.map((img, idx) => ({
         nomeArquivo: `imagem_${idx + 1}.jpg`,
         base64: Base64ImageUtil.extractBase64(img),
-        tipoImagem: TipoImagemEvento.Local
+        tipoImagem: TipoImagemEvento.Produto,
+        tipoArquivo: 'image/jpeg'
       }))
     };
 

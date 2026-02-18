@@ -13,7 +13,7 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { DropZoneImageComponent } from '../../../../core/components/drop-zone-image/drop-zone-image.component';
-import { Imagem, TipoImagemEvento } from '../../../../core/models/imagem.model';
+import { Imagem, TipoImagemEvento, resolverMimeTypeArquivo } from '../../../../core/models/imagem.model';
 import { CategoriaPresenteDto,  UpdatePresenteDto } from '../../../../core/models/presente.model';
 import { ModalService } from '../../../../core/services/modal.service';
 import { PresenteService } from '../../../../core/services/presente/presente.service';
@@ -56,7 +56,7 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
   presenteId: number = Number(this.acRouter.snapshot.paramMap.get('id') || '0');
 
   get imagensVisualizacao(): string[] {
-    return this.imagens.map(img => Base64ImageUtil.resolveImageSource(img.base64));
+    return this.imagens.map(img => img.url || '');
   }
 
   constructor() {
@@ -211,7 +211,7 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
   onImagensChange(imagensString: string[]) {
     this.imagens = imagensString.map((imgStr, idx) => {
       const imagemExistente = this.imagens.find(
-        img => Base64ImageUtil.resolveImageSource(img.base64) === imgStr
+        img => img.url === imgStr
       );
       
       if (imagemExistente) {
@@ -221,7 +221,9 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
       return {
         nomeArquivo: `imagem_${idx + 1}.jpg`,
         base64: Base64ImageUtil.extractBase64(imgStr),
-        tipoImagem: TipoImagemEvento.Local
+        url: imgStr,
+        tipoImagem: TipoImagemEvento.Local,
+        tipoArquivo: resolverMimeTypeArquivo(`imagem_${idx + 1}.jpg`)
       };
     });
   }

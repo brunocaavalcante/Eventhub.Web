@@ -188,7 +188,8 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
       imagens: this.imagens.map((img, idx) => ({
         nomeArquivo: `imagem_${idx + 1}.jpg`,
         base64: Base64ImageUtil.extractBase64(img),
-        tipoImagem: TipoImagemEvento.Local
+        tipoImagem: TipoImagemEvento.Local,
+        tipoArquivo: 'image/jpeg'
       })),
 
       participantes: this.organizadores.map(org => ({

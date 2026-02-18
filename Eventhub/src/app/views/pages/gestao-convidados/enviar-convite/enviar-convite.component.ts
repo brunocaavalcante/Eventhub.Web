@@ -187,7 +187,7 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
 
     if (!evento) return;
 
-    const conviteBackground = convite?.foto ? Base64ImageUtil.resolveImageSource(convite.foto.base64) : null;
+    const conviteBackground = convite?.foto ? convite.foto.url : null;
     if (conviteBackground) {
       this.addBackgroundOption(conviteBackground);
     }
@@ -385,7 +385,8 @@ export class EnviarConviteComponent extends BaseComponent implements OnInit, Aft
         id: this.convite()?.foto?.id ?? 0,
         nomeArquivo: 'convite-evento.png',
         base64: backgroundBase64,
-        tipoImagem: TipoImagemEvento.Convite
+        tipoImagem: TipoImagemEvento.Convite,
+        tipoArquivo: 'image/png'
       }
     };
 

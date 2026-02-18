@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Imagem } from '../../../../core/models/imagem.model';
-import { Base64ImageUtil } from '../../../../core/utils/base64-image.util';
 import { CurrencyBrPipe } from '../../../../core/utils/pipes/currency-br.pipe';
 import { NotificationService } from '../../../../core/services/notification.service';
 
@@ -52,7 +51,7 @@ export class VisualizarComprovanteModalComponent {
 
   resolverImagemComprovante(): string {
     try {
-      return Base64ImageUtil.resolveImageSource(this.data.comprovante.base64);
+      return this.data.comprovante.url || '';
     } catch (error) {
       console.error('Erro ao carregar imagem do comprovante:', error);
       return '';
@@ -120,16 +119,16 @@ export class VisualizarComprovanteModalComponent {
   }
 
   private obterExtensaoImagem(): string {
-    const base64 = this.data.comprovante.base64;
-
-    if (base64.startsWith('data:image/png') || base64.startsWith('iVBORw0KGgo')) {
-      return 'png';
+    const tipoArquivo = this.data.comprovante.tipoArquivo;
+    
+    if (tipoArquivo) {
+      return tipoArquivo.replace('image/', '');
     }
-    if (base64.startsWith('data:image/jpeg') || base64.startsWith('data:image/jpg') || base64.startsWith('/9j/')) {
-      return 'jpg';
-    }
-    if (base64.startsWith('data:image/webp')) {
-      return 'webp';
+    
+    const url = this.data.comprovante.url || '';
+    const match = url.match(/\.(png|jpe?g|webp|gif)($|\?)/i);
+    if (match) {
+      return match[1];
     }
 
     return 'png'; // Padrão

@@ -18,6 +18,8 @@ describe('VisualizarComprovanteModalComponent', () => {
     id: 1,
     nomeArquivo: 'comprovante.png',
     base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+    url: 'https://exemplo.com/comprovante.png',
+    tipoArquivo: 'image/png',
     tipoImagem: TipoImagemEvento.Comprovante
   };
 
@@ -76,7 +78,7 @@ describe('VisualizarComprovanteModalComponent', () => {
 
   it('deve resolver a imagem do comprovante corretamente', () => {
     expect(component.imagemSrc).toBeTruthy();
-    expect(component.imagemSrc).toContain('data:image');
+    expect(component.imagemSrc).toBe('https://exemplo.com/comprovante.png');
   });
 
   describe('Zoom In', () => {
@@ -193,21 +195,29 @@ describe('VisualizarComprovanteModalComponent', () => {
 
   describe('Obter Extensão da Imagem', () => {
     it('deve retornar png para imagem PNG', () => {
-      component.data.comprovante.base64 = 'data:image/png;base64,iVBORw0KGgo';
+      component.data.comprovante.tipoArquivo = 'image/png';
       const extensao = (component as any).obterExtensaoImagem();
       expect(extensao).toBe('png');
     });
 
     it('deve retornar jpg para imagem JPEG', () => {
-      component.data.comprovante.base64 = 'data:image/jpeg;base64,/9j/4AAQSkZJRg';
+      component.data.comprovante.tipoArquivo = 'image/jpeg';
       const extensao = (component as any).obterExtensaoImagem();
-      expect(extensao).toBe('jpg');
+      expect(extensao).toBe('jpeg');
     });
 
     it('deve retornar png como padrão para formato desconhecido', () => {
-      component.data.comprovante.base64 = 'data:image/unknown;base64,abc123';
+      component.data.comprovante.tipoArquivo = '';
+      component.data.comprovante.url = 'https://exemplo.com/imagem';
       const extensao = (component as any).obterExtensaoImagem();
       expect(extensao).toBe('png');
+    });
+
+    it('deve extrair extensão da URL quando tipoArquivo não está disponível', () => {
+      component.data.comprovante.tipoArquivo = '';
+      component.data.comprovante.url = 'https://exemplo.com/foto.jpg';
+      const extensao = (component as any).obterExtensaoImagem();
+      expect(extensao).toBe('jpg');
     });
   });
 

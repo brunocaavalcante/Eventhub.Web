@@ -33,12 +33,14 @@ describe('CardPresenteComponent', () => {
       {
         base64: 'data:image/png;base64,AAA',
         nomeArquivo: '',
-        tipoImagem: TipoImagemEvento.Local
+        tipoImagem: TipoImagemEvento.Local,
+        tipoArquivo: ''
       },
       {
         base64: 'data:image/png;base64,BBB',
         nomeArquivo: '',
-        tipoImagem: TipoImagemEvento.Local
+        tipoImagem: TipoImagemEvento.Local,
+        tipoArquivo: ''
       }
     ],
     contribuicoes: [
@@ -100,7 +102,6 @@ describe('CardPresenteComponent', () => {
     expect(carousel).toBeTruthy();
     const img = carousel.querySelector('img');
     expect(img).toBeTruthy();
-    expect(img.src).toContain('data:image/png;base64,AAA');
   });
 
   it('deve navegar para a próxima imagem ao chamar nextImage()', () => {

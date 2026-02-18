@@ -215,7 +215,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
 
   get imagens(): string[] {
     const presente = this.presente();
-    return presente?.imagens?.map(img => Base64ImageUtil.resolveImageSource(img.base64)) || [];
+    return presente?.imagens?.map(img => img.url || '') || [];
   }
 
   get hasImages(): boolean {
@@ -274,6 +274,11 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
 
   resolverFoto(foto?: string): string {
     if (!foto) return 'assets/icones/user-default.png';
+    
+    if (foto.startsWith('http') || foto.startsWith('assets/')) {
+      return foto;
+    }
+    
     return Base64ImageUtil.resolveImageSource(foto);
   }
 

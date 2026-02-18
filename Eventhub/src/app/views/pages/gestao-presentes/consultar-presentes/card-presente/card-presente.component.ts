@@ -11,7 +11,6 @@ import { Presente } from '../../../../../core/models/presente.model';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CurrencyBrPipe } from '../../../../../core/utils/pipes/currency-br.pipe';
 import { RouterModule } from "@angular/router";
-import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
 import { EnumStatusContribuicao } from '../../../../../core/utils/enums/status-contribuicao.enum';
 import { EnumStatusPresente } from '../../../../../core/utils/enums/status-presente.enum';
 
@@ -67,7 +66,8 @@ export class CardPresenteComponent {
   podeContribuir = computed(() => {
     const presente = this.presente();
     if (!presente) return false;
-    const statusDisponivel = presente.status?.id === EnumStatusPresente.Disponivel;
+    const statusDisponivel = presente.status?.id === EnumStatusPresente.Disponivel ||
+      presente.status?.id === EnumStatusPresente.EmArrecadacao;
     return statusDisponivel;
   });
 
@@ -84,7 +84,7 @@ export class CardPresenteComponent {
 
   get imagens(): string[] {
     const presente = this.presente();
-    return presente?.imagens?.map(img => Base64ImageUtil.resolveImageSource(img.base64)) || [];
+    return presente?.imagens?.map(img => img.url || '') || [];
   }
 
   get hasImages(): boolean {
