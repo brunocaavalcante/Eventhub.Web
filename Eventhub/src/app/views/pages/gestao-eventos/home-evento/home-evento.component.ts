@@ -14,10 +14,11 @@ import { getTipoEventoInfo } from '../../../../core/models/tipo-evento.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PerfilService } from '../../../../core/services/perfil.service';
 import { ModuloDto } from '../../../../core/models/sistema.model';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-home-evento',
-  imports: [MatIconModule, CommonModule, RouterModule],
+  imports: [MatIconModule, CommonModule, RouterModule, MatButtonModule,],
   templateUrl: './home-evento.component.html',
   styleUrl: './home-evento.component.scss'
 })
@@ -90,6 +91,12 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
           this.spinner.hide();
         }
       });
+  }
+
+  voltar(): void {
+    if (this.evento) {
+      this.router.navigate([`/eventos/meus-eventos`]);
+    }
   }
 
   getTipoEventoInfo(tipo: number | undefined) {

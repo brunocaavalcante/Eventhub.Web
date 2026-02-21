@@ -12,6 +12,8 @@ export interface Presente {
     categoria?: CategoriaPresenteDto;
     contribuicoes?: ContribuicaoPresenteDto[];
     imagens?: Imagem[];
+    idParticipanteReservou?: number;
+    dataReserva?: Date | string;
 }
 
 export interface UpdatePresenteDto {
@@ -63,6 +65,8 @@ export interface ContribuicaoDetalhesDto {
     dataCadastro: Date | string;
     status: StatusContribuicaoPresenteDto;
     participante: ParticipanteContribuicaoDto;
+    comprovante?: Imagem;
+    justificativa?: string;
 }
 
 export interface ParticipanteContribuicaoDto {
@@ -70,4 +74,15 @@ export interface ParticipanteContribuicaoDto {
     nome: string;
     email?: string;
     foto?: string;
+}
+
+export interface ReservarPresenteDto {
+    idPresente: number;
+    idParticipante: number;
+}
+
+export interface CancelarReservaPresenteDto {
+    idPresente: number;
+    idParticipante: number;
+    justificativa: string;
 }

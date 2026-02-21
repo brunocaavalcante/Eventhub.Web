@@ -6,8 +6,8 @@ import { of } from 'rxjs';
 
 import { EditarContribuicaoPresenteComponent } from './editar-contribuicao-presente.component';
 import { AuthService } from '../../../../../core/services/auth.service';
-import { PresenteService } from '../../../../../core/services/presente.service';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
+import { PresenteService } from '../../../../../core/services/presente/presente.service';
 
 describe('EditarContribuicaoPresenteComponent', () => {
   let component: EditarContribuicaoPresenteComponent;

@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { FormBuilder, FormControlName, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -30,7 +30,6 @@ export class LoginComponent extends BaseComponent implements OnInit, AfterViewIn
   form: FormGroup;
   loading = false;
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
 

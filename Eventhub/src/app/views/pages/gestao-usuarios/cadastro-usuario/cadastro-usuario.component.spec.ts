@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { CadastroUsuarioComponent } from './cadastro-usuario.component';
 
 describe('CadastroUsuarioComponent', () => {
@@ -8,7 +9,8 @@ describe('CadastroUsuarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CadastroUsuarioComponent]
+      imports: [CadastroUsuarioComponent],
+      providers: [provideHttpClient(), provideRouter([])]
     })
     .compileComponents();
 

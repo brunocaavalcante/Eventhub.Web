@@ -4,15 +4,15 @@
         <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item [routerLink]="['/presentes/editar', presente.idEvento, presente.id]">
+        <button mat-menu-item [routerLink]="['/presentes/editar', presente().idEvento, presente().id]">
             <mat-icon>edit</mat-icon>
             <span>Editar</span>
         </button>
-        <button mat-menu-item [routerLink]="['/presentes/detalhes', presente.idEvento, presente.id]">
+        <button mat-menu-item [routerLink]="['/presentes/detalhes', presente().idEvento, presente().id]">
             <mat-icon>visibility</mat-icon>
             <span>Ver Detalhes</span>
         </button>
-        <button mat-menu-item (click)="excluirPresente(presente)" class="menu-excluir">
+        <button mat-menu-item (click)="excluirPresente(presente())" class="menu-excluir">
             <mat-icon>delete</mat-icon>
             <span>Excluir</span>
         </button>
@@ -21,7 +21,7 @@
     <mat-card-header class="presente-imagem">
         <!-- Carrossel de Imagens -->
         <div class="carousel" *ngIf="hasImages; else noImage">
-            <img [src]="currentImage" [alt]="presente.nome" class="carousel-image">
+            <img [src]="currentImage" alt="{{presente().nome}}" class="carousel-image">
 
             <button *ngIf="hasMultipleImages" mat-icon-button class="carousel-btn carousel-btn-prev"
                 (click)="previousImage()">
@@ -46,30 +46,46 @@
 
     <mat-card-content>
         <div class="header">
-            <h3 class="presente-nome">{{ presente.nome }}</h3>
-            <div class="presente-status">{{presente.status?.descricao}} </div>
+            <h3 class="presente-nome">{{ presente().nome }}</h3>
+            <div class="presente-status">{{presente().status?.descricao}}</div>
         </div>
-        <div class="presente-valor">{{ presente.valor | currencyBr }}</div>
-        <div class="presente-descricao">{{ presente.descricao }}</div>
+        <div class="presente-valor">{{ presente().valor | currencyBr }}</div>
+        <div class="presente-descricao">{{ presente().descricao }}</div>
 
-        @if(presente.contribuicoes && presente.contribuicoes.length > 0){
+        @if(presente().contribuicoes && presente().contribuicoes!.length > 0 && temContribuicoesComValor()) {
         <div class="contribuicao">
             <div class="contribuicao-label">
                 <div>Cota compartilhada</div>
                 <div class="contribuicao-valor">
-                   {{ retornaSomaContribuicoes() | currencyBr }} / {{ presente.valor | currencyBr }}
+                    {{ retornaSomaContribuicoes() | currencyBr }} / {{ presente().valor | currencyBr }}
                 </div>
             </div>
             <mat-progress-bar color="primary" mode="determinate" [value]="calcularProgresso()"></mat-progress-bar>
-            <div class="contribuicoes">{{ (presente.contribuicoes.length > 1 ? presente.contribuicoes.length + '
+            <div class="contribuicoes">{{ (presente().contribuicoes!.length > 1 ? presente().contribuicoes!.length + '
                 contribuintes' : '1 contribuinte') }} </div>
         </div>
         }
     </mat-card-content>
     <mat-card-actions>
-        <button mat-button class="btn-reservar" [routerLink]="['/presentes/pagar', presente.idEvento, presente.id]">
+        @if(podeContribuir()) {
+        <button mat-button [routerLink]="['/presentes/pagar', presente().idEvento, presente().id]">
             <mat-icon>favorite</mat-icon>
             Contribuir com Pix
         </button>
+        }
+
+        @if(podeReservar()) {
+        <button mat-button class="btn-reservar" (click)="reservarPresente()">
+            <mat-icon>bookmark</mat-icon>
+            Reservar Presente
+        </button>
+        }
+
+        @if(podeCancelarReserva()) {
+        <button mat-button class="btn-cancelar-reserva" (click)="cancelarReservaPresente()">
+            <mat-icon>close</mat-icon>
+            Cancelar Reserva
+        </button>
+        }
     </mat-card-actions>
 </mat-card>

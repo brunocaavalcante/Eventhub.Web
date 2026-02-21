@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ModalConfirmComponent, ModalConfirmData } from '../components/modal/modal-confirm/modal-confirm.component';
 import { ModalErrorComponent, ModalErrorData } from '../components/modal/modal-error/modal-error.component';
 import { ModalSucessComponent, ModalSucessData } from '../components/modal/modal-sucess/modal-sucess.component';
+import { ModalInputComponent, ModalInputData } from '../components/modal/modal-input/modal-input.component';
 
 type DialogResult = boolean | undefined;
 
@@ -106,5 +107,12 @@ export class ModalService {
     config?: MatDialogConfig<ModalConfirmData>
   ): Observable<DialogResult> {
     return this.openDialog<ModalConfirmData, DialogResult>(ModalConfirmComponent, data, config);
+  }
+
+  openInputModal(
+    data?: ModalInputData,
+    config?: MatDialogConfig<ModalInputData>
+  ): Observable<string | null> {
+    return this.openDialog<ModalInputData, string | null>(ModalInputComponent, data, config);
   }
 }

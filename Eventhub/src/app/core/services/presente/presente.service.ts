@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { BaseService } from "./base.service";
-import { CategoriaPresenteDto, CreatePresenteDto, Presente, PresenteDetalhesDto, UpdatePresenteDto } from "../models/presente.model";
-import { RetornoAPI } from "../models/retorno-api.model";
 import { Observable } from "rxjs";
-import { CancelarContribuicaoPresenteDto, ContribuicaoPresenteDto, CreateContribuicaoPresenteDto, StatusContribuicaoPresenteDto, UpdateContribuicaoPresenteDto } from "../models/contribuicao-presente.model";
+import { CreateContribuicaoPresenteDto, ContribuicaoPresenteDto, CancelarContribuicaoPresenteDto, StatusContribuicaoPresenteDto, UpdateContribuicaoPresenteDto, ConfirmarContribuicaoPresenteDto } from "../../models/contribuicao-presente.model";
+import { CreatePresenteDto, Presente, UpdatePresenteDto, CategoriaPresenteDto, PresenteDetalhesDto, ReservarPresenteDto, CancelarReservaPresenteDto } from "../../models/presente.model";
+import { RetornoAPI } from "../../models/retorno-api.model";
+import { BaseService } from "../base.service";
 
 @Injectable({ providedIn: 'root' })
 export class PresenteService extends BaseService {
@@ -18,6 +18,10 @@ export class PresenteService extends BaseService {
 
     cancelarContribuicao(model: CancelarContribuicaoPresenteDto): Observable<RetornoAPI<null>> {
         return this.http.post<RetornoAPI<null>>(`${this.urlApi}/contribuicaopresente/cancelar`, model);
+    }
+
+    confirmarContribuicao(model: ConfirmarContribuicaoPresenteDto): Observable<RetornoAPI<null>> {
+        return this.http.post<RetornoAPI<null>>(`${this.urlApi}/contribuicaopresente/confirmar`, model);
     }
 
     atualizar(presente: UpdatePresenteDto): Observable<RetornoAPI<Presente[]>> {
@@ -50,5 +54,13 @@ export class PresenteService extends BaseService {
 
     atualizarContribuicao(contribuicao: UpdateContribuicaoPresenteDto): Observable<RetornoAPI<ContribuicaoPresenteDto>> {
         return this.http.put<RetornoAPI<ContribuicaoPresenteDto>>(`${this.urlApi}/contribuicaopresente/${contribuicao.id}`, contribuicao);
+    }
+
+    reservarPresente(reserva: ReservarPresenteDto): Observable<RetornoAPI<Presente>> {
+        return this.http.post<RetornoAPI<Presente>>(`${this.urlApi}/presentes/${reserva.idPresente}/reservar`, reserva);
+    }
+
+    cancelarReserva(cancelamento: CancelarReservaPresenteDto): Observable<RetornoAPI<null>> {
+        return this.http.post<RetornoAPI<null>>(`${this.urlApi}/presentes/${cancelamento.idPresente}/cancelar-reserva`, cancelamento);
     }
 }

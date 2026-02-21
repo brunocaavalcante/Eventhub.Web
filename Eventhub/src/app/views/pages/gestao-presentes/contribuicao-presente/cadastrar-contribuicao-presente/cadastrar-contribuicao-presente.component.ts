@@ -5,10 +5,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { BaseComponent } from '../../../../../core/components/base.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { PresenteService } from '../../../../../core/services/presente.service';
+import { PresenteService } from '../../../../../core/services/presente/presente.service';
 import { Presente } from '../../../../../core/models/presente.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
@@ -20,7 +20,7 @@ import { NotificationService } from '../../../../../core/services/notification.s
 import { PixEventoService } from '../../../../../core/services/pix-evento.service';
 import { FinalidadePix } from '../../../../../core/utils/enums/finalidade-pix.enum';
 import { CreateContribuicaoPresenteDto } from '../../../../../core/models/contribuicao-presente.model';
-import { Imagem, TipoImagemEvento } from '../../../../../core/models/imagem.model';
+import { TipoImagemEvento } from '../../../../../core/models/imagem.model';
 import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
 
 @Component({
@@ -44,7 +44,6 @@ export class CadastrarContribuicaoPresenteComponent extends BaseComponent implem
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements!: ElementRef[];
 
   form: FormGroup;
-  private readonly router = inject(Router);
   private readonly acRouter = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
@@ -174,7 +173,8 @@ export class CadastrarContribuicaoPresenteComponent extends BaseComponent implem
       comprovante: {
         nomeArquivo: `comprovante_${this.presenteId}_${Date.now()}.jpg`,
         base64: Base64ImageUtil.extractBase64(this.comprovante[0]),
-        tipoImagem: TipoImagemEvento.Comprovante
+        tipoImagem: TipoImagemEvento.Comprovante,
+        tipoArquivo: 'image/jpeg'
       }
     };
 

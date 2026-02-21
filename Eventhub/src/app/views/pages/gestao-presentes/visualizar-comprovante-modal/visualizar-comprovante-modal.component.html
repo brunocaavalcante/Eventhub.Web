@@ -1,0 +1,59 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+      <mat-icon class="btn-fechar"  (click)="fechar()" matTooltip="Fechar (ESC)">close</mat-icon>
+
+    <!-- Cabeçalho -->
+    <div class="modal-header">
+      <h2 class="modal-title">Comprovante de Contribuição</h2><br />
+      <p class="modal-info">
+        <span class="convidado-nome">{{ data.nomeConvidado }}</span>
+        <span class="separador">•</span>
+        <span class="valor-contribuicao">{{ data.valorContribuicao | currencyBr }}</span>
+      </p>
+    </div>
+
+    <!-- Área da Imagem -->
+    <div class="imagem-container">
+      @if (!imagemCarregada()) {
+      <div class="loading-spinner">
+        <mat-icon class="spinner-icon">hourglass_empty</mat-icon>
+        <p>Carregando comprovante...</p>
+      </div>
+      }
+
+      <img [src]="imagemSrc" alt="Comprovante de {{ data.nomeConvidado }}" class="comprovante-imagem"
+        [style.transform]="'scale(' + (zoom() / 100) + ')'" [class.loaded]="imagemCarregada()" (load)="onImageLoad()"
+        (error)="onImageError()" />
+
+      @if (!imagemCarregada() && imagemSrc) {
+      <div class="erro-imagem">
+        <mat-icon>broken_image</mat-icon>
+        <p>Erro ao carregar imagem</p>
+      </div>
+      }
+    </div>
+
+    <!-- Controles -->
+    <div class="modal-actions">
+      <button mat-raised-button class="btn-zoom" (click)="zoomOut()" [disabled]="!podeDiminuirZoom()"
+        matTooltip="Diminuir zoom ({{ zoom() }}%)">
+        <mat-icon>zoom_out</mat-icon>
+        Zoom Out
+      </button>
+
+      <span class="zoom-indicator">{{ zoom() }}%</span>
+
+      <button mat-raised-button class="btn-zoom" (click)="zoomIn()" [disabled]="!podeAumentarZoom()"
+        matTooltip="Aumentar zoom ({{ zoom() }}%)">
+        <mat-icon>zoom_in</mat-icon>
+        Zoom In
+      </button>
+
+      <button mat-raised-button color="primary" class="btn-download" (click)="download()"
+        [disabled]="!imagemCarregada()" matTooltip="Baixar comprovante">
+        <mat-icon>download</mat-icon>
+        Download
+      </button>
+    </div>
+  </div>
+</div>

@@ -2,13 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PresenteService } from '../../../../../core/services/presente.service';
 import { PixEventoService } from '../../../../../core/services/pix-evento.service';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { ModalService } from '../../../../../core/services/modal.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import { CadastrarContribuicaoPresenteComponent } from './cadastrar-contribuicao-presente.component';
+import { PresenteService } from '../../../../../core/services/presente/presente.service';
 
 describe('CadastrarContribuicaoPresenteComponent', () => {
   let component: CadastrarContribuicaoPresenteComponent;

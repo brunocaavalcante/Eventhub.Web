@@ -1,26 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
-import { Auth } from '@angular/fire/auth';
 import { AuthService } from '../../../../core/services/auth.service';
 import { UsuarioService } from '../../../../core/services/usuario.service';
 import { ActivatedRoute } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
 
-  const mockAuth = {
-    currentUser: null,
-    signOut: jest.fn(),
-    signInWithEmailAndPassword: jest.fn(),
-  };
-
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
       providers: [
-        { provide: Auth, useValue: mockAuth },
+        provideHttpClient(),
         { provide: UsuarioService, useValue: { obterUsuarioLogado: jest.fn(() => null) } },
         { provide: ActivatedRoute, useValue: {} },
         { provide: AuthService, useValue: {
@@ -46,7 +39,6 @@ describe('HeaderComponent', () => {
 
   it('deve navegar para rota ao chamar navegarPara', () => {
     component.navegarPara('/perfil');
-    expect(mockAuth.signOut).not.toHaveBeenCalled(); // sanity: not logout
     // router.navigate é mockado, mas não está no providers, então não testamos navegação real aqui
   });
 

@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormControlName, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../../../core/services/usuario.service';
 import { BaseComponent } from '../../../../core/components/base.component';
@@ -39,7 +39,6 @@ export class CadastroUsuarioComponent extends BaseComponent implements OnInit, A
   form: FormGroup;
   loading = false;
   private readonly usuarioService = inject(UsuarioService);
-  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
 

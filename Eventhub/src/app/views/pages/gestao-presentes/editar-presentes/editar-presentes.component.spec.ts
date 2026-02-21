@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { provideNgxMask } from 'ngx-mask';
 import { EditarPresentesComponent } from './editar-presentes.component';
-import { PresenteService } from '../../../../core/services/presente.service';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { TipoImagemEvento } from '../../../../core/models/imagem.model';
@@ -31,6 +31,8 @@ describe('EditarPresentesComponent', () => {
         id: 1,
         nomeArquivo: 'imagem1.jpg',
         base64: 'base64string1',
+        url: 'https://exemplo.com/imagem1.jpg',
+        tipoArquivo: 'image/jpeg',
         tipoImagem: TipoImagemEvento.Local
       }
     ]
@@ -291,6 +293,8 @@ describe('EditarPresentesComponent', () => {
           id: 1,
           nomeArquivo: 'teste.jpg',
           base64: 'base64string',
+          url: 'https://exemplo.com/teste.jpg',
+          tipoArquivo: 'image/jpeg',
           tipoImagem: TipoImagemEvento.Local
         }
       ];
@@ -298,7 +302,7 @@ describe('EditarPresentesComponent', () => {
       const resultado = component.imagensVisualizacao;
 
       expect(resultado.length).toBe(1);
-      expect(resultado[0]).toContain('base64string');
+      expect(resultado[0]).toBe('https://exemplo.com/teste.jpg');
     });
 
     it('deve retornar array vazio se não houver imagens', () => {
@@ -327,11 +331,13 @@ describe('EditarPresentesComponent', () => {
         id: 1,
         nomeArquivo: 'existente.jpg',
         base64: 'base64Existente',
+        url: 'https://exemplo.com/existente.jpg',
+        tipoArquivo: 'image/jpeg',
         tipoImagem: TipoImagemEvento.Local
       };
       component.imagens = [imagemExistente];
       
-      const imagemExistenteString = Base64ImageUtil.resolveImageSource(imagemExistente.base64);
+      const imagemExistenteString = imagemExistente.url!;
       const novaImagemString = 'data:image/jpeg;base64,novaImagem';
 
       component.onImagensChange([imagemExistenteString, novaImagemString]);
@@ -344,11 +350,11 @@ describe('EditarPresentesComponent', () => {
 
     it('deve remover imagens quando array reduzido', () => {
       component.imagens = [
-        { nomeArquivo: 'img1.jpg', base64: 'base1', tipoImagem: TipoImagemEvento.Local },
-        { nomeArquivo: 'img2.jpg', base64: 'base2', tipoImagem: TipoImagemEvento.Local }
+        { nomeArquivo: 'img1.jpg', base64: 'base1', url: 'https://exemplo.com/img1.jpg', tipoArquivo: 'image/jpeg', tipoImagem: TipoImagemEvento.Local },
+        { nomeArquivo: 'img2.jpg', base64: 'base2', url: 'https://exemplo.com/img2.jpg', tipoArquivo: 'image/jpeg', tipoImagem: TipoImagemEvento.Local }
       ];
 
-      const imagemString = Base64ImageUtil.resolveImageSource('base1');
+      const imagemString = component.imagens[0].url!;
       component.onImagensChange([imagemString]);
 
       expect(component.imagens.length).toBe(1);

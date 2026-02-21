@@ -2,6 +2,12 @@
   <!-- Header com estatísticas -->
   <div class="presentes-header">
     <div class="presentes-header-content">
+      <div class="header-voltar">
+        <button mat-button class="btn-voltar" (click)="voltar()">
+          <mat-icon>arrow_back</mat-icon>
+          Voltar para o menu do Evento
+        </button>
+      </div>
       <div class="presentes-header-titles">
         <h1 class="presentes-title">Lista de Presentes</h1>
         <p class="presentes-subtitle">Celebre conosco escolhendo um presente especial!</p>
@@ -46,7 +52,14 @@
         <h2>Disponíveis ({{ disponiveis().length }})</h2>
       </div>
       <div class="presentes-cards">
-        <app-card-presente *ngFor="let presente of disponiveis()" [presente]="presente" (excluir)="excluirPresente(presente)"></app-card-presente>
+        <app-card-presente
+          *ngFor="let presente of disponiveis()"
+          [presente]="presente"
+          [idParticipanteLogado]="idParticipanteLogado()"
+          (excluir)="excluirPresente(presente)"
+          (reservar)="reservarPresente(presente)"
+          (cancelarReserva)="cancelarReserva(presente)">
+        </app-card-presente>
       </div>
     </div>
 
@@ -57,7 +70,14 @@
         <h2>Em Arrecadação ({{ emArrecadacao().length }})</h2>
       </div>
       <div class="presentes-cards">
-        <app-card-presente *ngFor="let presente of emArrecadacao()" (excluir)="excluirPresente(presente)" [presente]="presente"></app-card-presente>
+        <app-card-presente
+          *ngFor="let presente of emArrecadacao()"
+          [presente]="presente"
+          [idParticipanteLogado]="idParticipanteLogado()"
+          (excluir)="excluirPresente(presente)"
+          (reservar)="reservarPresente(presente)"
+          (cancelarReserva)="cancelarReserva(presente)">
+        </app-card-presente>
       </div>
     </div>
 
@@ -68,7 +88,14 @@
         <h2>Reservados ({{ reservados().length }})</h2>
       </div>
       <div class="presentes-cards">
-        <app-card-presente *ngFor="let presente of reservados()" (excluir)="excluirPresente(presente)" [presente]="presente"></app-card-presente>
+        <app-card-presente
+          *ngFor="let presente of reservados()"
+          [presente]="presente"
+          [idParticipanteLogado]="idParticipanteLogado()"
+          (excluir)="excluirPresente(presente)"
+          (reservar)="reservarPresente(presente)"
+          (cancelarReserva)="cancelarReserva(presente)">
+        </app-card-presente>
       </div>
     </div>
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, computed, EventEmitter, input, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,8 +11,8 @@ import { Presente } from '../../../../../core/models/presente.model';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CurrencyBrPipe } from '../../../../../core/utils/pipes/currency-br.pipe';
 import { RouterModule } from "@angular/router";
-import { Base64ImageUtil } from '../../../../../core/utils/base64-image.util';
 import { EnumStatusContribuicao } from '../../../../../core/utils/enums/status-contribuicao.enum';
+import { EnumStatusPresente } from '../../../../../core/utils/enums/status-presente.enum';
 
 @Component({
   selector: 'app-card-presente',
@@ -33,12 +33,48 @@ import { EnumStatusContribuicao } from '../../../../../core/utils/enums/status-c
   styleUrl: './card-presente.component.scss'
 })
 export class CardPresenteComponent {
-  @Input() presente!: Presente;
+  presente = input.required<Presente>();
+  idParticipanteLogado = input<number>();
   @Output() excluir = new EventEmitter<Presente>();
+  @Output() reservar = new EventEmitter<Presente>();
+  @Output() cancelarReserva = new EventEmitter<Presente>();
+
   currentImageIndex = 0;
 
+  // Computed properties para controle de exibição dos botões
+  podeReservar = computed(() => {
+    const presente = this.presente();
+    if (!presente) return false;
+
+    const statusDisponivel = presente.status?.id === EnumStatusPresente.Disponivel;
+    const semContribuicoesAtivas = !presente.contribuicoes || presente.contribuicoes.length === 0 ||
+      presente.contribuicoes.every(c => c.idStatusContribuicao === EnumStatusContribuicao.Cancelado);
+
+    return statusDisponivel && semContribuicoesAtivas;
+  });
+
+  podeCancelarReserva = computed(() => {
+    const presente = this.presente();
+    const idLogado = this.idParticipanteLogado();
+    if (!presente || !idLogado) return false;
+
+    const statusReservado = presente.status?.id === EnumStatusPresente.Reservado;
+    const reservouEstePresente = presente.idParticipanteReservou === idLogado;
+
+    return statusReservado && reservouEstePresente;
+  });
+
+  podeContribuir = computed(() => {
+    const presente = this.presente();
+    if (!presente) return false;
+    const statusDisponivel = presente.status?.id === EnumStatusPresente.Disponivel ||
+      presente.status?.id === EnumStatusPresente.EmArrecadacao;
+    return statusDisponivel;
+  });
+
   get imagens(): string[] {
-    return this.presente?.imagens?.map(img => Base64ImageUtil.resolveImageSource(img.base64)) || [];
+    const presente = this.presente();
+    return presente?.imagens?.map(img => img.url || '') || [];
   }
 
   get hasImages(): boolean {
@@ -60,22 +96,29 @@ export class CardPresenteComponent {
   }
 
   calcularProgresso(): number {
-    if (!this.presente.valor || this.presente.valor === 0) {
+    const presente = this.presente();
+    if (!presente.valor || presente.valor === 0) {
       return 0;
     }
     const totalContribuido = this.retornaSomaContribuicoes();
-    return Math.min((totalContribuido / this.presente.valor) * 100, 100);
+    return Math.min((totalContribuido / presente.valor) * 100, 100);
   }
 
   retornaSomaContribuicoes(): number {
-    if (!this.presente.contribuicoes || this.presente.contribuicoes.length === 0) {
+    const presente = this.presente();
+    if (!presente.contribuicoes || presente.contribuicoes.length === 0) {
       return 0;
     }
-    return this.presente.contribuicoes
+    return presente.contribuicoes
       .filter(contribuicao => {
-        return contribuicao.status === EnumStatusContribuicao.Confirmado.toString();
+        return contribuicao.idStatusContribuicao === EnumStatusContribuicao.Confirmado;
       })
       .reduce((soma, contribuicao) => soma + contribuicao.valor, 0);
+  }
+
+  temContribuicoesComValor(): boolean {
+    const presente = this.presente();
+    return presente?.contribuicoes?.some(c => c.valor > 0 && c.idStatusContribuicao === EnumStatusContribuicao.Confirmado) ?? false;
   }
 
   previousImage(): void {
@@ -94,5 +137,13 @@ export class CardPresenteComponent {
 
   excluirPresente(presente: Presente): void {
     this.excluir.emit(presente);
+  }
+
+  reservarPresente(): void {
+    this.reservar.emit(this.presente());
+  }
+
+  cancelarReservaPresente(): void {
+    this.cancelarReserva.emit(this.presente());
   }
 }

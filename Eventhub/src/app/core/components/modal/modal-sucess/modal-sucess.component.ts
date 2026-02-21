@@ -10,6 +10,7 @@ export interface ModalSucessData {
   title?: string;
   message?: string;
   okLabel?: string;
+  showIcon?: boolean;
 }
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,7 @@ import { ContribuicaoDetalhesDto, PresenteDetalhesDto } from '../../../../../cor
 import { ModalSucessComponent } from '../../../../../core/components/modal/modal-sucess/modal-sucess.component';
 import { ModalConfirmComponent } from '../../../../../core/components/modal/modal-confirm/modal-confirm.component';
 import { BaseComponent } from '../../../../../core/components/base.component';
-import { PresenteService } from '../../../../../core/services/presente.service';
+import { PresenteService } from '../../../../../core/services/presente/presente.service';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { DateUtils } from '../../../../../core/utils/date.utils';
 import { ModalService } from '../../../../../core/services/modal.service';
@@ -44,7 +44,6 @@ export class EditarContribuicaoPresenteComponent extends BaseComponent implement
 
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly presenteService = inject(PresenteService);
   private readonly modalService = inject(ModalService);
   private readonly spinner = inject(SpinnerService);
@@ -94,7 +93,7 @@ export class EditarContribuicaoPresenteComponent extends BaseComponent implement
           if (response.executouComSucesso && response.data) {
             this.presente = response.data;
             this.contribuicao =
-              this.presente.contribuicoes.find(
+              this.presente!.contribuicoes.find(
                 (c) => c.id === this.idContribuicao,
               ) || null;
 

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
 import { TipoEventoComponent } from './tipo-evento.component';
 
 describe('TipoEventoComponent', () => {
@@ -8,7 +8,8 @@ describe('TipoEventoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TipoEventoComponent]
+      imports: [TipoEventoComponent],
+      providers: [provideHttpClient()]
     })
     .compileComponents();
 

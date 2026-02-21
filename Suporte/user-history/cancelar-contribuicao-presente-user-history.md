@@ -4,8 +4,8 @@
 
 ### 1.1 Cenário 1: Abrir Modal de Cancelamento
 
-DADO que o usuário está visualizando os detalhes de um presente com contribuições  
-QUANDO o usuário clica na ação "Cancelar contribuição" no menu de ações de uma contribuição  
+DADO que o usuário está visualizando os detalhes de um presente com contribuições
+QUANDO o usuário clica na ação "Cancelar contribuição" no menu de ações de uma contribuição
 ENTÃO o sistema abre um modal exibindo:
 - Título "Cancelar Contribuição"
 - Nome do convidado que fez a contribuição
@@ -15,7 +15,7 @@ ENTÃO o sistema abre um modal exibindo:
 - Botões "Voltar" e "Confirmar Cancelamento"
 
 #### 1.1.1 Informações adicionais
-- **Modal**: 
+- **Modal**:
   - Largura: 600px (desktop), 90vw (mobile)
   - Não pode ser fechado clicando fora (`disableClose: true`)
   - Botão X no canto superior direito fecha o modal
@@ -28,8 +28,8 @@ ENTÃO o sistema abre um modal exibindo:
 
 ### 1.2 Cenário 2: Validar Justificativa Obrigatória
 
-DADO que o modal de cancelamento está aberto  
-QUANDO o usuário tenta confirmar sem preencher a justificativa  
+DADO que o modal de cancelamento está aberto
+QUANDO o usuário tenta confirmar sem preencher a justificativa
 ENTÃO o sistema exibe mensagem de erro "A justificativa é obrigatória" e não permite prosseguir
 
 #### 1.2.1 Informações adicionais
@@ -42,8 +42,8 @@ ENTÃO o sistema exibe mensagem de erro "A justificativa é obrigatória" e não
 
 ### 1.3 Cenário 3: Validar Tamanho Mínimo da Justificativa
 
-DADO que o usuário está preenchendo a justificativa  
-QUANDO o usuário digita menos de 10 caracteres e tenta confirmar  
+DADO que o usuário está preenchendo a justificativa
+QUANDO o usuário digita menos de 10 caracteres e tenta confirmar
 ENTÃO o sistema exibe mensagem de erro "A justificativa deve ter pelo menos 10 caracteres" e não permite prosseguir
 
 #### 1.3.1 Informações adicionais
@@ -52,8 +52,8 @@ ENTÃO o sistema exibe mensagem de erro "A justificativa deve ter pelo menos 10 
 
 ### 1.4 Cenário 4: Cancelar Operação (Voltar)
 
-DADO que o modal de cancelamento está aberto  
-QUANDO o usuário clica no botão "Voltar" ou no X  
+DADO que o modal de cancelamento está aberto
+QUANDO o usuário clica no botão "Voltar" ou no X
 ENTÃO o sistema fecha o modal sem executar o cancelamento e retorna objeto `{ confirmado: false }`
 
 #### 1.4.1 Informações adicionais
@@ -61,8 +61,8 @@ ENTÃO o sistema fecha o modal sem executar o cancelamento e retorna objeto `{ c
 
 ### 1.5 Cenário 5: Confirmar Cancelamento com Justificativa Válida
 
-DADO que o usuário preencheu uma justificativa válida (mínimo 10 caracteres)  
-QUANDO o usuário clica em "Confirmar Cancelamento"  
+DADO que o usuário preencheu uma justificativa válida (mínimo 10 caracteres)
+QUANDO o usuário clica em "Confirmar Cancelamento"
 ENTÃO o sistema:
 1. Fecha o modal
 2. Retorna objeto `{ confirmado: true, justificativa: 'texto digitado' }`
@@ -79,8 +79,8 @@ ENTÃO o sistema:
 
 ### 1.6 Cenário 6: Validação Visual do Formulário
 
-DADO que o usuário interagiu com o campo de justificativa  
-QUANDO o campo perde o foco (blur) ou o usuário tenta submeter  
+DADO que o usuário interagiu com o campo de justificativa
+QUANDO o campo perde o foco (blur) ou o usuário tenta submeter
 ENTÃO o sistema valida e exibe feedback visual:
 - Campo válido: borda verde
 - Campo inválido: borda vermelha + mensagem de erro
@@ -89,9 +89,31 @@ ENTÃO o sistema valida e exibe feedback visual:
 - **Validação automática** via `BaseComponent.configurarValidacaoFormularioBase()`
 - Mensagens configuradas em `validationMessages`
 
+### 1.7 Cenário 7: Visualizar Justificativa de Cancelamento
+
+DADO que uma contribuição está cancelada e possui justificativa de cancelamento
+QUANDO o organizador visualiza os detalhes do presente na tabela de contribuições
+ENTÃO o sistema exibe a ação "Ver justificativa" para aquela contribuição
+E QUANDO o organizador clica na ação "Ver justificativa"
+ENTÃO o sistema abre um modal exibindo:
+- Título: "Justificativa de Cancelamento"
+- Conteúdo: texto completo da justificativa
+- Botão "Fechar" ou "OK"
+
+#### 1.7.1 Informações adicionais
+- **Ação visível apenas para contribuições canceladas** com justificativa (`status === 'cancelado' && !!contrib.justificativaCancelamento`)
+- **Ícone da ação**: `info`
+- **Posição na tabela**: fica após a ação "Ver comprovante" (posição 2)
+- **Modal utilizado**: `ModalSucessComponent` configurado sem ícone
+- **Largura do modal**: 600px (desktop), 90vw (mobile)
+- **Validação**: se justificativa não estiver disponível, exibe warning "Justificativa de cancelamento não disponível"
+- **Componente**: disponível na tela de "Detalhar Presente"
+
 ---
 
-## 7. Campos da Interface
+## 2. Campos da Interface
+
+### 2.1 Campos do Modal de Cancelamento
 
 | Campo                        | Descrição                                 | Tipo      | Obrigatório | Validações                |
 | :--------------------------- | :---------------------------------------- | :-------- | :---------: | :------------------------ |
@@ -99,15 +121,54 @@ ENTÃO o sistema valida e exibe feedback visual:
 | Valor da Contribuição        | Valor monetário da contribuição           | Label     | -           | Formatado em R$           |
 | Justificativa do Cancelamento| Motivo do cancelamento                    | Textarea  | Sim         | Required, MinLength: 10   |
 
+### 2.2 Campos do Modelo de Resposta da API
+
+| Campo                        | Descrição                                                                    | Tipo      | Obrigatório |
+| :--------------------------- | :--------------------------------------------------------------------------- | :-------- | :---------: |
+| justificativaCancelamento    | Justificativa fornecida pelo organizador no momento do cancelamento          | string    | Não         |
+
+**Observação**: O campo `justificativaCancelamento` é recuperado junto com os detalhes da contribuição e utilizado para exibir a justificativa em contribuições já canceladas.
+
 ---
 
 ## 3. Regras de Negócio
 
+### RN-01: Validação do Formulário
 - O botão "Confirmar Cancelamento" só é habilitado quando o formulário está válido
 - Justificativa obrigatória e mínimo de 10 caracteres
-- Cancelamento é permanente, valor removido do total arrecadado, contribuição removida da lista
-- Retorno do modal: `{ confirmado: false }` ou `{ confirmado: true, justificativa }`
-- Integração com API: chamada para cancelar contribuição, atualização dos dados após sucesso
+
+### RN-02: Permanência do Cancelamento
+- Cancelamento é permanente
+- Valor removido do total arrecadado
+- Contribuição removida da lista de contribuições ativas
+
+### RN-03: Retorno do Modal
+- Modal de cancelamento retorna: `{ confirmado: false }` ou `{ confirmado: true, justificativa }`
+- Utilizado para controlar fluxo de execução após fechamento do modal
+
+### RN-04: Integração com API
+- Chamada para API para cancelar contribuição após confirmação
+- Atualização dos dados do presente após sucesso da operação
+
+### RN-05: Armazenamento da Justificativa
+- A justificativa de cancelamento deve ser armazenada permanentemente no banco de dados
+- Deve ser recuperada junto com os detalhes da contribuição
+- Campo opcional mas recomendado para auditoria e transparência
+
+### RN-06: Visualização da Justificativa
+- A ação "Ver justificativa" só aparece para contribuições canceladas que possuem justificativa
+- Validação: `status === 'cancelado' && !!contrib.justificativaCancelamento`
+- Deve validar existência da justificativa antes de exibir o modal
+- Modal de visualização exibe informação sem necessidade de confirmação (apenas leitura)
+
+---
+
+## 4. Histórico de Alterações
+
+| Versão | Data       | Alteração                                                             | Motivo                                                                           | Impacto                                                |
+| :----- | :--------- | :-------------------------------------------------------------------- | :------------------------------------------------------------------------------- | :----------------------------------------------------- |
+| 1.0    | -          | Criação da funcionalidade de cancelamento de contribuições           | Necessidade de permitir correção de erros e gestão de contribuições             | Implementação inicial                                  |
+| 1.1    | 05/02/2026 | Implementação da visualização de justificativa de cancelamento        | Necessidade de auditoria e transparência sobre cancelamentos de contribuições    | Melhoria na rastreabilidade e prestação de contas      |
 
 ---
 

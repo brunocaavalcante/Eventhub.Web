@@ -45,7 +45,6 @@ export class CadastrarQrcodeComponent extends BaseComponent implements OnInit, A
   private readonly destroyRef = inject(DestroyRef);
   private readonly pixEventoService = inject(PixEventoService);
   private readonly modalService = inject(ModalService);
-  private readonly router = inject(Router);
 
   idEvento: number = 0;
   finalidadePix: number = 1;

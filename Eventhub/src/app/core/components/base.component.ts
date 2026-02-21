@@ -6,6 +6,7 @@ import { FormGroup } from "@angular/forms";
 import { Observable, fromEvent, merge } from "rxjs";
 import { DisplayMessage, ValidadorGenerico, ValidationMessages } from "../utils/validations/generic-form.validator";
 import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 
 export abstract class BaseComponent {
 
@@ -13,6 +14,7 @@ export abstract class BaseComponent {
     genericValidator!: ValidadorGenerico;
     validationMessages!: ValidationMessages;
     protected dialog = inject(MatDialog);
+    protected readonly router = inject(Router);
     protected readonly userService = inject(UsuarioService);
     /**
      * Busca o usuário logado usando UsuarioService

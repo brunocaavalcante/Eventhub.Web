@@ -28,8 +28,7 @@ mat-card {
     right: 8px;
     z-index: 10;
     background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(4px);
-    
+
     &:hover {
         background: rgba(255, 255, 255, 1);
     }
@@ -178,6 +177,14 @@ mat-card-actions {
         width: 95%;
         height: 40px !important;
         @include btn-primary;
+    }
+
+    .btn-reservar {
+       @include btn-secondary;
+    }
+
+    .btn-cancelar-reserva {
+        @include btn-outline-error;
     }
 }
 

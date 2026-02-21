@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetalharPresenteComponent } from './detalhar-presente.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { PresenteService } from '../../../../core/services/presente.service';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { Location } from '@angular/common';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,9 +31,11 @@ describe('DetalharPresenteComponent', () => {
     status: { id: EnumStatusPresente.Disponivel, descricao: 'Disponível' },
     imagens: [
       {
-        base64: 'data:image/png;base64,abc123',
+        base64: '',
         nomeArquivo: '',
+        url: 'https://exemplo.com/imagem.jpg',
         tipoImagem: TipoImagemEvento.Capa,
+        tipoArquivo: ''
       },
     ],
     contribuicoes: [
@@ -129,11 +131,15 @@ describe('DetalharPresenteComponent', () => {
       ...mockPresente, imagens: [{
         base64: 'img1',
         nomeArquivo: '',
-        tipoImagem: TipoImagemEvento.Capa
+        url: 'https://exemplo.com/img1.jpg',
+        tipoImagem: TipoImagemEvento.Capa,
+        tipoArquivo: ''
       }, {
         base64: 'img2',
         nomeArquivo: '',
-        tipoImagem: TipoImagemEvento.Capa
+        url: 'https://exemplo.com/img2.jpg',
+        tipoImagem: TipoImagemEvento.Capa,
+        tipoArquivo: ''
       }]
     });
     component.nextImage();
@@ -147,11 +153,15 @@ describe('DetalharPresenteComponent', () => {
       ...mockPresente, imagens: [{
         base64: 'img1',
         nomeArquivo: '',
-        tipoImagem: TipoImagemEvento.Capa
+        url: 'https://exemplo.com/img1.jpg',
+        tipoImagem: TipoImagemEvento.Capa,
+        tipoArquivo: ''
       }, {
         base64: 'img2',
         nomeArquivo: '',
-        tipoImagem: TipoImagemEvento.Capa
+        url: 'https://exemplo.com/img2.jpg',
+        tipoImagem: TipoImagemEvento.Capa,
+        tipoArquivo: ''
       }]
     });
     component.previousImage();
@@ -163,11 +173,15 @@ describe('DetalharPresenteComponent', () => {
       ...mockPresente, imagens: [{
         base64: 'img1',
         nomeArquivo: '',
-        tipoImagem: TipoImagemEvento.Capa
+        url: 'https://exemplo.com/img1.jpg',
+        tipoImagem: TipoImagemEvento.Capa,
+        tipoArquivo: ''
       }, {
         base64: 'img2',
         nomeArquivo: '',
-        tipoImagem: TipoImagemEvento.Capa
+        url: 'https://exemplo.com/img2.jpg',
+        tipoImagem: TipoImagemEvento.Capa,
+        tipoArquivo: ''
       }]
     });
     component.goToImage(1);

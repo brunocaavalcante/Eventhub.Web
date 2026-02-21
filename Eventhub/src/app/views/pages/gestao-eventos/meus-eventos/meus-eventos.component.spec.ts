@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { MeusEventosComponent } from './meus-eventos.component';
 
 describe('MeusEventosComponent', () => {
@@ -8,7 +9,8 @@ describe('MeusEventosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MeusEventosComponent]
+      imports: [MeusEventosComponent],
+      providers: [provideHttpClient(), provideRouter([])]
     })
     .compileComponents();
 

@@ -80,6 +80,10 @@ export class TabelaGenericaComponent<T = any> {
     const valor = this.obterValor(linha, chave);
     if (!valor) return iconePadrao;
 
+    if (valor.startsWith('http') || valor.startsWith('assets/')) {
+      return valor;
+    }
+
     const resolvida = Base64ImageUtil.resolveImageSource(valor);
     return resolvida || iconePadrao;
   }

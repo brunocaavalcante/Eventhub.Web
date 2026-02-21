@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal, computed } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +10,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseComponent } from '../../../../core/components/base.component';
-import { PresenteService } from '../../../../core/services/presente.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { ContribuicaoDetalhesDto, PresenteDetalhesDto, StatusPresenteDto } from '../../../../core/models/presente.model';
 import { CurrencyBrPipe } from '../../../../core/utils/pipes/currency-br.pipe';
@@ -20,9 +19,13 @@ import { finalize } from 'rxjs';
 import { TabelaGenericaComponent } from '../../../../core/components/tabela-generica/tabela-generica.component';
 import { ConfigTabela } from '../../../../core/components/tabela-generica/tabela-generica.model';
 import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
-import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
-import { CancelarContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
+import { CancelarContribuicaoPresenteDto, ConfirmarContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
 import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } from '../contribuicao-presente/cancelar-contribuicao-presente/cancelar-contribuicao-presente.component';
+import { VisualizarComprovanteModalComponent } from '../visualizar-comprovante-modal/visualizar-comprovante-modal.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatBadgeModule } from '@angular/material/badge';
+import { PresenteService } from '../../../../core/services/presente/presente.service';
+import { ModalService } from '../../../../core/services/modal.service';
 
 @Component({
   selector: 'app-detalhar-presente',
@@ -35,6 +38,8 @@ import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } fro
     MatFormFieldModule,
     MatInputModule,
     MatChipsModule,
+    MatSelectModule,
+    MatBadgeModule,
     RouterModule,
     CurrencyBrPipe,
     TabelaGenericaComponent
@@ -44,15 +49,15 @@ import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } fro
 })
 export class DetalharPresenteComponent extends BaseComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly location = inject(Location);
   private readonly presenteService = inject(PresenteService);
   private readonly spinner = inject(SpinnerService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly modalService = inject(ModalService);
 
   presente = signal<PresenteDetalhesDto | null>(null);
   contribuicoesFiltradas = signal<ContribuicaoDetalhesDto[]>([]);
   filtroNome = signal('');
+  filtroStatus = signal<string>('todos');
   currentImageIndex = 0;
 
   configTabela = computed<ConfigTabela<ContribuicaoDetalhesDto>>(() => ({
@@ -85,11 +90,34 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
       {
         label: 'Ver comprovante',
         icon: 'receipt',
+        visivel: (contrib) => contrib.comprovante != null,
         handler: (contrib) => this.verComprovante(contrib)
+      },
+      {
+        label: 'Ver justificativa',
+        icon: 'info',
+        visivel: (contrib) => {
+          const status = contrib.status?.descricao?.toLowerCase();
+          return status === 'cancelado' && !!contrib.justificativa;
+        },
+        handler: (contrib) => this.verJustificativaCancelamento(contrib)
+      },
+      {
+        label: 'Confirmar contribuição',
+        icon: 'check_circle',
+        visivel: (contrib) => {
+          const status = contrib.status?.descricao?.toLowerCase();
+          return status !== 'confirmado' && status !== 'cancelado';
+        },
+        handler: (contrib) => { this.confirmarContribuicao(contrib); }
       },
       {
         label: 'Editar contribuição',
         icon: 'edit',
+        visivel: (contrib) => {
+          const status = contrib.status?.descricao?.toLowerCase();
+          return status !== 'cancelado';
+        },
         handler: (contrib) => {
           this.router.navigate(['/presentes/editar-contribuicao', this.idEvento, this.idPresente, contrib.id]);
         }
@@ -97,15 +125,11 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
       {
         label: 'Cancelar contribuição',
         icon: 'cancel',
-        visivel: (contrib) => contrib.status?.descricao?.toLowerCase() !== 'cancelado',
+        visivel: (contrib) => {
+          const status = contrib.status?.descricao?.toLowerCase();
+          return status !== 'cancelado';
+        },
         handler: (contrib) => this.cancelarContribuicao(contrib)
-      },
-      {
-        label: 'Confirmar contribuição',
-        icon: 'check_circle',
-        handler: (contrib) => {
-          this.router.navigate(['/presentes', this.idEvento, 'detalhar', this.idPresente, 'contribuicoes', contrib.id, 'confirmar']);
-        }
       }
     ],
     placeholder: 'Filtrar por nome...',
@@ -140,7 +164,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
         next: (response) => {
           if (response.executouComSucesso && response.data) {
             this.presente.set(response.data);
-            this.contribuicoesFiltradas.set(response.data.contribuicoes || []);
+            this.atualizarContribuicoesFiltradas();
           }
         },
         error: (err) => {
@@ -149,9 +173,46 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
       });
   }
 
+  atualizarContribuicoesFiltradas(): void {
+    const presente = this.presente();
+    if (!presente?.contribuicoes) {
+      this.contribuicoesFiltradas.set([]);
+      return;
+    }
+
+    const status = this.filtroStatus();
+    let contribuicoes = presente.contribuicoes;
+
+    if (status !== 'todos') {
+      contribuicoes = contribuicoes.filter(c =>
+        c.status?.descricao?.toLowerCase() === status.toLowerCase()
+      );
+    }
+
+    this.contribuicoesFiltradas.set(contribuicoes);
+  }
+
+  contarPorStatus(status: string): number {
+    const presente = this.presente();
+    if (!presente?.contribuicoes) return 0;
+
+    if (status === 'todos') {
+      return presente.contribuicoes.length;
+    }
+
+    return presente.contribuicoes.filter(c =>
+      c.status?.descricao?.toLowerCase() === status.toLowerCase()
+    ).length;
+  }
+
+  onFiltroStatusChange(novoStatus: string): void {
+    this.filtroStatus.set(novoStatus);
+    this.atualizarContribuicoesFiltradas();
+  }
+
   get imagens(): string[] {
     const presente = this.presente();
-    return presente?.imagens?.map(img => Base64ImageUtil.resolveImageSource(img.base64)) || [];
+    return presente?.imagens?.map(img => img.url || '') || [];
   }
 
   get hasImages(): boolean {
@@ -210,16 +271,86 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
 
   resolverFoto(foto?: string): string {
     if (!foto) return 'assets/icones/user-default.png';
+
+    if (foto.startsWith('http') || foto.startsWith('assets/')) {
+      return foto;
+    }
+
     return Base64ImageUtil.resolveImageSource(foto);
   }
 
   verComprovante(contribuicao: ContribuicaoDetalhesDto): void {
-    console.log('Ver comprovante:', contribuicao);
-    // TODO: Implementar visualização de comprovante
+    if (!contribuicao.comprovante) {
+      console.warn('Contribuição não possui comprovante');
+      return;
+    }
+
+    this.dialog.open(VisualizarComprovanteModalComponent, {
+      width: '90vw',
+      height: '90vh',
+      maxWidth: '1200px',
+      maxHeight: '90vh',
+      disableClose: false,
+      panelClass: 'modal-fullscreen',
+      data: {
+        comprovante: contribuicao.comprovante,
+        nomeConvidado: contribuicao.participante.nome,
+        valorContribuicao: contribuicao.valor
+      }
+    });
+  }
+
+  verJustificativaCancelamento(contribuicao: ContribuicaoDetalhesDto): void {
+    if (!contribuicao.justificativa) {
+      console.warn('Contribuição não possui justificativa de cancelamento');
+      return;
+    }
+
+    this.modalService.openSuccessModal({
+      title: 'Justificativa de Cancelamento',
+      message: contribuicao.justificativa,
+      showIcon: false
+    });
   }
 
   voltar(): void {
     this.router.navigate(['/presentes', this.idEvento]);
+  }
+
+  confirmarContribuicao(contribuicao: ContribuicaoDetalhesDto): void {
+    this.modalService.openConfirmationModal({
+      title: 'Confirmar Contribuição',
+      message: `Tem certeza que deseja confirmar a contribuição de ${contribuicao.participante.nome} no valor de R$ ${contribuicao.valor}?`,
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(confirmed => {
+        if (confirmed) {
+          this.spinner.show();
+
+          const model: ConfirmarContribuicaoPresenteDto = {
+            idContribuicao: contribuicao.id,
+            idPresente: Number(this.idPresente ?? 0)
+          };
+
+          this.presenteService.confirmarContribuicao(model)
+            .pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+              next: (response) => {
+                this.spinner.hide();
+                if (response.executouComSucesso) {
+                  this.modalService.openSuccessModal({ title: 'Contribuição Confirmada', message: 'A contribuição foi confirmada com sucesso.' })
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe(() => {
+                      this.carregarDetalhes();
+                    });
+                }
+              },
+              error: (err) => {
+                console.error('Erro ao confirmar contribuição:', err);
+                this.spinner.hide();
+              }
+            });
+        }
+      });
   }
 
   cancelarContribuicao(contribuicao: ContribuicaoDetalhesDto): void {
@@ -230,7 +361,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
       data: { contribuicao }
     });
 
-    dialogRef.afterClosed().subscribe((result: CancelarContribuicaoResult) => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result: CancelarContribuicaoResult) => {
       if (result?.confirmado) {
         this.spinner.show();
         const model: CancelarContribuicaoPresenteDto = {
@@ -244,12 +375,11 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
               this.spinner.hide();
               console.log(response);
               if (response.executouComSucesso) {
-                this.dialog.open(ModalSucessComponent, {
-                  data: { title: 'Contribuição Cancelada', message: 'A contribuição foi cancelada com sucesso.' }
-                })
-                .afterClosed().subscribe(() => {
-                  this.carregarDetalhes();
-                });
+                this.modalService.openSuccessModal({ title: 'Contribuição Cancelada', message: 'A contribuição foi cancelada com sucesso.' })
+                  .pipe(takeUntilDestroyed(this.destroyRef))
+                  .subscribe(() => {
+                    this.carregarDetalhes();
+                  });
               }
             },
             error: (err) => {
