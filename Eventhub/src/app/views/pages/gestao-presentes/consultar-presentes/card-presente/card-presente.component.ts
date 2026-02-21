@@ -47,9 +47,10 @@ export class CardPresenteComponent {
     if (!presente) return false;
 
     const statusDisponivel = presente.status?.id === EnumStatusPresente.Disponivel;
-    const semContribuicoes = !presente.contribuicoes || presente.contribuicoes.length === 0;
+    const semContribuicoesAtivas = !presente.contribuicoes || presente.contribuicoes.length === 0 ||
+      presente.contribuicoes.every(c => c.idStatusContribuicao === EnumStatusContribuicao.Cancelado);
 
-    return statusDisponivel && semContribuicoes;
+    return statusDisponivel && semContribuicoesAtivas;
   });
 
   podeCancelarReserva = computed(() => {

@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
-import { RouterLink, Router, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { DropZoneImageComponent } from '../../../../core/components/drop-zone-image/drop-zone-image.component';
@@ -43,7 +43,6 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements!: ElementRef[];
 
   form: FormGroup;
-  private readonly router = inject(Router);
   private readonly acRouter = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);

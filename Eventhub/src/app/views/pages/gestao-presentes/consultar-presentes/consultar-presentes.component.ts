@@ -47,7 +47,6 @@ import { PresenteService } from '../../../../core/services/presente/presente.ser
 })
 export class ConsultarPresentesComponent extends BaseComponent implements OnInit {
   private readonly acRoute = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly presenteService = inject(PresenteService);
   private readonly pixEventoService = inject(PixEventoService);
@@ -397,6 +396,10 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
           this.spinner.hide();
         }
       });
+  }
+
+  voltar(): void {
+    this.router.navigate([`/eventos/home/${this.eventoId}`]);
   }
 
   set filtroCategoriaModel(value: string) {

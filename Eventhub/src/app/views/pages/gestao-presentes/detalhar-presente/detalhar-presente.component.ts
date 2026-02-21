@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal, computed } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,7 +19,6 @@ import { finalize } from 'rxjs';
 import { TabelaGenericaComponent } from '../../../../core/components/tabela-generica/tabela-generica.component';
 import { ConfigTabela } from '../../../../core/components/tabela-generica/tabela-generica.model';
 import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
-import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
 import { CancelarContribuicaoPresenteDto, ConfirmarContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
 import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } from '../contribuicao-presente/cancelar-contribuicao-presente/cancelar-contribuicao-presente.component';
 import { VisualizarComprovanteModalComponent } from '../visualizar-comprovante-modal/visualizar-comprovante-modal.component';
@@ -50,7 +49,6 @@ import { ModalService } from '../../../../core/services/modal.service';
 })
 export class DetalharPresenteComponent extends BaseComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly presenteService = inject(PresenteService);
   private readonly spinner = inject(SpinnerService);
   private readonly destroyRef = inject(DestroyRef);
@@ -308,14 +306,10 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
       return;
     }
 
-    this.dialog.open(ModalSucessComponent, {
-      width: '600px',
-      maxWidth: '90vw',
-      data: {
-        title: 'Justificativa de Cancelamento',
-        message: contribuicao.justificativa,
-        showIcon: false
-      }
+    this.modalService.openSuccessModal({
+      title: 'Justificativa de Cancelamento',
+      message: contribuicao.justificativa,
+      showIcon: false
     });
   }
 

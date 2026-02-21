@@ -160,7 +160,7 @@ describe('CardPresenteComponent', () => {
   });
 
   describe('Funcionalidades de Reserva', () => {
-    it('podeReservar deve retornar true para presente disponível sem contribuições', () => {
+    it('podeReservar deve retornar true para presente disponível', () => {
       const presenteSemContribuicoes: Presente = {
         ...mockPresente,
         status: { id: 1, descricao: 'Disponível' },
@@ -173,13 +173,31 @@ describe('CardPresenteComponent', () => {
       expect(component.podeReservar()).toBe(true);
     });
 
-    it('podeReservar deve retornar false para presente com contribuições', () => {
-      const presenteComContribuicoes: Presente = {
+    it('podeReservar deve retornar true quando todas as contribuições estão canceladas', () => {
+      const presenteComContribuicoesCanceladas: Presente = {
         ...mockPresente,
         status: { id: 1, descricao: 'Disponível' },
-        contribuicoes: [{ id: 1, idPresente: 1, idParticipante: 1, valor: 1000, dataCadastro: new Date() }]
+        contribuicoes: [
+          { id: 1, idPresente: 1, idParticipante: 1, valor: 500, dataCadastro: new Date(), idStatusContribuicao: EnumStatusContribuicao.Cancelado },
+          { id: 2, idPresente: 1, idParticipante: 2, valor: 300, dataCadastro: new Date(), idStatusContribuicao: EnumStatusContribuicao.Cancelado }
+        ]
       };
-      fixture.componentRef.setInput('presente', presenteComContribuicoes);
+      fixture.componentRef.setInput('presente', presenteComContribuicoesCanceladas);
+      fixture.componentRef.setInput('idParticipanteLogado', 123);
+      fixture.detectChanges();
+
+      expect(component.podeReservar()).toBe(true);
+    });
+
+    it('podeReservar deve retornar false quando há contribuição não cancelada', () => {
+      const presenteComContribuicaoAtiva: Presente = {
+        ...mockPresente,
+        status: { id: 1, descricao: 'Disponível' },
+        contribuicoes: [
+          { id: 1, idPresente: 1, idParticipante: 1, valor: 500, dataCadastro: new Date(), idStatusContribuicao: EnumStatusContribuicao.Confirmado }
+        ]
+      };
+      fixture.componentRef.setInput('presente', presenteComContribuicaoAtiva);
       fixture.componentRef.setInput('idParticipanteLogado', 123);
       fixture.detectChanges();
 

@@ -32,7 +32,6 @@ export class CadastroConvidadoComponent extends BaseComponent implements OnInit,
   erros = signal('');
 
   private readonly fb = inject(FormBuilder);
-  private readonly router = inject(Router);
   private readonly acRouter = inject(ActivatedRoute);
   private readonly service = inject(ParticipanteService);
   private readonly spinner = inject(SpinnerService);

@@ -21,7 +21,7 @@ import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { EventoService } from '../../../../../core/services/evento.service';
 import { ModalSucessComponent } from '../../../../../core/components/modal/modal-sucess/modal-sucess.component';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ModalConfirmComponent } from '../../../../../core/components/modal/modal-confirm/modal-confirm.component';
 import { Observable } from 'rxjs';
 import { TipoImagemEvento } from '../../../../../core/models/imagem.model';
@@ -58,7 +58,6 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(EventoService);
   private readonly spinner = inject(SpinnerService);
-  private readonly router = inject(Router);
   private readonly acRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 

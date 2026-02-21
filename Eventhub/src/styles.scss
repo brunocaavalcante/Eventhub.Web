@@ -1,4 +1,6 @@
 @use '@angular/material' as mat;
+@use 'variables' as *;
+@use 'mixins' as *;
 
 html {
   @include mat.theme((color: (primary: mat.$rose-palette,
@@ -65,4 +67,32 @@ body {
 .convite-preview-sheet .mat-bottom-sheet-container {
   padding: 0;
   background: transparent;
+}
+
+.header-voltar {
+  margin-bottom: 24px;
+
+  .btn-voltar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: $cor-primaria;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: $radius-btn;
+    transition: all $transition-fast;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      background: $cor-primaria-clara;
+    }
+  }
 }

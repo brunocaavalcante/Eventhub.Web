@@ -1,4 +1,10 @@
 <div class="home-evento-container">
+    <div class="header-voltar">
+        <button mat-button class="btn-voltar" (click)="voltar()">
+            <mat-icon>arrow_back</mat-icon>
+            Voltar para Meus Eventos
+        </button>
+    </div>
     <div class="evento-banner">
         <img [src]="getTipoEventoInfo(evento?.idTipoEvento).imagem" alt="Banner do Evento" class="evento-banner-img" />
         <div class="evento-banner-info">

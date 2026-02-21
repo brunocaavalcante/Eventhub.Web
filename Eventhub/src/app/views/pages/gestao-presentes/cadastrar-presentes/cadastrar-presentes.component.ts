@@ -5,7 +5,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { BaseComponent } from '../../../../core/components/base.component';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DropZoneImageComponent } from "../../../../core/components/drop-zone-image/drop-zone-image.component";
@@ -44,7 +44,6 @@ export class CadastrarPresentesComponent extends BaseComponent implements OnInit
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements!: ElementRef[];
 
   form: FormGroup;
-  private readonly router = inject(Router);
   private readonly acRouter = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);

@@ -7,34 +7,6 @@
   padding-bottom: 40px;
 }
 
-.header-voltar {
-  margin-bottom: 24px;
-
-  .btn-voltar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: transparent;
-    border: none;
-    color: $cor-primaria;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 8px 12px;
-    border-radius: $radius-btn;
-    transition: all $transition-fast;
-
-    mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-    }
-
-    &:hover {
-      background: $cor-primaria-clara;
-    }
-  }
-}
-
 .presente-detalhe {
   display: flex;
   flex-direction: column;
