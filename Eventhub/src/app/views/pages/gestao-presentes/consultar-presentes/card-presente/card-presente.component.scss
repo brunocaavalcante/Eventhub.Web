@@ -65,24 +65,6 @@ mat-card {
         @include font-size(0.8rem);
         color: $cor-verde;
     }
-
-    .badge-reservado {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        border: 1px solid $cor-cinza-medio;
-        border-radius: 12px;
-        padding: 2px 10px;
-        @include font-size(0.75rem);
-        color: $cor-cinza-medio;
-        background: rgba($cor-cinza-claro, 0.3);
-
-        mat-icon {
-            font-size: 16px;
-            width: 16px;
-            height: 16px;
-        }
-    }
 }
 
 .presente-imagem {

@@ -22,6 +22,11 @@ export interface CancelarContribuicaoPresenteDto {
   justificativa: string;
 }
 
+export interface ConfirmarContribuicaoPresenteDto {
+  idContribuicao: number;
+  idPresente: number;
+}
+
 export interface UpdateContribuicaoPresenteDto {
   id: number;
   valor: number;

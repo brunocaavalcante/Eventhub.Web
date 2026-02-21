@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { CreateContribuicaoPresenteDto, ContribuicaoPresenteDto, CancelarContribuicaoPresenteDto, StatusContribuicaoPresenteDto, UpdateContribuicaoPresenteDto } from "../../models/contribuicao-presente.model";
+import { CreateContribuicaoPresenteDto, ContribuicaoPresenteDto, CancelarContribuicaoPresenteDto, StatusContribuicaoPresenteDto, UpdateContribuicaoPresenteDto, ConfirmarContribuicaoPresenteDto } from "../../models/contribuicao-presente.model";
 import { CreatePresenteDto, Presente, UpdatePresenteDto, CategoriaPresenteDto, PresenteDetalhesDto, ReservarPresenteDto, CancelarReservaPresenteDto } from "../../models/presente.model";
 import { RetornoAPI } from "../../models/retorno-api.model";
 import { BaseService } from "../base.service";
@@ -18,6 +18,10 @@ export class PresenteService extends BaseService {
 
     cancelarContribuicao(model: CancelarContribuicaoPresenteDto): Observable<RetornoAPI<null>> {
         return this.http.post<RetornoAPI<null>>(`${this.urlApi}/contribuicaopresente/cancelar`, model);
+    }
+
+    confirmarContribuicao(model: ConfirmarContribuicaoPresenteDto): Observable<RetornoAPI<null>> {
+        return this.http.post<RetornoAPI<null>>(`${this.urlApi}/contribuicaopresente/confirmar`, model);
     }
 
     atualizar(presente: UpdatePresenteDto): Observable<RetornoAPI<Presente[]>> {

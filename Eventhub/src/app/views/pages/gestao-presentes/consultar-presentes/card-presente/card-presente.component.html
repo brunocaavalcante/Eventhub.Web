@@ -48,16 +48,11 @@
         <div class="header">
             <h3 class="presente-nome">{{ presente().nome }}</h3>
             <div class="presente-status">{{presente().status?.descricao}}</div>
-            @if(estaReservadoPorOutro()) {
-            <div class="badge-reservado">
-                Reservado
-            </div>
-            }
         </div>
         <div class="presente-valor">{{ presente().valor | currencyBr }}</div>
         <div class="presente-descricao">{{ presente().descricao }}</div>
 
-        @if(presente().contribuicoes && presente().contribuicoes!.length > 0){
+        @if(presente().contribuicoes && presente().contribuicoes!.length > 0 && temContribuicoesComValor()) {
         <div class="contribuicao">
             <div class="contribuicao-label">
                 <div>Cota compartilhada</div>

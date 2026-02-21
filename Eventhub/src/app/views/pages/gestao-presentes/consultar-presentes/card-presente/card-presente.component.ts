@@ -71,17 +71,6 @@ export class CardPresenteComponent {
     return statusDisponivel;
   });
 
-  estaReservadoPorOutro = computed(() => {
-    const presente = this.presente();
-    const idLogado = this.idParticipanteLogado();
-    if (!presente || !idLogado) return false;
-
-    const statusReservado = presente.status?.id === EnumStatusPresente.Reservado;
-    const reservadoPorOutro = presente.idParticipanteReservou !== idLogado;
-
-    return statusReservado && reservadoPorOutro;
-  });
-
   get imagens(): string[] {
     const presente = this.presente();
     return presente?.imagens?.map(img => img.url || '') || [];
@@ -124,6 +113,11 @@ export class CardPresenteComponent {
         return contribuicao.idStatusContribuicao === EnumStatusContribuicao.Confirmado;
       })
       .reduce((soma, contribuicao) => soma + contribuicao.valor, 0);
+  }
+
+  temContribuicoesComValor(): boolean {
+    const presente = this.presente();
+    return presente?.contribuicoes?.some(c => c.valor > 0 && c.idStatusContribuicao === EnumStatusContribuicao.Confirmado) ?? false;
   }
 
   previousImage(): void {

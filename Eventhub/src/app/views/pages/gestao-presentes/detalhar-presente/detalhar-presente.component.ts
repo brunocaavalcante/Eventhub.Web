@@ -20,12 +20,13 @@ import { TabelaGenericaComponent } from '../../../../core/components/tabela-gene
 import { ConfigTabela } from '../../../../core/components/tabela-generica/tabela-generica.model';
 import { EnumStatusPresente } from '../../../../core/utils/enums/status-presente.enum';
 import { ModalSucessComponent } from '../../../../core/components/modal/modal-sucess/modal-sucess.component';
-import { CancelarContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
+import { CancelarContribuicaoPresenteDto, ConfirmarContribuicaoPresenteDto } from '../../../../core/models/contribuicao-presente.model';
 import { CancelarContribuicaoPresenteComponent, CancelarContribuicaoResult } from '../contribuicao-presente/cancelar-contribuicao-presente/cancelar-contribuicao-presente.component';
 import { VisualizarComprovanteModalComponent } from '../visualizar-comprovante-modal/visualizar-comprovante-modal.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatBadgeModule } from '@angular/material/badge';
 import { PresenteService } from '../../../../core/services/presente/presente.service';
+import { ModalService } from '../../../../core/services/modal.service';
 
 @Component({
   selector: 'app-detalhar-presente',
@@ -50,10 +51,10 @@ import { PresenteService } from '../../../../core/services/presente/presente.ser
 export class DetalharPresenteComponent extends BaseComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly location = inject(Location);
   private readonly presenteService = inject(PresenteService);
   private readonly spinner = inject(SpinnerService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly modalService = inject(ModalService);
 
   presente = signal<PresenteDetalhesDto | null>(null);
   contribuicoesFiltradas = signal<ContribuicaoDetalhesDto[]>([]);
@@ -110,9 +111,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
           const status = contrib.status?.descricao?.toLowerCase();
           return status !== 'confirmado' && status !== 'cancelado';
         },
-        handler: (contrib) => {
-          this.router.navigate(['/presentes', this.idEvento, 'detalhar', this.idPresente, 'contribuicoes', contrib.id, 'confirmar']);
-        }
+        handler: (contrib) => { this.confirmarContribuicao(contrib); }
       },
       {
         label: 'Editar contribuição',
@@ -274,11 +273,11 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
 
   resolverFoto(foto?: string): string {
     if (!foto) return 'assets/icones/user-default.png';
-    
+
     if (foto.startsWith('http') || foto.startsWith('assets/')) {
       return foto;
     }
-    
+
     return Base64ImageUtil.resolveImageSource(foto);
   }
 
@@ -324,6 +323,42 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
     this.router.navigate(['/presentes', this.idEvento]);
   }
 
+  confirmarContribuicao(contribuicao: ContribuicaoDetalhesDto): void {
+    this.modalService.openConfirmationModal({
+      title: 'Confirmar Contribuição',
+      message: `Tem certeza que deseja confirmar a contribuição de ${contribuicao.participante.nome} no valor de R$ ${contribuicao.valor}?`,
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(confirmed => {
+        if (confirmed) {
+          this.spinner.show();
+
+          const model: ConfirmarContribuicaoPresenteDto = {
+            idContribuicao: contribuicao.id,
+            idPresente: Number(this.idPresente ?? 0)
+          };
+
+          this.presenteService.confirmarContribuicao(model)
+            .pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+              next: (response) => {
+                this.spinner.hide();
+                if (response.executouComSucesso) {
+                  this.modalService.openSuccessModal({ title: 'Contribuição Confirmada', message: 'A contribuição foi confirmada com sucesso.' })
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe(() => {
+                      this.carregarDetalhes();
+                    });
+                }
+              },
+              error: (err) => {
+                console.error('Erro ao confirmar contribuição:', err);
+                this.spinner.hide();
+              }
+            });
+        }
+      });
+  }
+
   cancelarContribuicao(contribuicao: ContribuicaoDetalhesDto): void {
     const dialogRef = this.dialog.open(CancelarContribuicaoPresenteComponent, {
       width: '600px',
@@ -332,7 +367,7 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
       data: { contribuicao }
     });
 
-    dialogRef.afterClosed().subscribe((result: CancelarContribuicaoResult) => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result: CancelarContribuicaoResult) => {
       if (result?.confirmado) {
         this.spinner.show();
         const model: CancelarContribuicaoPresenteDto = {
@@ -346,12 +381,11 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
               this.spinner.hide();
               console.log(response);
               if (response.executouComSucesso) {
-                this.dialog.open(ModalSucessComponent, {
-                  data: { title: 'Contribuição Cancelada', message: 'A contribuição foi cancelada com sucesso.' }
-                })
-                .afterClosed().subscribe(() => {
-                  this.carregarDetalhes();
-                });
+                this.modalService.openSuccessModal({ title: 'Contribuição Cancelada', message: 'A contribuição foi cancelada com sucesso.' })
+                  .pipe(takeUntilDestroyed(this.destroyRef))
+                  .subscribe(() => {
+                    this.carregarDetalhes();
+                  });
               }
             },
             error: (err) => {

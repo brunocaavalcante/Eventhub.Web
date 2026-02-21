@@ -12,6 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TipoImagemEvento } from '../../../../../core/models/imagem.model';
+import { EnumStatusContribuicao } from '../../../../../core/utils/enums/status-contribuicao.enum';
 
 describe('CardPresenteComponent', () => {
   let component: CardPresenteComponent;
@@ -44,7 +45,7 @@ describe('CardPresenteComponent', () => {
       }
     ],
     contribuicoes: [
-      { id: 1, idPresente: 1, idParticipante: 1, valor: 2000, dataCadastro: new Date() }
+      { id: 1, idPresente: 1, idParticipante: 1, valor: 2000, dataCadastro: new Date(), idStatusContribuicao: EnumStatusContribuicao.Confirmado },
     ]
   };
 
@@ -222,19 +223,6 @@ describe('CardPresenteComponent', () => {
       fixture.detectChanges();
 
       expect(component.podeCancelarReserva()).toBe(false);
-    });
-
-    it('estaReservadoPorOutro deve retornar true quando reservado por outro', () => {
-      const presenteReservadoPorOutro: Presente = {
-        ...mockPresente,
-        status: { id: 2, descricao: 'Reservado' },
-        idParticipanteReservou: 456
-      };
-      fixture.componentRef.setInput('presente', presenteReservadoPorOutro);
-      fixture.componentRef.setInput('idParticipanteLogado', 123);
-      fixture.detectChanges();
-
-      expect(component.estaReservadoPorOutro()).toBe(true);
     });
 
     it('deve emitir evento ao chamar reservarPresente', () => {
