@@ -27,10 +27,8 @@
       <mat-form-field appearance="outline" class="presentes-filter">
         <mat-label>Filtrar por status</mat-label>
         <mat-select [(ngModel)]="filtroStatusModel">
+          <mat-option *ngFor="let status of statusPresente()" [value]="status.id">{{ status.descricao }}</mat-option>
           <mat-option value="">Todos os status</mat-option>
-          <mat-option value="disponivel">Disponível</mat-option>
-          <mat-option value="parcial">Parcialmente Reservado</mat-option>
-          <mat-option value="completo">Reservado</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

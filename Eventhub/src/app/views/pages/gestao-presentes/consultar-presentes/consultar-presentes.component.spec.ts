@@ -19,7 +19,7 @@ describe('ConsultarPresentesComponent', () => {
   let mockUsuarioService: jest.Mocked<any>;
 
   beforeEach(async () => {
-    mockPresenteService = { obterPresentesPorEvento: jest.fn(() => of({ executouComSucesso: true, data: [] })), excluir: jest.fn(() => of({ executouComSucesso: true })) };
+    mockPresenteService = { obterPresentesPorEvento: jest.fn(() => of({ executouComSucesso: true, data: [] })), excluir: jest.fn(() => of({ executouComSucesso: true })), obterStatusPresente: jest.fn(() => of({ executouComSucesso: true, data: [] })) };
     mockPixService = { buscarPixEventoFinalidade: jest.fn(() => of({ executouComSucesso: true, data: null })) };
     mockModalService = { openConfirmationModal: jest.fn(() => of(true)), openSuccessModal: jest.fn(), openErrorModal: jest.fn() };
     mockRouter = { navigate: jest.fn() };

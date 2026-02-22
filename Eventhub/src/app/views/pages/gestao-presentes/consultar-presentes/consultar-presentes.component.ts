@@ -14,7 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BaseComponent } from '../../../../core/components/base.component';
-import { Presente } from '../../../../core/models/presente.model';
+import { Presente, StatusPresenteDto } from '../../../../core/models/presente.model';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { CardPresenteComponent } from './card-presente/card-presente.component';
 import { ModalService } from '../../../../core/services/modal.service';
@@ -55,6 +55,7 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
 
   presentes = signal<Presente[]>([]);
   pix = signal<PixEventoDto | null>(null);
+  statusPresente = signal<StatusPresenteDto[]>([]);
   busca = signal('');
   filtroStatus = signal<string>('');
   filtroCategoria = signal<string>('');
@@ -103,6 +104,7 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
   ngOnInit(): void {
     this.eventoId = this.acRoute.snapshot.paramMap.get('idEvento') || '0';
     this.carregarPresentes();
+    this.carregarStatusPresente();
     this.carregarPixPresente();
     const usuarioLogado = this.obterUsuarioLogado();
     if (usuarioLogado) {
@@ -143,6 +145,24 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
         },
         error: (error) => {
           console.error('Erro ao carregar PIX do presente:', error);
+          this.spinner.hide();
+        }
+      });
+  }
+
+  carregarStatusPresente(): void {
+    this.spinner.show();
+    this.presenteService.obterStatusPresente()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          if (response.executouComSucesso) {
+            this.statusPresente.set(response.data || []);
+          }
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error('Erro ao carregar status dos presentes:', error);
           this.spinner.hide();
         }
       });
