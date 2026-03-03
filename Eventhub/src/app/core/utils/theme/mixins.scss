@@ -30,7 +30,7 @@
   @include btn-primary($bg-color: $cor-btn-secundario, $color: $cor-primaria);
 }
 
-@mixin btn-outline-error{
+@mixin btn-outline-error {
   @include btn-primary($bg-color: transparent, $color: $cor-erro);
   border: 1.5px solid $cor-erro;
 }
@@ -129,6 +129,7 @@
     font-size: $size * 0.85;
   }
 }
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
@@ -136,12 +137,15 @@
 }
 
 @mixin card {
-  background: $cor-branco;
   border-radius: $radius-card;
   box-shadow: $sombra-card;
   transition: box-shadow $transition-normal;
 
   &:hover {
     box-shadow: 0 4px 20px rgba($cor-primaria, 0.12);
+  }
+
+  @media (max-width: $break-mobile) {
+    padding: 0px;
   }
 }

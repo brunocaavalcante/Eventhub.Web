@@ -16,10 +16,6 @@
 .presente-card {
   @include card;
   padding: 32px;
-
-  @media (max-width: $break-mobile) {
-    padding: 20px;
-  }
 }
 
 .presente-info {
@@ -131,16 +127,28 @@
 
   .presente-titulo-valor {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 16px;
+
+    .presente-status {
+      flex-shrink: 0;
+      width: auto;
+      margin-left: 3px;
+    }
+
+    @media (max-width: $break-mobile) {
+      overflow: hidden;
+      max-width: 370px;
+    }
   }
 
   .presente-nome {
     @include font-size(1.5rem);
+    @include text-truncate;
     font-weight: $font-peso-bold;
     color: $cor-texto;
     margin: 0;
+    min-width: 0;
+    flex: 1;
   }
 
   .presente-valor {

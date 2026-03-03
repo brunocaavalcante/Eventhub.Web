@@ -123,7 +123,6 @@ export class EditarPresentesComponent extends BaseComponent implements OnInit, A
     this.presenteService.obterPorId(this.presenteId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (retorno) => {
         this.spinner.hide();
-        console.log(retorno);
         if (retorno.executouComSucesso && retorno.data) {
           this.form.patchValue({
             nome: retorno.data.nome,

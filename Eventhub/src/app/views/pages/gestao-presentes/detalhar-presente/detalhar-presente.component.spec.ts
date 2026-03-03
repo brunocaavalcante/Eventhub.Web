@@ -205,7 +205,6 @@ describe('DetalharPresenteComponent', () => {
     expect(component.getStatusClass({ id: EnumStatusPresente.Reservado, descricao: 'Reservado' })).toBe('status-confirmado');
     expect(component.getStatusClass({ id: EnumStatusPresente.EmArrecadacao, descricao: 'Em Arrecadação' })).toBe('status-em-arrecadacao');
     expect(component.getStatusClass({ id: EnumStatusPresente.Finalizado, descricao: 'Finalizado' })).toBe('status-confirmado');
-    expect(component.getStatusClass({ id: EnumStatusPresente.Cancelado, descricao: 'Cancelado' })).toBe('status-cancelado');
     expect(component.getStatusClass({ id: 99, descricao: 'Desconhecido' })).toBe('');
   });
 

@@ -82,7 +82,8 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.def)).subscribe({
         next: (res) => {
           if (res.executouComSucesso && Array.isArray(res.data)) {
-            this.cards.set(res.data);
+            const menusPermitidos = res.data.filter(modulo => modulo.showInMenu);
+            this.cards.set(menusPermitidos);
           }
           this.spinner.hide();
         },

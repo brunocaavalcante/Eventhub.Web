@@ -214,11 +214,6 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
     }
   }
 
-  editarPresente(presente: Presente): void {
-    // TODO: Navegar para tela de edição
-    console.log('Editar presente:', presente);
-  }
-
   excluirPresente(presente: Presente): void {
     if (!this.podeExcluirPresente(presente)) {
       return;
@@ -279,11 +274,6 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
       return false;
     }
     return true;
-  }
-
-  verContribuicoes(presente: Presente): void {
-    // TODO: Abrir modal com lista de contribuições
-    console.log('Ver contribuições:', presente);
   }
 
   get filtroStatusModel() {

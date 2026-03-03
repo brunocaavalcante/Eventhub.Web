@@ -5,6 +5,7 @@ export interface ModuloDto {
     icone: string;
     rota: string;
     ordem: number;
+    showInMenu: boolean;
 }
 
 export interface PermissaoDto{
