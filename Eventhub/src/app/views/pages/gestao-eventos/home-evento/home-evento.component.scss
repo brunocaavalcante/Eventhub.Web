@@ -148,6 +148,48 @@ a {
     color: $cor-cinza-medio;
 }
 
+.compartilhar-section {
+    margin: 32px 0;
+    padding: 0;
+}
+
+.compartilhar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+
+    mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: $cor-primaria;
+    }
+}
+
+.compartilhar-title {
+    font-size: 1.25rem;
+    font-weight: $font-peso-bold;
+    color: $cor-preto;
+}
+
+.compartilhar-desc {
+    margin: 0 0 16px 0;
+    color: $cor-cinza-medio;
+    line-height: 1.6;
+    font-size: 0.98rem;
+}
+
+.compartilhar-link-field {
+    width: 100%;
+    font-family: 'Courier New', monospace;
+    
+    input {
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+    }
+}
+
 .evento-data {
     .periodo-mobile {
         .data-inicio {
@@ -223,6 +265,23 @@ a {
             display: block;
             margin-left: 0;
             margin-top: 2px;
+        }
+    }
+
+    .card-compartilhar {
+        padding: 18px 12px;
+
+        &-link {
+            flex-direction: column;
+
+            .input-link {
+                font-size: 0.8rem;
+                padding: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     }
 }

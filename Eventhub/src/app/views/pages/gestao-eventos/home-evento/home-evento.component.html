@@ -43,6 +43,23 @@
         </div>
     </div>
 
+    <div class="compartilhar-section">
+        <div class="compartilhar-header">
+            <mat-icon>share</mat-icon>
+            <span class="compartilhar-title">Compartilhar Evento</span>
+        </div>
+        <p class="compartilhar-desc">
+            Compartilhe o link abaixo com seus convidados para que possam se cadastrar no evento.
+        </p>
+        <mat-form-field appearance="outline" class="compartilhar-link-field">
+            <mat-label>Link do Evento</mat-label>
+            <input matInput readonly [value]="linkEvento" #inputLink aria-label="Link do evento" />
+            <button mat-icon-button matSuffix (click)="copiarLink(inputLink)" matTooltip="Copiar link" color="primary">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+
     <div class="home-evento-cards">
         <a class="evento-card-link" *ngFor="let card of cards()" [routerLink]="[card.rota, evento?.id]">
             <mat-icon class="evento-card-icon">{{card.icone}}</mat-icon>

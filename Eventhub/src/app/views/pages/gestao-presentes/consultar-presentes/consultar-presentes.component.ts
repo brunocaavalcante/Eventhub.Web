@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin, finalize } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -99,71 +100,59 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
     this.presentesFiltrados().filter(p => p.status?.id === 3)
   );
 
-
-
   ngOnInit(): void {
     this.eventoId = this.acRoute.snapshot.paramMap.get('idEvento') || '0';
-    this.carregarPresentes();
-    this.carregarStatusPresente();
-    this.carregarPixPresente();
     const usuarioLogado = this.obterUsuarioLogado();
     if (usuarioLogado) {
       this.idParticipanteLogado.set(usuarioLogado.id);
     }
+    this.carregarDados();
+  }
+
+  carregarDados(): void {
+    this.spinner.show();
+    forkJoin({
+      presentes: this.presenteService.obterPresentesPorEvento(this.eventoId),
+      status: this.presenteService.obterStatusPresente(),
+      pix: this.pixEventoService.buscarPixEventoFinalidade(Number(this.eventoId), FinalidadePix.Presentes)
+    })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.spinner.hide())
+      )
+      .subscribe({
+        next: ({ presentes, status, pix }) => {
+          if (presentes.executouComSucesso) {
+            this.presentes.set(presentes.data || []);
+          }
+          if (status.executouComSucesso) {
+            this.statusPresente.set(status.data || []);
+          }
+          if (pix.executouComSucesso) {
+            this.pix.set(pix.data || null);
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao carregar dados dos presentes:', error);
+        }
+      });
   }
 
   carregarPresentes(): void {
     this.spinner.show();
     this.presenteService.obterPresentesPorEvento(this.eventoId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.spinner.hide())
+      )
       .subscribe({
         next: (response) => {
           if (response.executouComSucesso) {
-            console.log('Presentes carregados:', response.data);
             this.presentes.set(response.data || []);
           }
-
-          this.spinner.hide();
         },
         error: (error) => {
           console.error('Erro ao carregar presentes:', error);
-          this.spinner.hide();
-        }
-      });
-  }
-
-  carregarPixPresente(): void {
-    this.spinner.show();
-    this.pixEventoService.buscarPixEventoFinalidade(Number(this.eventoId), FinalidadePix.Presentes)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response) => {
-          if (response.executouComSucesso) {
-            this.pix.set(response.data || null);
-          }
-          this.spinner.hide();
-        },
-        error: (error) => {
-          console.error('Erro ao carregar PIX do presente:', error);
-          this.spinner.hide();
-        }
-      });
-  }
-
-  carregarStatusPresente(): void {
-    this.spinner.show();
-    this.presenteService.obterStatusPresente()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response) => {
-          if (response.executouComSucesso) {
-            this.statusPresente.set(response.data || []);
-          }
-          this.spinner.hide();
-        },
-        error: (error) => {
-          console.error('Erro ao carregar status dos presentes:', error);
-          this.spinner.hide();
         }
       });
   }
