@@ -3,19 +3,19 @@ import { BaseService } from "./base.service";
 import { CadastroConvidadoDto, ListarConvidadosDto, ParticipanteDto } from "../models/participante.model";
 import { map, Observable } from "rxjs";
 import { RetornoAPI } from "../models/retorno-api.model";
-import { EnvioConviteDTO } from "../models/envio.convite.model";
+import { ConfirmarPresencaDTO, RecusarConviteDto } from "../models/confirmar-presenca.model";
 
 @Injectable({ providedIn: 'root' })
 export class ParticipanteService extends BaseService {
 
     buscarParticipantesConfirmados(idEvento: number): Observable<number> {
-        return this.http.get<RetornoAPI<EnvioConviteDTO[]>>(`${this.urlApi}/participantes/evento/${idEvento}/confirmados`).pipe(
+        return this.http.get<RetornoAPI<ListarConvidadosDto[]>>(`${this.urlApi}/participantes/evento/${idEvento}/confirmados`).pipe(
             map(response => {
                 if (response && response.executouComSucesso && response.data) {
                     // Soma o participante (1) + seus acompanhantes para cada confirmado
                     return response.data.reduce((total, p) => {
-                        if (p.status === "Confirmado") {
-                            return total + (p.qtdAcompanhantes + 1);
+                        if (p.statusConfirmacao === "Confirmado") {
+                            return total + (p.quantidadeAcompanhantes + 1);
                         }
                         return total;
                     }, 0);
@@ -35,5 +35,13 @@ export class ParticipanteService extends BaseService {
 
     cadastroConvidado(convidado: CadastroConvidadoDto): Observable<RetornoAPI<ParticipanteDto>> {
         return this.http.post<RetornoAPI<ParticipanteDto>>(`${this.urlApi}/participantes/convidado`, convidado);
+    }
+
+    confirmarPresenca(dto: ConfirmarPresencaDTO): Observable<RetornoAPI<void>> {
+        return this.http.post<RetornoAPI<void>>(`${this.urlApi}/participantes/confirmar-presenca`, dto);
+    }
+
+    recusarConvite(dto: RecusarConviteDto): Observable<RetornoAPI<void>> {
+        return this.http.post<RetornoAPI<void>>(`${this.urlApi}/participantes/recusar-convite`, dto);
     }
 }

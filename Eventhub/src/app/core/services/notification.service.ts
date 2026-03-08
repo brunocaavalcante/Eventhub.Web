@@ -36,4 +36,18 @@ export class NotificationService {
 
         window.alert(text);
     }
+
+    showWarning(message: string): void {
+        const text = message || 'Atenção: verifique as informações.';
+        if (this.snackBar) {
+            try {
+                this.snackBar.open(text, 'Fechar', { duration: 4000 });
+                return;
+            } catch (e) {
+                // fallback para alert
+            }
+        }
+
+        window.alert(text);
+    }
 }

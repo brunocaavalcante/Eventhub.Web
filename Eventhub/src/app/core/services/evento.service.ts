@@ -22,4 +22,8 @@ export class EventoService extends BaseService {
     buscarStatusEventos(): Observable<RetornoAPI<EventoStatusDto[]>> {
         return this.http.get<RetornoAPI<EventoStatusDto[]>>(`${this.urlApi}/eventos/status`);
     }
+
+    buscarEventoPorToken(token: string): Observable<RetornoAPI<EventoUserDto>> {
+        return this.http.get<RetornoAPI<EventoUserDto>>(`${this.urlApi}/eventos/token/${token}`);
+    }
 }

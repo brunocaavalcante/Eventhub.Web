@@ -1,0 +1,334 @@
+<div class="responder-container">
+    <mat-card class="responder-card">
+        <mat-card-header class="responder-header">
+            <mat-icon class="header-icon">celebration</mat-icon>
+            <div class="header-texto">
+                <h1>Confirmar Presença</h1>
+                @if (evento()) {
+                <p class="evento-nome">{{ evento()!.nome }}</p>
+                }
+            </div>
+        </mat-card-header>
+
+        <mat-card-content>
+            <mat-stepper [linear]="true" [orientation]="stepperOrientation()" #stepper class="responder-stepper">
+
+                <!-- ========== ETAPA 1: SUA RESPOSTA ========== -->
+                <mat-step [stepControl]="formResposta">
+                    <ng-template matStepLabel>Sua Resposta</ng-template>
+
+                    <form [formGroup]="formResposta" class="step-form">
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <mat-icon>question_answer</mat-icon>
+                                Você vai comparecer?
+                            </h3>
+
+                            <mat-radio-group formControlName="vaiComparecer" class="resposta-radio">
+                                <mat-radio-button value="sim" class="radio-option">
+                                    <div class="radio-content">
+                                        <mat-icon class="radio-icon sucesso">check_circle</mat-icon>
+                                        <span>Sim, vou comparecer</span>
+                                    </div>
+                                </mat-radio-button>
+
+                                <mat-radio-button value="nao" class="radio-option">
+                                    <div class="radio-content">
+                                        <mat-icon class="radio-icon erro">cancel</mat-icon>
+                                        <span>Não vou comparecer</span>
+                                    </div>
+                                </mat-radio-button>
+                            </mat-radio-group>
+
+                            @if (displayMessage['vaiComparecer']) {
+                            <mat-error class="error-msg">
+                                <mat-icon>error</mat-icon>
+                                {{ displayMessage['vaiComparecer'] }}
+                            </mat-error>
+                            }
+                        </div>
+
+                        <!-- Campos para CONFIRMAR presença -->
+                        @if (vaiComparecer.value === 'sim') {
+                        <div class="form-section animate-in">
+                            <h3 class="section-title">
+                                <mat-icon>people</mat-icon>
+                                Acompanhantes
+                            </h3>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Número de Acompanhantes</mat-label>
+                                <input matInput type="number" formControlName="qtdAcompanhantes" placeholder="0"
+                                    title="Número de acompanhantes" min="0" />
+                                @if (displayMessage['qtdAcompanhantes']) {
+                                <mat-error>
+                                    <mat-icon>error</mat-icon>
+                                    {{ displayMessage['qtdAcompanhantes'] }}
+                                </mat-error>
+                                }
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Mensagem para o Organizador (opcional)</mat-label>
+                                <textarea matInput formControlName="mensagemOrganizador" rows="4" maxlength="500"
+                                    placeholder="Deixe uma mensagem especial..."></textarea>
+                                <mat-hint align="end">
+                                    {{ formResposta.get('mensagemOrganizador')?.value?.length || 0 }} / 500
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                        }
+
+                        <!-- Campos para RECUSAR presença -->
+                        @if (vaiComparecer.value === 'nao') {
+                        <div class="form-section animate-in">
+                            <h3 class="section-title">
+                                <mat-icon>message</mat-icon>
+                                Sua Mensagem
+                            </h3>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Motivo da Recusa (opcional)</mat-label>
+                                <textarea matInput formControlName="motivoRecusa" rows="3" maxlength="300"
+                                    placeholder="Compartilhe o motivo, se desejar..."></textarea>
+                                <mat-hint align="end">
+                                    {{ formResposta.get('motivoRecusa')?.value?.length || 0 }} / 300
+                                </mat-hint>
+                                @if (displayMessage['motivoRecusa']) {
+                                <mat-error>
+                                    <mat-icon>error</mat-icon>
+                                    {{ displayMessage['motivoRecusa'] }}
+                                </mat-error>
+                                }
+                            </mat-form-field>
+
+                            <div class="info-box">
+                                <mat-icon>info</mat-icon>
+                                <p>Agradecemos por avisar! O organizador será notificado da sua resposta.</p>
+                            </div>
+                        </div>
+                        }
+
+                        <div class="step-actions">
+                            @if (vaiComparecer.value === 'sim') {
+                                <button mat-raised-button color="primary" matStepperNext (click)="proximaEtapa()"
+                                    type="button" [disabled]="formResposta.invalid">
+                                    Continuar
+                                    <mat-icon>arrow_forward</mat-icon>
+                                </button>
+                            } @else {
+                                <button mat-raised-button color="primary" (click)="proximaEtapa()"
+                                    type="button" [disabled]="formResposta.invalid">
+                                    Enviar Resposta
+                                    <mat-icon>arrow_forward</mat-icon>
+                                </button>
+                            }
+                        </div>
+                    </form>
+                </mat-step>
+
+                <!-- ========== ETAPA 2: CADASTRO/LOGIN ========== -->
+                @if (vaiComparecer.value === 'sim') {
+                <mat-step [stepControl]="formCadastro">
+                    <ng-template matStepLabel>Seus Dados</ng-template>
+
+                    <form [formGroup]="formCadastro" class="step-form">
+                        <div class="form-section">
+                            <h3 class="section-title"> <mat-icon>person</mat-icon> Identificação</h3>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Email</mat-label>
+                                <input matInput type="email" formControlName="email" placeholder="seu@email.com"
+                                    title="Digite seu email" />
+                                <mat-icon matSuffix>email</mat-icon>
+                                @if (displayMessage['email']) {
+                                <mat-error>
+                                    <mat-icon>error</mat-icon>
+                                    {{ displayMessage['email'] }}
+                                </mat-error>
+                                }
+                            </mat-form-field>
+
+                            @if (emailJaExiste()) {
+                            <div class="info-box sucesso animate-in">
+                                <mat-icon>check_circle</mat-icon>
+                                <p>
+                                    <strong>Email já cadastrado!</strong><br>
+                                    Sua presença será confirmada. Após confirmar, faça login para acessar o evento.
+                                </p>
+                            </div>
+                            }
+
+                            <!-- Campos de CADASTRO (email NÃO existe) -->
+                            @if (!emailJaExiste() && formCadastro.get('email')?.valid) {
+                            <div class="animate-in">
+                                <mat-form-field appearance="outline" class="full-width" formControlName="nome"
+                                    placeholder="Digite seu nome completo" title="Nome completo">
+                                    <mat-label>Nome</mat-label>
+                                    <input matInput formControlName="nome" />
+                                    <mat-icon matSuffix>person</mat-icon>
+                                    @if (displayMessage['nome']) {
+                                    <mat-error>
+                                        <mat-icon>error</mat-icon>
+                                        {{ displayMessage['nome'] }}
+                                    </mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width"
+                                    placeholder="Mínimo 6 caracteres" title="Digite sua senha">
+                                    <input matInput [type]="showPassword() ? 'text' : 'password'"
+                                        formControlName="senha" />
+                                    <button mat-icon-button matSuffix type="button" (click)="togglePassword()">
+                                        <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                    </button>
+                                    @if (displayMessage['senha']) {
+                                    <mat-error>
+                                        <mat-icon>error</mat-icon>
+                                        {{ displayMessage['senha'] }}
+                                    </mat-error>
+                                    }
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" class="full-width" placeholder="Confirme sua senha"
+                                    title="Digite novamente sua senha para confirmação">
+                                    <input matInput [type]="showConfirmPassword() ? 'text' : 'password'"
+                                        formControlName="confirmarSenha" />
+                                    <button mat-icon-button matSuffix type="button" (click)="toggleConfirmPassword()">
+                                        <mat-icon>{{ showConfirmPassword() ? 'visibility_off' : 'visibility'
+                                            }}</mat-icon>
+                                    </button>
+                                    @if (displayMessage['confirmarSenha']) {
+                                    <mat-error>
+                                        <mat-icon>error</mat-icon>
+                                        {{ displayMessage['confirmarSenha'] }}
+                                    </mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Telefone (opcional)</mat-label>
+                                    <input matInput formControlName="telefone" mask="(00) 0000-0000||(00) 00000-0000"
+                                        placeholder="(00) 00000-0000" />
+                                    <mat-icon matSuffix>phone</mat-icon>
+                                    @if (displayMessage['telefone']) {
+                                    <mat-error>
+                                        <mat-icon>error</mat-icon>
+                                        {{ displayMessage['telefone'] }}
+                                    </mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                            }
+                        </div>
+
+                        <div class="step-actions">
+                            <button mat-button matStepperPrevious type="button" title="Voltar para etapa anterior">
+                                <mat-icon>arrow_back</mat-icon>
+                                Voltar
+                            </button>
+
+                            <button mat-raised-button color="primary" type="button" title="Confirmar presença"
+                                (click)="finalizarConfirmacao()">
+                                @if (emailJaExiste()) {
+                                Confirmar Presença
+                                } @else {
+                                Cadastrar e Confirmar
+                                }
+                                <mat-icon>check</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+                </mat-step>
+
+                <!-- ========== ETAPA 3: SUCESSO ========== -->
+                <mat-step>
+                    <ng-template matStepLabel>Confirmação</ng-template>
+
+                    <div class="sucesso-container">
+                        <div class="sucesso-animation">
+                            <mat-icon class="sucesso-icon">check_circle</mat-icon>
+                        </div>
+
+                        <h2 class="sucesso-titulo">Presença Confirmada!</h2>
+
+                        <div class="sucesso-detalhes">
+                            <p class="sucesso-acompanhantes">
+                                <mat-icon>person</mat-icon>
+                                <strong>Você</strong>
+                                @if (formResposta.get('qtdAcompanhantes')?.value > 0) {
+                                + {{ formResposta.get('qtdAcompanhantes')?.value }}
+                                {{ formResposta.get('qtdAcompanhantes')?.value === 1 ? 'acompanhante' : 'acompanhantes'
+                                }}
+                                }
+                            </p>
+
+                            @if (formResposta.get('mensagemOrganizador')?.value) {
+                            <div class="sucesso-mensagem">
+                                <mat-icon>message</mat-icon>
+                                <p>"{{ formResposta.get('mensagemOrganizador')?.value }}"</p>
+                            </div>
+                            }
+                        </div>
+
+                        @if (usuarioExistente()) {
+                        <!-- Usuário já existe - Mostrar botão de login -->
+                        <div class="info-box sucesso">
+                            <mat-icon>info</mat-icon>
+                            <p>
+                                <strong>Presença confirmada com sucesso!</strong><br>
+                                Faça login para acessar o evento e ver mais detalhes.
+                            </p>
+                        </div>
+
+                        <div class="step-actions actions-center">
+                            <button mat-raised-button color="primary" (click)="irParaLogin()"
+                                title="Ir para a página de login" type="button">
+                                <mat-icon>login</mat-icon>
+                                Fazer Login
+                            </button>
+                        </div>
+                        } @else {
+                        <div class="info-box sucesso">
+                            <mat-icon>celebration</mat-icon>
+                            <p>
+                                <strong>Tudo pronto!</strong><br>
+                                Agora você pode acessar a página do evento para ver todos os detalhes.
+                            </p>
+                        </div>
+
+                        <div class="step-actions actions-center">
+                            <button mat-raised-button color="primary" (click)="irParaEvento()"
+                                title="Ir para a página do evento" type="button">
+                                <mat-icon>event</mat-icon>
+                                Acessar Evento
+                            </button>
+                        </div>
+                        }
+                    </div>
+                </mat-step>
+                }
+
+                <!-- Mensagem de recusa enviada -->
+                @if (vaiComparecer.value === 'nao' && formResposta.valid) {
+                <mat-step>
+                    <ng-template matStepLabel>Confirmação</ng-template>
+
+                    <div class="sucesso-container">
+                        <mat-icon class="info-icon">info</mat-icon>
+                        <h2 class="info-titulo">Resposta Enviada</h2>
+                        <p>Agradecemos por avisar! O organizador foi notificado da sua resposta.</p>
+
+                        <div class="step-actions actions-center">
+                            <button mat-raised-button color="primary" (click)="irParaEvento()"
+                                title="Ir para a página do evento" type="button">
+                                <mat-icon>event</mat-icon>
+                                Ir para Evento
+                            </button>
+                        </div>
+                    </div>
+                </mat-step>
+                }
+            </mat-stepper>
+        </mat-card-content>
+    </mat-card>
+</div>

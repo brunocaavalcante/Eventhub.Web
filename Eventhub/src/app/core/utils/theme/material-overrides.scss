@@ -1,0 +1,84 @@
+@use 'variables' as *;
+
+// ========================================
+// Customizações de componentes Angular Material
+// ========================================
+
+// ========================================
+// Mat Stepper
+// ========================================
+
+// Estilos gerais (desktop e mobile)
+.mat-stepper-horizontal,
+.mat-stepper-vertical {
+  // Ícones dos steps
+  .mat-step-icon {
+    background-color: $cor-primaria;
+  }
+
+  .mat-step-icon-selected {
+    background-color: $cor-primaria-escura;
+  }
+
+  // Labels dos steps
+  .mat-step-label {
+    font-size: $font-body;
+    font-weight: $font-peso-medium;
+  }
+
+  // Ajustes específicos para mobile
+  @media (max-width: $break-mobile) {
+    // Header dos steps
+    .mat-step-header {
+      padding: $gap-sm;
+      margin-top: 10px;
+    }
+
+    // ========================================
+    // Stepper Horizontal (Mobile)
+    // ========================================
+    .mat-horizontal-stepper-header {
+      padding: 0 !important;
+      height: auto;
+      min-height: 56px;
+    }
+
+    .mat-horizontal-stepper-header-container {
+      padding: 0 !important;
+    }
+
+    .mat-horizontal-content-container,
+    .mat-horizontal-stepper-content {
+      padding: 0 !important;
+    }
+
+    // ========================================
+    // Stepper Vertical (Mobile)
+    // ========================================
+    .mat-vertical-stepper-header {
+      padding: 0 !important;
+      height: auto;
+    }
+
+    .mat-vertical-content,
+    .mat-vertical-stepper-content {
+      padding: 0 !important;
+    }
+
+    .mat-vertical-content-container {
+      margin-left: 0;
+    }
+
+    // Remove linha vertical do stepper
+    .mat-stepper-vertical-line::before {
+      display: none !important;
+    }
+  }
+}
+
+// ========================================
+// Mat Card
+// ========================================
+.mat-mdc-card-content {
+  margin-top: 11px;
+}

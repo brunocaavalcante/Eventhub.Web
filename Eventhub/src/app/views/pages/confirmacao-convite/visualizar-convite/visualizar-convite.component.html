@@ -1,0 +1,88 @@
+<div class="convite-container">
+  @if (erroCarregamento()) {
+  <mat-card class="erro-card">
+    <div class="erro-header">
+      <mat-icon class="erro-icon">error_outline</mat-icon>
+      <h2>OPS!</h2>
+    </div>
+    <p>{{ erroCarregamento() }}</p>
+    <button mat-raised-button color="primary" routerLink="/">
+      Voltar para o Início
+    </button>
+  </mat-card>
+  } 
+  @else if (evento()) {
+  <mat-card class="convite-card">
+    <div class="convite-imagem-container">
+      <img [src]="getImagemCapa()" [alt]="evento()!.nome" title="{{ evento()!.nome }}" class="convite-imagem" />
+      <div class="convite-overlay">
+        <mat-icon class="convite-icon">celebration</mat-icon>
+        <span class="convite-badge">Você foi convidado!</span>
+      </div>
+    </div>
+
+    <mat-card-content class="convite-content">
+      <div class="convite-header">
+        <h1 class="evento-titulo">{{ evento()!.nome }}</h1>
+        @if (evento()!.descricao) {
+        <p class="evento-descricao">{{ evento()!.descricao }}</p>
+        }
+      </div>
+
+      <div class="evento-detalhes">
+        <div class="detalhe-item">
+          <mat-icon>event</mat-icon>
+          <div class="detalhe-texto">
+            <span class="detalhe-label">Data</span>
+            @if (evento()!.tipoData === 'unica') {
+            <span class="detalhe-valor">
+              {{ DateUtils.formatarDataExtenso(evento()!.dataInicio) }}
+            </span>
+            } @else {
+            <span class="detalhe-valor">
+              {{ DateUtils.formatarDataBR(evento()!.dataInicio) }} até
+              {{ DateUtils.formatarDataBR(evento()!.dataFim) }}
+            </span>
+            }
+          </div>
+        </div>
+
+        @if (getEnderecoCompleto()) {
+        <div class="detalhe-item">
+          <mat-icon>location_on</mat-icon>
+          <div class="detalhe-texto">
+            <span class="detalhe-label">Local</span>
+            <span class="detalhe-valor">{{ getEnderecoCompleto() }}</span>
+          </div>
+        </div>
+        }
+
+        @if (evento()!.maxConvidado) {
+        <div class="detalhe-item">
+          <mat-icon>people</mat-icon>
+          <div class="detalhe-texto">
+            <span class="detalhe-label">Capacidade</span>
+            <span class="detalhe-valor">{{ evento()!.maxConvidado }} convidados</span>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="convite-mensagem">
+        <mat-icon class="mensagem-icon">mail_outline</mat-icon>
+        <p>
+          Estamos muito felizes em convidá-lo(a) para este evento especial.
+          Sua presença será um presente!
+        </p>
+      </div>
+
+      <div class="convite-acoes">
+        <button mat-raised-button color="primary" class="btn-responder" (click)="responderConvite()">
+          <mat-icon>check_circle</mat-icon>
+          Responder Convite
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
+</div>

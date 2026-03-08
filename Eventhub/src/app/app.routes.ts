@@ -26,5 +26,9 @@ export const routes: Routes = [
     {
         path: 'presentes',
         loadChildren: () => import('./views/pages/gestao-presentes/gestao-presentes.route').then(m => m.routes)
+    },
+    {
+        path: 'participar-evento',
+        loadChildren: () => import('./views/pages/confirmacao-convite/confirmacao-convite.route').then(m => m.routes)
     }
 ];

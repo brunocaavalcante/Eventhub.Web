@@ -12,12 +12,14 @@ export interface EventoDto{
     id: number;
     idTipoEvento: number;
     nome: string;
+    tokenConvite: string;
     descricao?: string;
     dataInicio?: Date | null;
     dataFim?: Date | null;
     maxConvidado?: number;
     tipoData: 'unica' | 'periodo';
     endereco?: EnderecoEventoDto;
+    fotoCapaBase64?: string;
 }
 
 export interface EventoStatusDto {
@@ -37,6 +39,7 @@ export interface EventoUserDto {
     dataInicio: Date;
     dataFim: Date;
     fotoCapaBase64: string;
+    endereco?: EnderecoEventoDto;
     tipoData: 'unica' | 'periodo';
 }
 

@@ -32,7 +32,7 @@
                 </div>
                 <div class="convidado-card" *ngFor="let convidado of confirmados()">
                     <ng-container *ngIf="convidado?.foto; else userIcon1">
-                        <img [src]="convidado?.foto" [alt]="convidado.nome" class="convidado-avatar">
+                        <img [src]="convidado?.foto" alt="{{convidado.nome}}" class="convidado-avatar">
                     </ng-container>
                     <ng-template #userIcon1>
                         <mat-icon class="convidado-avatar">person</mat-icon>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="convidado-card" *ngFor="let convidado of pendentes()">
                     <ng-container *ngIf="convidado.foto; else userIcon2">
-                        <img [src]="convidado.foto" [alt]="convidado.nome" class="convidado-avatar">
+                        <img [src]="convidado.foto" alt="{{convidado.nome}}" class="convidado-avatar">
                     </ng-container>
                     <ng-template #userIcon2>
                         <mat-icon class="convidado-avatar">person</mat-icon>
@@ -74,7 +74,7 @@
                 </div>
                 <div class="convidado-card" *ngFor="let convidado of ausentes()">
                     <ng-container *ngIf="convidado.foto; else userIcon3">
-                        <img [src]="convidado.foto" [alt]="convidado.nome" class="convidado-avatar">
+                        <img [src]="convidado.foto" alt="{{convidado.nome}}" class="convidado-avatar">
                     </ng-container>
                     <ng-template #userIcon3>
                         <mat-icon class="convidado-avatar">person</mat-icon>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="convidado-card" *ngFor="let convidado of pendenteEnvio()">
                     <ng-container *ngIf="convidado.foto; else userIcon4">
-                        <img [src]="convidado.foto" [alt]="convidado.nome" class="convidado-avatar">
+                        <img [src]="convidado.foto" alt="{{convidado.nome}}" class="convidado-avatar">
                     </ng-container>
                     <ng-template #userIcon4>
                         <mat-icon class="convidado-avatar">person</mat-icon>

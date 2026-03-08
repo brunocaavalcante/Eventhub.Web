@@ -50,8 +50,7 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
     if (id) {
       this.spinner.show();
       this.usuario = await this.obterUsuarioLogado();
-      this.buscarEventoPorId(Number(id));
-      this.linkEvento = `${window.location.origin}/participar-evento/${id}`;
+      this.buscarEventoPorId(Number(id));      
     }
   }
 
@@ -60,6 +59,7 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
       next: (result) => {
         if (result.executouComSucesso && result.data) {
           this.evento = result.data;
+          this.linkEvento = `${window.location.origin}/participar-evento/${this.evento.tokenConvite}`;
           this.identificarPerfilUsuario();
         }
       },
