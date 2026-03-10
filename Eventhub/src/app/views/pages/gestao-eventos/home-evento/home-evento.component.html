@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    <div class="compartilhar-section">
+    <div class="compartilhar-section" *ngIf="idPerfil() === EnumPerfil.Administrador">
         <div class="compartilhar-header">
             <mat-icon>share</mat-icon>
             <span class="compartilhar-title">Compartilhar Evento</span>

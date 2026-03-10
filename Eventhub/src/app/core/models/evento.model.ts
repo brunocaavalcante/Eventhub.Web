@@ -54,6 +54,15 @@ export interface CadastroEventoDto {
     endereco: EnderecoEventoDto;
     imagens: Imagem[];
     participantes: Participante[];
+    configuracaoVisibilidade?: ConfiguracaoVisibilidadeDto;
+}
+
+export interface ConfiguracaoVisibilidadeDto {
+    galeriaFotos: boolean;
+    chatConvidados: boolean;
+    listaPresentes: boolean;
+    listaConvidados: boolean;
+    agendaEvento: boolean;
 }
 
 export interface TipoEvento {

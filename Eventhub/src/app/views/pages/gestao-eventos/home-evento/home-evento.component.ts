@@ -20,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { EnumPerfil } from '../../../../core/utils/enums/perfil-usuario.enum';
 
 @Component({
   selector: 'app-home-evento',
@@ -29,7 +30,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class HomeEventoComponent extends BaseComponent implements OnInit {
 
-  isOrganizador = false;
   isConvidado = false;
   private readonly spinner = inject(SpinnerService);
   private readonly service = inject(EventoService);
@@ -41,7 +41,9 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
   DateUtils: any = DateUtils;
   evento: EventoDto | null = null;
   usuario: UsuarioInfoDTO | null = null;
+  idPerfil = signal<number | null>(null);
   cards = signal<ModuloDto[]>([]);
+  EnumPerfil = EnumPerfil;
 
   linkEvento:string = '';
 
@@ -75,8 +77,9 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
     this.participanteService.obterParticipantePorIdUsuario(this.usuario.id, this.evento.id)
       .pipe(takeUntilDestroyed(this.def)).subscribe({
         next: (res) => {
-          if (res.executouComSucesso && res.data) {
-            this.obterModulosPerfil(res.data.perfil.id);
+          if (res.executouComSucesso && res.data && this.evento) {
+            this.idPerfil.set(res.data.perfil.id);
+            this.obterModulosPerfil(this.evento.id, res.data.perfil.id);
           }
         },
         error: (err) => {
@@ -86,13 +89,12 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
       });
   }
 
-  obterModulosPerfil(idPerfil: number) {
-    this.perfilService.obterModulosPerfil(idPerfil)
+  obterModulosPerfil(idEvento: number, idPerfil: number) {
+    this.perfilService.obterModulosPerfil(idEvento, idPerfil)
       .pipe(takeUntilDestroyed(this.def)).subscribe({
         next: (res) => {
           if (res.executouComSucesso && Array.isArray(res.data)) {
-            const menusPermitidos = res.data.filter(modulo => modulo.showInMenu);
-            this.cards.set(menusPermitidos);
+            this.cards.set(res.data);
           }
           this.spinner.hide();
         },

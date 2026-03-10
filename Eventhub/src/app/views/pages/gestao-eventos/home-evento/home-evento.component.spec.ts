@@ -111,11 +111,11 @@ describe('HomeEventoComponent (Jest)', () => {
     const perfilService = TestBed.inject(PerfilService);
     perfilService.obterModulosPerfil = jest.fn().mockReturnValue({
       pipe: () => ({
-        subscribe: (obj: any) => obj.next({ executouComSucesso: true, data: [{ nome: 'Configurações', showInMenu: true  }] })
+        subscribe: (obj: any) => obj.next({ executouComSucesso: true, data: [{ nome: 'Galeria', showInMenu: true  }] })
       })
     });
-    component.obterModulosPerfil(1);
+    component.obterModulosPerfil(99, 1);
     expect(component.cards().length).toBeGreaterThan(0);
-    expect(component.cards()[0].nome).toBe('Configurações');
+    expect(component.cards()[0].nome).toBe('Galeria');
   });
 });

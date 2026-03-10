@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 import { CadastroOrganizadoresComponent } from '../../organizadores/cadastro-organizadores/cadastro-organizadores.component';
+import { ConfiguracaoVisibilidadeComponent } from '../configuracao-visibilidade/configuracao-visibilidade.component';
 import { BaseComponent } from '../../../../../core/components/base.component';
 import { Participante } from '../../../../../core/models/organizador.model';
 import { UsuarioInfoDTO } from '../../../../../core/models/usuario.model';
@@ -47,6 +48,7 @@ import { DropZoneImageComponent } from "../../../../../core/components/drop-zone
     ReactiveFormsModule,
     NgxMaskDirective,
     CadastroOrganizadoresComponent,
+    ConfiguracaoVisibilidadeComponent,
     DropZoneImageComponent
 ],
   templateUrl: './cadastrar-evento.component.html',
@@ -112,6 +114,10 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
     this.configurarMensagensValidacaoBase(this.validationMessages);
   }
 
+  get step3FormGroup(): FormGroup {
+    return this.form.get('step3') as FormGroup;
+  }
+
   ngAfterViewInit(): void {
     this.configurarValidacaoFormularioBase(this.formInputElements, this.form);
     this.spinner.hide();
@@ -136,6 +142,13 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
         numero: ['', [Validators.required]],
         pontoReferencia: ['']
       }),
+      step3: this.fb.group({
+        galeriaFotos: [true],
+        chatConvidados: [true],
+        listaPresentes: [false],
+        listaConvidados: [false],
+        agendaEvento: [true]
+      }),
     });
 
     this.usuarioLogado = await this.userService.obterUsuarioLogado();
@@ -148,7 +161,10 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
     else if (this.etapa === 1 && this.form.get('step2')?.valid) {
       this.etapa++;
     }
-    else if (this.etapa === 2 && this.form.valid) {
+    else if (this.etapa === 2 && this.form.get('step3')?.valid) {
+      this.etapa++;
+    }
+    else if (this.etapa === 3 && this.form.valid) {
       this.salvarEvento();
     } else {
       this.form.markAllAsTouched();
@@ -197,7 +213,15 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
         email: org.email,
         telefone: org.telefone,
         idPerfil: org.idPerfil ?? 0
-      }))
+      })),
+
+      configuracaoVisibilidade: {
+        galeriaFotos: this.form.get('step3.galeriaFotos')?.value ?? true,
+        chatConvidados: this.form.get('step3.chatConvidados')?.value ?? true,
+        listaPresentes: this.form.get('step3.listaPresentes')?.value ?? false,
+        listaConvidados: this.form.get('step3.listaConvidados')?.value ?? false,
+        agendaEvento: this.form.get('step3.agendaEvento')?.value ?? true
+      }
     };
 
     this.service.cadastro(dto).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -218,8 +242,11 @@ export class CadastrarEventoComponent extends BaseComponent implements OnInit, A
   habilitarBotaoProximo(): boolean {
     const step1Valido = this.form.get('step1')?.valid;
     const step2Valido = this.form.get('step2')?.valid;
-    return (this.etapa === 0 && step1Valido) || (this.etapa === 1 && step2Valido) ||
-      (this.etapa === 2 && this.form.valid && this.organizadores.length > 0);
+    const step3Valido = this.form.get('step3')?.valid;
+    return (this.etapa === 0 && step1Valido) || 
+           (this.etapa === 1 && step2Valido) ||
+           (this.etapa === 2 && step3Valido) ||
+           (this.etapa === 3 && this.form.valid && this.organizadores.length > 0);
   }
 
   voltar() {
