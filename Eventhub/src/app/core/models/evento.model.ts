@@ -11,6 +11,7 @@ export enum StatusEvento {
 export interface EventoDto{
     id: number;
     idTipoEvento: number;
+    status?: EventoStatusDto;
     nome: string;
     tokenConvite: string;
     descricao?: string;
@@ -71,6 +72,29 @@ export interface TipoEvento {
     icon: string;
     descricao?: string;
     idFoto?: string;
+}
+
+export interface UpdateEventoDto {
+    id: number;
+    nome: string;
+    descricao?: string;
+    idTipoEvento: number;
+    maxConvidado?: number;
+    dataInicio: Date;
+    dataFim: Date | null;
+    tipoData: 'unica' | 'periodo';
+    endereco: EnderecoEventoDto;
+    fotoCapaBase64?: string;
+}
+
+export interface CancelarEventoDto {
+    idEvento: number;
+    motivo: string;
+}
+
+export interface ComunicarAlteracoesEventoDto {
+    idEvento: number;
+    mensagem: string;
 }
 
 export interface EnderecoEventoDto {

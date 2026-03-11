@@ -82,3 +82,10 @@
 .mat-mdc-card-content {
   margin-top: 11px;
 }
+
+// ========================================
+// Mat Dialog
+// ========================================
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-width: 90vw !important; // Permite modais maiores, limitado a 90% da viewport
+}

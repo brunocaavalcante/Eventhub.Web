@@ -28,7 +28,7 @@ export const TipoEventoDescricaoImagem: Record<number, { descricao: string; imag
     },
     [TipoEventoEnum.FORMATURA]: {
         descricao: 'Formatura',
-        imagem: 'assets/imagens/formatura.png'
+        imagem: 'assets/imagens/cp-formatura.png'
     },
     [TipoEventoEnum.NETWORKING]: {
         descricao: 'Networking',
