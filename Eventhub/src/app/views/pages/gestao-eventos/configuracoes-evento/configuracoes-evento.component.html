@@ -142,10 +142,27 @@
                     FINALIZAR EVENTO
                 </button>
 
-                <button mat-stroked-button color="warn" type="button" (click)="cancelar()">
-                    <mat-icon>cancel</mat-icon>
-                    CANCELAR EVENTO
+                <button 
+                    *ngIf="podeReativar(); else cancelarBtn" 
+                    mat-stroked-button 
+                    color="accent" 
+                    type="button" 
+                    (click)="reativarEvento()">
+                    <mat-icon>restart_alt</mat-icon>
+                    REATIVAR EVENTO
                 </button>
+                
+                <ng-template #cancelarBtn>
+                    <button 
+                        mat-stroked-button 
+                        color="warn" 
+                        type="button" 
+                        (click)="cancelar()"
+                        [disabled]="eventoCancelado()">
+                        <mat-icon>cancel</mat-icon>
+                        CANCELAR EVENTO
+                    </button>
+                </ng-template>
 
                 <button mat-flat-button color="warn" type="button" (click)="excluir()">
                     <mat-icon>delete_forever</mat-icon>

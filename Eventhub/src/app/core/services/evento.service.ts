@@ -36,7 +36,11 @@ export class EventoService extends BaseService {
     }
 
     cancelarEvento(dto: CancelarEventoDto): Observable<RetornoAPI<null>> {
-        return this.http.post<RetornoAPI<null>>(`${this.urlApi}/eventos/${dto.idEvento}/cancelar`, dto);
+        return this.http.patch<RetornoAPI<null>>(`${this.urlApi}/eventos/${dto.id}/cancelar`, dto);
+    }
+
+    reativarEvento(idEvento: number): Observable<RetornoAPI<void>> {
+        return this.http.patch<RetornoAPI<void>>(`${this.urlApi}/eventos/${idEvento}/reativar`, {});
     }
     //TODO: Avaliar se esse método deve ficar aqui ou em um serviço específico de notificações
     comunicarAlteracoesAosConvidados(dto: ComunicarAlteracoesEventoDto): Observable<RetornoAPI<null>> {

@@ -79,4 +79,8 @@ export class ConsultarConvidadosComponent extends BaseComponent implements OnIni
     if (!busca) return true;
     return convidado.nome.toLowerCase().includes(busca);
   }
+
+  voltar() {
+    this.router.navigate([`/eventos/home/${this.eventoId}`]);
+  }
 }

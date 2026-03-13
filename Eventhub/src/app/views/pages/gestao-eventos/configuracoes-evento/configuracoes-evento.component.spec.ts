@@ -15,6 +15,7 @@ import { SpinnerService } from '../../../../core/services/spinner.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { UsuarioService } from '../../../../core/services/usuario.service';
+import { RetornoAPI } from '../../../../core/models/retorno-api.model';
 
 describe('ConfiguracoesEventoComponent', () => {
   let component: ConfiguracoesEventoComponent;
@@ -54,6 +55,7 @@ describe('ConfiguracoesEventoComponent', () => {
       atualizar: jest.fn().mockReturnValue(of({ executouComSucesso: true, data: mockEvento })),
       atualizarStatus: jest.fn().mockReturnValue(of({ executouComSucesso: true, data: mockEvento })),
       cancelarEvento: jest.fn().mockReturnValue(of({ executouComSucesso: true, data: null })),
+      reativarEvento: jest.fn().mockReturnValue(of({ executouComSucesso: true, data: mockEvento })),
       excluir: jest.fn().mockReturnValue(of({ executouComSucesso: true, data: null }))
     } as any;
 
@@ -73,7 +75,8 @@ describe('ConfiguracoesEventoComponent', () => {
 
     mockModalService = {
       openConfirmationModal: jest.fn().mockReturnValue(of(true)),
-      openInputModal: jest.fn().mockReturnValue(of('Motivo do cancelamento'))
+      openInputModal: jest.fn().mockReturnValue(of('Motivo do cancelamento')),
+      openSuccessModal: jest.fn().mockReturnValue(of(true))
     } as any;
 
     mockUsuarioService = {
@@ -174,12 +177,6 @@ describe('ConfiguracoesEventoComponent', () => {
     expect(component.form.invalid).toBe(false);
   });
 
-  it('deve retornar status info correto', () => {
-    const statusInfo = component.getStatusInfo(1);
-    expect(statusInfo.label).toBe('Ativo');
-    expect(statusInfo.class).toBe('status-ativo');
-  });
-
   it('deve confirmar antes de voltar com alterações não salvas', () => {
     fixture.detectChanges();
     component.form.markAsDirty();
@@ -187,5 +184,187 @@ describe('ConfiguracoesEventoComponent', () => {
     component.voltar();
     
     expect(mockModalService.openConfirmationModal).toHaveBeenCalled();
+  });
+
+  it('deve identificar evento cancelado corretamente', () => {
+    const eventoCancelado = { ...mockEvento, status: { id: 4, descricao: 'Cancelado' } };
+    mockEventoService.buscarEventoPorId.mockReturnValue(of({ 
+      executouComSucesso: true, 
+      data: eventoCancelado,
+      statusHttp: 200,
+      erros: []
+    }));
+    
+    fixture.detectChanges();
+    
+    expect(component.eventoCancelado()).toBe(true);
+  });
+
+  it('deve identificar evento não expirado corretamente', () => {
+    const eventoFuturo = { ...mockEvento, dataInicio: new Date('2027-12-31') };
+    mockEventoService.buscarEventoPorId.mockReturnValue(of({ 
+      executouComSucesso: true, 
+      data: eventoFuturo,
+      statusHttp: 200,
+      erros: []
+    }));
+    
+    fixture.detectChanges();
+    
+    expect(component.eventoExpirado()).toBe(false);
+  });
+
+  it('deve identificar evento expirado corretamente', () => {
+    const eventoPassado = { ...mockEvento, dataInicio: new Date('2020-01-01') };
+    mockEventoService.buscarEventoPorId.mockReturnValue(of({ 
+      executouComSucesso: true, 
+      data: eventoPassado,
+      statusHttp: 200,
+      erros: []
+    }));
+    
+    fixture.detectChanges();
+    
+    expect(component.eventoExpirado()).toBe(true);
+  });
+
+  it('deve permitir reativar evento cancelado e não expirado', () => {
+    const eventoCanceladoFuturo = { 
+      ...mockEvento, 
+      status: { id: 4, descricao: 'Cancelado' },
+      dataInicio: new Date('2027-12-31')
+    };
+    mockEventoService.buscarEventoPorId.mockReturnValue(of({ 
+      executouComSucesso: true, 
+      data: eventoCanceladoFuturo,
+      statusHttp: 200,
+      erros: []
+    }));
+    
+    fixture.detectChanges();
+    
+    expect(component.podeReativar()).toBe(true);
+  });
+
+  it('não deve permitir reativar evento cancelado e expirado', () => {
+    const eventoCanceladoPassado = { 
+      ...mockEvento, 
+      status: { id: 4, descricao: 'Cancelado' },
+      dataInicio: new Date('2020-01-01')
+    };
+    mockEventoService.buscarEventoPorId.mockReturnValue(of({ 
+      executouComSucesso: true, 
+      data: eventoCanceladoPassado,
+      statusHttp: 200,
+      erros: []
+    }));
+    
+    fixture.detectChanges();
+    
+    expect(component.podeReativar()).toBe(false);
+  });
+
+  it('deve reativar evento cancelado', () => {
+    const eventoCanceladoFuturo = { 
+      ...mockEvento, 
+      status: { id: 4, descricao: 'Cancelado' },
+      dataInicio: new Date('2027-12-31')
+    };
+    mockEventoService.buscarEventoPorId.mockReturnValue(of({ 
+      executouComSucesso: true, 
+      data: eventoCanceladoFuturo,
+      statusHttp: 200,
+      erros: []
+    }));
+    
+    fixture.detectChanges();
+    
+    component.reativarEvento();
+    
+    expect(mockModalService.openConfirmationModal).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Reativar Evento',
+        message: 'O evento voltará ao status Ativo e os convidados poderão confirmar presença novamente.',
+        confirmLabel: 'Reativar',
+        cancelLabel: 'Cancelar'
+      })
+    );
+    expect(mockSpinnerService.show).toHaveBeenCalled();
+    expect(mockEventoService.reativarEvento).toHaveBeenCalledWith(1);
+    expect(mockSpinnerService.hide).toHaveBeenCalled();
+    expect(mockModalService.openSuccessModal).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Evento Reativado',
+        message: 'O evento foi reativado com sucesso.'
+      })
+    );
+  });
+
+  it('não deve reativar evento quando usuário cancela confirmação', () => {
+    const eventoCanceladoFuturo = { 
+      ...mockEvento, 
+      status: { id: 4, descricao: 'Cancelado' },
+      dataInicio: new Date('2027-12-31')
+    };
+    mockEventoService.buscarEventoPorId.mockReturnValue(of({ 
+      executouComSucesso: true, 
+      data: eventoCanceladoFuturo,
+      statusHttp: 200,
+      erros: []
+    }));
+    mockModalService.openConfirmationModal.mockReturnValue(of(false));
+    
+    fixture.detectChanges();
+    
+    component.reativarEvento();
+    
+    expect(mockModalService.openConfirmationModal).toHaveBeenCalled();
+    expect(mockEventoService.reativarEvento).not.toHaveBeenCalled();
+  });
+
+  it('deve exibir erro ao falhar reativação de evento', () => {
+    const eventoCanceladoFuturo = { 
+      ...mockEvento, 
+      status: { id: 4, descricao: 'Cancelado' },
+      dataInicio: new Date('2027-12-31')
+    };
+    mockEventoService.buscarEventoPorId.mockReturnValue(of({ 
+      executouComSucesso: true, 
+      data: eventoCanceladoFuturo,
+      statusHttp: 200,
+      erros: []
+    }));
+    mockEventoService.reativarEvento.mockReturnValue(of(<RetornoAPI<void>>{ 
+      executouComSucesso: false, 
+      data: undefined,
+      statusHttp: 500,
+      erros: ['Erro ao reativar evento']
+    }));
+    
+    fixture.detectChanges();
+    
+    component.reativarEvento();
+    
+    expect(mockNotificationService.showError).toHaveBeenCalledWith('Erro ao reativar evento');
+  });
+
+  it('deve usar dataFim para verificar expiração em eventos de período', () => {
+    const eventoPeriodo = { 
+      ...mockEvento, 
+      tipoData: 'periodo' as const,
+      dataInicio: new Date('2020-01-01'),
+      dataFim: new Date('2027-12-31')
+    };
+    mockEventoService.buscarEventoPorId.mockReturnValue(of({ 
+      executouComSucesso: true, 
+      data: eventoPeriodo,
+      statusHttp: 200,
+      erros: []
+    }));
+    
+    fixture.detectChanges();
+    
+    // Não deve estar expirado porque dataFim é futura
+    expect(component.eventoExpirado()).toBe(false);
   });
 });

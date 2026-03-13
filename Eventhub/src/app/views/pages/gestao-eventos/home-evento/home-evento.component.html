@@ -4,6 +4,9 @@
             <mat-icon>arrow_back</mat-icon>
             Voltar para Meus Eventos
         </button>
+        <span class="status" [ngClass]="getStatusEventoInfo(evento?.status?.id).class" *ngIf="evento?.status">
+            {{ getStatusEventoInfo(evento?.status?.id).label }}
+        </span>
     </div>
     <div class="evento-banner">
         <img [src]="getTipoEventoInfo(evento?.idTipoEvento).imagem" alt="Banner do Evento" class="evento-banner-img" />
@@ -43,7 +46,7 @@
         </div>
     </div>
 
-    <div class="compartilhar-section" *ngIf="idPerfil() === EnumPerfil.Administrador">
+    <div class="compartilhar-section" *ngIf="idPerfil() === EnumPerfil.Administrador && evento?.status?.id === EnumEventoStatus.Ativo">
         <div class="compartilhar-header">
             <mat-icon>share</mat-icon>
             <span class="compartilhar-title">Compartilhar Evento</span>

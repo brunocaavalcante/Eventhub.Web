@@ -18,6 +18,7 @@ import { finalize } from 'rxjs';
 
 import { BaseComponent } from '../../../../core/components/base.component';
 import { EventoDto, StatusEvento, UpdateEventoDto, CancelarEventoDto } from '../../../../core/models/evento.model';
+import { getStatusEventoInfo } from '../../../../core/utils/evento-status.util';
 import { EventoService } from '../../../../core/services/evento.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -68,8 +69,30 @@ export class ConfiguracoesEventoComponent extends BaseComponent implements OnIni
     eventoStatus = computed(() => {
         console.log('Computando eventoStatus para evento:', this.evento());
         const status = this.evento()?.status?.id;
-        return this.getStatusInfo(status);
+        return getStatusEventoInfo(status);
     });
+
+    eventoCancelado = computed(() => this.evento()?.status?.id === StatusEvento.Cancelado);
+
+    eventoExpirado = computed(() => {
+        const evento = this.evento();
+        if (!evento) return false;
+
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+
+        // Se for período, verifica a dataFim, senão usa dataInicio
+        const dataReferencia = evento.tipoData === 'periodo' && evento.dataFim
+            ? new Date(evento.dataFim)
+            : evento.dataInicio ? new Date(evento.dataInicio) : null;
+
+        if (!dataReferencia) return false;
+
+        dataReferencia.setHours(0, 0, 0, 0);
+        return dataReferencia < hoje;
+    });
+
+    podeReativar = computed(() => this.eventoCancelado() && !this.eventoExpirado());
 
     ngOnInit(): void {
         const id = this.route.snapshot.paramMap.get('id');
@@ -324,7 +347,7 @@ export class ConfiguracoesEventoComponent extends BaseComponent implements OnIni
         }).pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(motivo => {
                 if (motivo) {
-                    const dto: CancelarEventoDto = { idEvento: this.evento()!.id, motivo };
+                    const dto: CancelarEventoDto = { id: this.evento()!.id, justificativa: motivo };
                     this.spinner.show();
                     this.eventoService.cancelarEvento(dto)
                         .pipe(
@@ -334,11 +357,51 @@ export class ConfiguracoesEventoComponent extends BaseComponent implements OnIni
                         .subscribe({
                             next: (result) => {
                                 if (result.executouComSucesso) {
-                                    this.notification.showSuccess('Evento cancelado com sucesso!');
-                                    this.router.navigate(['/eventos/meus-eventos']);
+                                    this.modalService.openSuccessModal({
+                                        title: 'Evento Cancelado',
+                                        message: 'O evento foi cancelado e os convidados notificados.'
+                                    }).pipe(takeUntilDestroyed(this.destroyRef))
+                                        .subscribe(x => {
+                                            if (x) this.router.navigate(['/eventos/meus-eventos']);
+                                        });
                                 }
                             },
                             error: () => this.notification.showError('Erro ao cancelar evento')
+                        });
+                }
+            });
+    }
+
+    reativarEvento(): void {
+        if (!this.evento()) return;
+
+        this.modalService.openConfirmationModal({
+            title: 'Reativar Evento',
+            message: 'O evento voltará ao status Ativo e os convidados poderão confirmar presença novamente.',
+            confirmLabel: 'Reativar',
+            cancelLabel: 'Cancelar'
+        }).pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(confirmed => {
+                if (confirmed) {
+                    this.spinner.show();
+                    this.eventoService.reativarEvento(this.evento()!.id)
+                        .pipe(
+                            takeUntilDestroyed(this.destroyRef),
+                            finalize(() => this.spinner.hide())
+                        )
+                        .subscribe({
+                            next: (result) => {
+                                if (result.executouComSucesso) {
+                                    this.modalService.openSuccessModal({
+                                        title: 'Evento Reativado',
+                                        message: 'O evento foi reativado com sucesso.'
+                                    }).pipe(takeUntilDestroyed(this.destroyRef))
+                                        .subscribe(x => {
+                                            if (x) this.router.navigate(['/eventos/home', this.evento()?.id]);
+                                        });
+                                }
+                            },
+                            error: () => this.notification.showError('Erro ao reativar evento')
                         });
                 }
             });
@@ -412,16 +475,7 @@ export class ConfiguracoesEventoComponent extends BaseComponent implements OnIni
         }
     }
 
-    getStatusInfo(idStatus?: number) {
-        console.log('Obtendo status info para idStatus:', idStatus);
-        const statusMap: Record<number, { label: string; class: string }> = {
-            [StatusEvento.Ativo]: { label: 'Ativo', class: 'status-ativo' },
-            [StatusEvento.Rascunho]: { label: 'Rascunho', class: 'status-rascunho' },
-            [StatusEvento.Finalizado]: { label: 'Finalizado', class: 'status-finalizado' },
-            [StatusEvento.Cancelado]: { label: 'Cancelado', class: 'status-cancelado' }
-        };
-        return statusMap[idStatus || 0] || { label: 'Desconhecido', class: '' };
-    }
+
 
     getTipoEventoNome(idTipo: number): string {
         const tipo = this.tiposEvento().find(t => t.id === idTipo);

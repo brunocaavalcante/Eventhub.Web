@@ -8,7 +8,7 @@ export enum StatusEvento {
     Cancelado = 4
 }
 
-export interface EventoDto{
+export interface EventoDto {
     id: number;
     idTipoEvento: number;
     status?: EventoStatusDto;
@@ -88,8 +88,8 @@ export interface UpdateEventoDto {
 }
 
 export interface CancelarEventoDto {
-    idEvento: number;
-    motivo: string;
+    id: number;
+    justificativa: string;
 }
 
 export interface ComunicarAlteracoesEventoDto {

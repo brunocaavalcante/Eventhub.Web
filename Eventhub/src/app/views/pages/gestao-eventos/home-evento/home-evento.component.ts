@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { DateUtils } from '../../../../core/utils/date.utils';
 import { ActivatedRoute } from '@angular/router';
 import { EventoDto } from '../../../../core/models/evento.model';
@@ -13,6 +13,7 @@ import { UsuarioInfoDTO } from '../../../../core/models/usuario.model';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { getTipoEventoInfo } from '../../../../core/models/tipo-evento.model';
+import { getStatusEventoInfo } from '../../../../core/utils/evento-status.util';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PerfilService } from '../../../../core/services/perfil.service';
 import { ModuloDto } from '../../../../core/models/sistema.model';
@@ -21,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EnumPerfil } from '../../../../core/utils/enums/perfil-usuario.enum';
+import { EnumEventoStatus } from '../../../../core/utils/enums/status-evento.enum';
 
 @Component({
   selector: 'app-home-evento',
@@ -44,6 +46,7 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
   idPerfil = signal<number | null>(null);
   cards = signal<ModuloDto[]>([]);
   EnumPerfil = EnumPerfil;
+  EnumEventoStatus = EnumEventoStatus;
 
   linkEvento:string = '';
 
@@ -119,5 +122,9 @@ export class HomeEventoComponent extends BaseComponent implements OnInit {
 
   getTipoEventoInfo(tipo: number | undefined) {
     return getTipoEventoInfo(tipo ?? 0);
+  }
+
+  getStatusEventoInfo(idStatus: number | undefined) {
+    return getStatusEventoInfo(idStatus);
   }
 }
