@@ -214,15 +214,21 @@
           color: $cor-branco;
         }
       }
+    }
 
-      &:last-child {
-        color: white;
-        background: $cor-erro;
-        border-color: $cor-erro;
+    .excluir-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid rgba($cor-erro, 0.3);
 
-        &:hover {
-          background: darken($cor-erro, 10%);
-        }
+      button {
+        margin-bottom: 0;
+      }
+
+      .excluir-aviso {
+        @include texto-alert($cor-atencao);
       }
     }
   }

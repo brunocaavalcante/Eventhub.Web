@@ -410,29 +410,82 @@ export class ConfiguracoesEventoComponent extends BaseComponent implements OnIni
     excluir(): void {
         if (!this.evento()) return;
 
+        const evento = this.evento()!;
+
+        // Primeira confirmação com aviso sobre ação destrutiva
         this.modalService.openConfirmationModal({
-            title: 'Excluir Permanentemente?',
-            message: `ATENÇÃO: Todos os dados do evento "${this.evento()!.nome}" serão perdidos.`,
-            confirmLabel: 'Excluir',
+            title: 'EXCLUIR EVENTO?',
+            message: `
+                <span class="warning-text">Esta ação NÃO pode ser desfeita!</span>
+                
+                <div class="event-details">
+                    <p><span class="label">Evento:</span> "${evento.nome}"</p>
+                    <p><span class="label">Data:</span> ${new Date(evento.dataInicio!).toLocaleDateString('pt-BR')}</p>
+                </div>
+                
+                <span class="section-title">Serão excluídos permanentemente:</span>
+                
+                <ul class="impact-list">
+                    <li>Todas as contribuições (presentes)</li>
+                    <li>Lista de participantes</li>
+                    <li>Fotos da galeria</li>
+                    <li>Programação do evento</li>
+                    <li>Notificações relacionadas</li>
+                </ul>
+                
+                <div class="final-notice">
+                    <p>Todos os participantes serão notificados por e-mail.</p>
+                    <p>Tem certeza absoluta?</p>
+                </div>
+            `,
+            confirmLabel: 'Sim, Excluir',
             cancelLabel: 'Cancelar'
-        }).pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(confirmed => {
-                if (confirmed) {
-                    this.spinner.show();
-                    this.eventoService.excluir(this.evento()!.id)
-                        .pipe(
-                            takeUntilDestroyed(this.destroyRef),
-                            finalize(() => this.spinner.hide())
-                        )
-                        .subscribe({
-                            next: (result) => {
-                                if (result.executouComSucesso) {
-                                    this.notification.showSuccess('Evento excluído!');
-                                    this.router.navigate(['/eventos/meus-eventos']);
-                                }
-                            },
-                            error: () => this.notification.showError('Erro ao excluir evento')
+        },{width:"600px"}).pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(primeiraConfirmacao => {
+                if (primeiraConfirmacao) {
+                    // Segunda confirmação digitando o nome do evento
+                    this.modalService.openInputModal({
+                        title: 'Confirme a Exclusão',
+                        message: `Digite o nome do evento para confirmar: "${evento.nome}"`,
+                        inputLabel: 'Nome do Evento',
+                        inputPlaceholder: 'Digite exatamente o nome do evento',
+                        inputType: 'text',
+                        confirmLabel: 'Confirmar Exclusão',
+                        cancelLabel: 'Cancelar',
+                        inputRequired: true,
+                        inputMinLength: 1
+                    }).pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(nomeDigitado => {
+                            if (nomeDigitado && nomeDigitado.trim() === evento.nome.trim()) {
+                                this.executarExclusao();
+                            } else if (nomeDigitado) {
+                                this.notification.showError('Nome do evento não corresponde. Exclusão cancelada.');
+                            }
                         });
+                }
+            });
+    }
+
+    private executarExclusao(): void {
+        if (!this.evento()) return;
+
+        this.spinner.show();
+        this.eventoService.excluir(this.evento()!.id)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => this.spinner.hide())
+            )
+            .subscribe({
+                next: (result) => {
+                    if (result.executouComSucesso) {
+                        this.modalService.openSuccessModal({
+                            title: 'Evento Excluído',
+                            message: 'O evento foi excluído permanentemente e todos os participantes foram notificados por e-mail.'
+                        }).pipe(takeUntilDestroyed(this.destroyRef))
+                            .subscribe(() => {
+                                this.router.navigate(['/eventos/meus-eventos']);
+                            });
+                    }
                 }
             });
     }

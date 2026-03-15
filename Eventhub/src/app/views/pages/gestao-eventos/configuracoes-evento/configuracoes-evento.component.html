@@ -142,32 +142,31 @@
                     FINALIZAR EVENTO
                 </button>
 
-                <button 
-                    *ngIf="podeReativar(); else cancelarBtn" 
-                    mat-stroked-button 
-                    color="accent" 
-                    type="button" 
+                <button *ngIf="podeReativar(); else cancelarBtn" mat-stroked-button color="accent" type="button"
                     (click)="reativarEvento()">
                     <mat-icon>restart_alt</mat-icon>
                     REATIVAR EVENTO
                 </button>
-                
+
                 <ng-template #cancelarBtn>
-                    <button 
-                        mat-stroked-button 
-                        color="warn" 
-                        type="button" 
-                        (click)="cancelar()"
+                    <button mat-stroked-button color="warn" type="button" (click)="cancelar()"
                         [disabled]="eventoCancelado()">
                         <mat-icon>cancel</mat-icon>
                         CANCELAR EVENTO
                     </button>
                 </ng-template>
 
-                <button mat-flat-button color="warn" type="button" (click)="excluir()">
-                    <mat-icon>delete_forever</mat-icon>
-                    EXCLUIR PERMANENTEMENTE
-                </button>
+                <div class="excluir-section">
+                    <button mat-stroked-button color="warn" type="button" (click)="excluir()">
+                        <mat-icon>delete_forever</mat-icon>
+                        EXCLUIR PERMANENTEMENTE
+                    </button>
+                    <p class="excluir-aviso">
+                        <mat-icon>info</mat-icon>
+                        <span>A exclusão só é permitida se o evento não iniciou, não está concluído e não possui
+                            contribuições confirmadas ou em análise.</span>
+                    </p>
+                </div>
             </div>
         </mat-card>
 
