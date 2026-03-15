@@ -1,0 +1,245 @@
+@use "../variables" as *;
+@use "layout" as *;
+
+// Modal Card Base
+@mixin modal-card {
+  width: auto;
+  padding: $padding-lg $padding-lg;
+  text-align: center;
+  border-radius: $gap-lg;
+  max-width: 600px;
+  background: $cor-branco;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  @media (max-width: $break-tablet) {
+    padding: $padding $padding;
+    max-width: 90vw;
+  }
+
+  @media (max-width: $break-mobile) {
+    padding: $gap-lg $gap;
+    border-radius: $radius-card;
+  }
+}
+
+// Modal Icon Circle
+@mixin modal-icon-circle($size: 64px, $icon-size: 32px, $color: $cor-primaria) {
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  background: rgba($color, 0.1);
+  border: 2px solid rgba($color, 0.2);
+  @include flex-center;
+
+  svg, mat-icon {
+    width: $icon-size;
+    height: $icon-size;
+    font-size: $icon-size;
+    color: $color;
+    stroke-width: 2;
+  }
+
+  @media (max-width: $break-mobile) {
+    width: $size * 0.8;
+    height: $size * 0.8;
+
+    svg, mat-icon {
+      width: $icon-size * 0.8;
+      height: $icon-size * 0.8;
+      font-size: $icon-size * 0.8;
+    }
+  }
+}
+
+// Modal Title
+@mixin modal-title {
+  font-size: 24px;
+  font-weight: $font-peso-bold;
+  color: $cor-texto;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin: 0;
+
+  @media (max-width: $break-mobile) {
+    font-size: 20px;
+  }
+}
+
+// Modal Message
+@mixin modal-message {
+  margin: 0 0 $padding-lg 0;
+  color: $cor-texto-secundario;
+  font-size: $font-body;
+  line-height: 1.6;
+
+  @media (max-width: $break-mobile) {
+    font-size: $font-small;
+    margin-bottom: $gap;
+  }
+}
+
+// Modal Warning Text
+@mixin modal-warning-text {
+  display: block;
+  margin-top: $gap-sm;
+  margin-bottom: $gap-lg;
+  font-weight: $font-peso-bold;
+  color: $cor-vermelho;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  @media (max-width: $break-mobile) {
+    font-size: 16px;
+    margin-bottom: $gap;
+  }
+}
+
+// Modal Section Title
+@mixin modal-section-title {
+  display: block;
+  font-size: $font-small;
+  font-weight: $font-peso-medium;
+  color: $cor-texto-secundario;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: $padding 0 $gap 0;
+  text-align: center;
+
+  @media (max-width: $break-mobile) {
+    font-size: $font-small * 0.9;
+    margin: $gap 0 $gap-sm 0;
+  }
+}
+
+// Modal Details Card
+@mixin modal-details-card {
+  background: $cor-cinza-claro;
+  border: 1px solid $cor-cinza-borda;
+  border-radius: $radius-card;
+  padding: $gap;
+  margin: $gap-lg 0;
+  text-align: left;
+
+  p {
+    margin: 4px 0;
+    color: $cor-texto-secundario;
+    font-size: $font-body;
+
+    .label {
+      font-weight: $font-peso-medium;
+      color: $cor-texto;
+    }
+  }
+
+  @media (max-width: $break-mobile) {
+    padding: $gap-sm;
+    margin: $gap 0;
+
+    p {
+      font-size: $font-small;
+    }
+  }
+}
+
+// Modal Impact List
+@mixin modal-impact-list {
+  text-align: left;
+  margin: $gap-lg auto;
+  padding: 0;
+  list-style: none;
+  max-width: 400px;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    margin: $gap-sm 0;
+    color: $cor-texto;
+    font-size: $font-body;
+
+    &::before {
+      content: "•";
+      color: $cor-primaria;
+      font-size: 24px;
+      line-height: 1;
+      margin-right: $gap-sm;
+      flex-shrink: 0;
+    }
+  }
+
+  @media (max-width: $break-mobile) {
+    max-width: 100%;
+    margin: $gap auto;
+
+    li {
+      font-size: $font-small;
+      margin: 10px 0;
+
+      &::before {
+        font-size: 20px;
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+// Modal Actions Container
+@mixin modal-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: $gap-sm;
+  margin-top: $padding-lg;
+
+  @media (max-width: $break-mobile) {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: $gap-lg;
+  }
+}
+
+// Modal Button Cancel
+@mixin modal-button-cancel {
+  padding: $gap-sm $padding !important;
+  color: $cor-texto-secundario !important;
+  font-weight: $font-peso-medium !important;
+  border-radius: $radius-btn !important;
+  transition: all $transition-fast;
+  min-width: 120px;
+
+  &:hover {
+    background: $cor-cinza-claro !important;
+  }
+
+  @media (max-width: $break-mobile) {
+    width: 100%;
+    padding: 10px $gap !important;
+  }
+}
+
+// Modal Button Confirm (Primary)
+@mixin modal-button-confirm($color: $cor-primaria) {
+  padding: $gap-sm $padding !important;
+  background: $color !important;
+  color: $cor-branco !important;
+  font-weight: $font-peso-bold !important;
+  border-radius: $radius-btn !important;
+  box-shadow: 0 10px 15px -3px rgba($color, 0.3), 0 4px 6px -2px rgba($color, 0.2) !important;
+  transition: all $transition-fast;
+  min-width: 120px;
+
+  &:hover {
+    background: darken($color, 8%) !important;
+    transform: scale(0.98);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: $break-mobile) {
+    width: 100%;
+    padding: 10px $gap !important;
+  }
+}

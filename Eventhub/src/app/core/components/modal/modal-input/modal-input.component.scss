@@ -2,11 +2,12 @@
 @use 'mixins' as *;
 
 .modal-input {
-  padding: 20px;
+  padding: $gap-lg $padding;
   min-width: 400px;
 
-  @media (max-width: 600px) {
+  @media (max-width: $break-mobile) {
     min-width: 280px;
+    padding: $gap $gap-sm;
   }
 }
 
@@ -14,24 +15,31 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: $gap-sm;
 
   h2 {
     margin: 0;
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: $font-peso-medium;
+    color: $cor-texto;
   }
 
   .close-button {
     margin-right: -12px;
+    color: $cor-texto-secundario;
   }
 }
 
 .modal-message {
-  margin-bottom: 24px;
-  color: rgba(0, 0, 0, 0.7);
-  font-size: 0.95rem;
+  margin-bottom: $gap-lg;
+  color: $cor-texto-secundario;
+  font-size: $font-body;
   line-height: 1.5;
+
+  @media (max-width: $break-mobile) {
+    font-size: $font-small;
+    margin-bottom: $gap;
+  }
 }
 
 .full-width {
@@ -39,18 +47,29 @@
 }
 
 mat-dialog-actions {
-  margin-top: 16px;
+  margin-top: $gap;
   padding: 0;
-  gap: 8px;
+  gap: $gap-sm;
+  display: flex;
+  justify-content: flex-end;
+
+  @media (max-width: $break-mobile) {
+    flex-direction: column;
+  }
 }
 
 .btn-cancel {
-  margin-right: 8px;
+  @include modal-button-cancel;
+  margin-right: 0;
 }
 
 .btn-confirm {
+  @include modal-button-confirm;
+
   &:disabled {
-    background-color: rgba(0, 0, 0, 0.12) !important;
-    color: rgba(0, 0, 0, 0.26) !important;
+    background: $cor-cinza-medio !important;
+    color: $cor-cinza-claro !important;
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }

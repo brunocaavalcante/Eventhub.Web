@@ -1,59 +1,42 @@
-@use "variables" as *;
+@use 'mixins' as *;
+@use 'variables' as *;
 
 .host {
     display: block;
 }
 
 .modal-success-card {
-    width: 360px;
-    padding: 28px 28px 20px;
-    text-align: center;
+    @include modal-card;
+    min-width: 320px;
 }
 
 .modal-success-icon {
-    width: 56px;
-    height: 56px;
-    margin: 0 auto 18px auto;
-    border-radius: 50%;
-    background: rgba(76, 175, 80, 0.12);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    margin: 0 auto $gap auto;
 
-.modal-success-icon mat-icon {
-    color: #22c55e;
-    font-size: 28px;
+    .icon-circle {
+        @include modal-icon-circle(56px, 28px, $cor-sucesso);
+    }
 }
 
 .modal-success-title {
-    margin: 0 0 8px 0;
-    font-weight: 600;
+    margin: 0 0 $gap-sm 0;
+    font-weight: $font-peso-medium;
+    font-size: 22px;
+    color: $cor-texto;
+
+    @media (max-width: $break-mobile) {
+        font-size: 18px;
+    }
 }
 
 .modal-success-message {
-    margin: 0 0 18px 0;
-    color: rgba(0, 0, 0, 0.6);
-    font-size: 14px;
+    @include modal-message;
 }
 
 .modal-success-actions {
-    display: flex;
-    justify-content: center;
+    @include modal-actions;
 }
 
 .ok-btn {
-    background: #22c55e !important;
-    color: white;
-    min-width: 120px;
-    border-radius: 8px;
-    padding: 0.5rem 1.2rem !important;
-}
-
-@media (max-width: $break-mobile) {
-    .modal-success-card {
-        width: auto;
-        padding: 18px 18px 10px;
-        text-align: center;
-    }
+    @include modal-button-confirm($cor-sucesso);
 }

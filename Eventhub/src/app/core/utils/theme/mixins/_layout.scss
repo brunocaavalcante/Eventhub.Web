@@ -1,0 +1,33 @@
+@use "../variables" as *;
+
+@mixin container($max-width: 1200px) {
+  display: flex;
+  flex-direction: column;
+  max-width: $max-width;
+  margin: auto;
+  padding: 0 40px 40px 40px;
+
+  @media (max-width: 600px) {
+    padding: 0 15px 15px 15px;
+  }
+}
+
+@mixin grid-columns($cols: 3, $gap: 20px) {
+  display: grid;
+  grid-template-columns: repeat($cols, 1fr);
+  gap: $gap;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
