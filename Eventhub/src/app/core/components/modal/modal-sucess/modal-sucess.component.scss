@@ -8,6 +8,10 @@
 .modal-success-card {
     @include modal-card;
     min-width: 320px;
+
+    @media (max-width: $break-mobile) {
+        min-width: 280px;
+    }
 }
 
 .modal-success-icon {

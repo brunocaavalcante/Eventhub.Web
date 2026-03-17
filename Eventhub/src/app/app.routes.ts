@@ -30,5 +30,9 @@ export const routes: Routes = [
     {
         path: 'participar-evento',
         loadChildren: () => import('./views/pages/confirmacao-convite/confirmacao-convite.route').then(m => m.routes)
+    },
+    {
+        path: 'notificacoes',
+        loadComponent: () => import('./views/pages/notificacoes/notificacoes.component').then(m => m.NotificacoesComponent)
     }
 ];

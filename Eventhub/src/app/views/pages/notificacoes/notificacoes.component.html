@@ -1,0 +1,87 @@
+<div class="notificacoes-container">
+  <ng-container *ngIf="notificacoes().length > 0; else emptyState">
+    <!-- Header -->
+    <div class="notificacoes-header">
+      <div class="header-info">
+        <h1 class="titulo">Notificações</h1>
+        <p class="subtitulo">
+          Você tem<span class="destaque">{{ contadorNaoLidas() }} não lida{{ contadorNaoLidas() === 1 ? '' : 's' }}</span>
+        </p>
+      </div>
+
+      <button mat-button 
+              class="btn-marcar-todas"
+              (click)="marcarTodasComoLidas()"
+              [disabled]="contadorNaoLidas() === 0">
+        <mat-icon>done_all</mat-icon>
+        Marcar todas como lidas
+      </button>
+    </div>
+
+    <!-- Grupos de Notificações -->
+    <section *ngFor="let grupo of gruposNotificacoes()" class="grupo-notificacoes">
+      <div class="grupo-titulo">
+        <h3>{{ grupo.titulo }}</h3>
+      </div>
+
+      <div class="lista-notificacoes">
+        <div *ngFor="let notificacao of grupo.notificacoes"
+             class="notificacao-card"
+             [class.nao-lida]="!notificacao.lida"
+             (click)="marcarComoLida(notificacao)">
+          
+          <!-- Bolinha indicadora de não lida -->
+          <div class="indicador-nao-lida" *ngIf="!notificacao.lida"></div>
+          
+          <!-- Ícone -->
+          <div class="icone-container"
+               [style.background]="obterCorIcone(notificacao.prioridade).bg">
+            <mat-icon [style.color]="obterCorIcone(notificacao.prioridade).icon">
+              {{ obterCorIcone(notificacao.prioridade).icone }}
+            </mat-icon>
+          </div>
+
+          <!-- Conteúdo -->
+          <div class="notificacao-conteudo">
+            <div class="cabecalho">
+              <h4 class="titulo-notificacao">{{ notificacao.titulo }}</h4>
+              <span class="tempo">{{ formatarDataRelativa(notificacao.dataEnvio) }}</span>
+            </div>
+
+            <p class="descricao">{{ notificacao.descricao }}</p>
+
+            <!-- Ações (aparecem no hover) -->
+            <div class="acoes">
+              <button *ngIf="notificacao.linkAcao"
+                      mat-icon-button
+                      class="btn-acao"
+                      [routerLink]="notificacao.linkAcao"
+                      matTooltip="Ver detalhes"
+                      matTooltipPosition="left"
+                      (click)="$event.stopPropagation()">
+                <mat-icon>open_in_new</mat-icon>
+              </button>
+
+              <button mat-icon-button
+                      class="btn-excluir"
+                      matTooltip="Excluir notificação"
+                      matTooltipPosition="left"
+                      (click)="remover(notificacao, $event)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <!-- Estado vazio -->
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <mat-icon>notifications_none</mat-icon>
+      <h2>Você não tem notificações</h2>
+      <p>Quando houver novidades sobre seus eventos, elas aparecerão aqui.</p>
+    </div>
+  </ng-template>
+</div>
