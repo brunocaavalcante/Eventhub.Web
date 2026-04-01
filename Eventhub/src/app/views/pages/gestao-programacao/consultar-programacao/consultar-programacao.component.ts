@@ -145,4 +145,8 @@ export class ConsultarProgramacaoComponent extends BaseComponent implements OnIn
     const icones = ['favorite', 'church', 'restaurant', 'cake', 'music_note', 'local_bar', 'photo_camera', 'celebration'];
     return icones[index % icones.length];
   }
+
+  voltar(): void {
+    this.router.navigate(['/eventos/home', this.eventoId]);
+  }
 }

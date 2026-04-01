@@ -278,7 +278,7 @@
     }
 
     .info-descricao {
-      font-size: 0.875rem;
+      @include font-size(0.875rem);
       color: $cor-cinza-medio;
       margin: 0.25rem 0 0.75rem 0;
       line-height: 1.5;
@@ -351,7 +351,7 @@
   text-align: center;
 
   .vazia-icone {
-    font-size: 5rem;
+    @include font-size(5rem);
     width: 5rem;
     height: 5rem;
     color: $cor-primaria-clara;
@@ -359,14 +359,14 @@
   }
 
   .vazia-titulo {
-    font-size: 1.5rem;
+    @include font-size(1.5rem);
     font-weight: 700;
     color: $cor-preto;
     margin: 0 0 0.5rem 0;
   }
 
   .vazia-descricao {
-    font-size: 1rem;
+    @include font-size(1rem);
     color: $cor-cinza-medio;
     margin: 0 0 2rem 0;
   }

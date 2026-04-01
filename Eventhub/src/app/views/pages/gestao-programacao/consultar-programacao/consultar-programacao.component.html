@@ -1,6 +1,13 @@
 <!-- Main Content -->
 <main class="programacao-main">
   <!-- Page Header -->
+  <div class="header-voltar">
+    <button mat-button class="btn-voltar" (click)="voltar()">
+      <mat-icon>arrow_back</mat-icon>
+      Voltar para Home
+    </button>
+  </div>
+
   <div class="page-header">
     <div class="page-header-info">
       <h2 class="page-title">Roteiro do Grande Dia</h2>
@@ -10,11 +17,9 @@
 
   <!-- Timeline de Programações -->
   <div class="programacao-timeline" *ngIf="programacoesFiltradas().length > 0; else semProgramacoes">
-    <div class="timeline-item" 
-         *ngFor="let programacao of programacoesFiltradas(); let last = last; let i = index"
-         [class.last-item]="last"
-         [class.destaque]="programacao.idStatus === 2">
-      
+    <div class="timeline-item" *ngFor="let programacao of programacoesFiltradas(); let last = last; let i = index"
+      [class.last-item]="last" [class.destaque]="programacao.idStatus === 2">
+
       <!-- Timeline Icon -->
       <div class="timeline-icon-wrapper">
         <div class="timeline-icon">
@@ -107,9 +112,6 @@
 </main>
 
 <!-- FAB Mobile -->
-<button *ngIf="isMobile() && programacoes().length > 0" 
-        mat-fab 
-        class="btn-fab-mobile" 
-        (click)="adicionarProgramacao()">
+<button *ngIf="isMobile() && programacoes().length > 0" mat-fab class="btn-fab-mobile" (click)="adicionarProgramacao()">
   <mat-icon>add</mat-icon>
 </button>
