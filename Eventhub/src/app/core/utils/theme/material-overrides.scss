@@ -1,4 +1,5 @@
 @use 'variables' as *;
+@use 'mixins' as *;
 
 // ========================================
 // Customizações de componentes Angular Material
@@ -11,6 +12,7 @@
 // Estilos gerais (desktop e mobile)
 .mat-stepper-horizontal,
 .mat-stepper-vertical {
+
   // Ícones dos steps
   .mat-step-icon {
     background-color: $cor-primaria;
@@ -28,6 +30,7 @@
 
   // Ajustes específicos para mobile
   @media (max-width: $break-mobile) {
+
     // Header dos steps
     .mat-step-header {
       padding: $gap-sm;
@@ -88,4 +91,63 @@
 // ========================================
 .cdk-overlay-pane.mat-mdc-dialog-panel {
   max-width: 90vw !important; // Permite modais maiores, limitado a 90% da viewport
+}
+
+// ========================================
+// Mat Raised Button
+// ========================================
+.mat-mdc-raised-button {
+  padding: $gap-sm $padding !important;
+  background: $cor-primaria !important;
+  color: white !important;
+  font-weight: 500 !important;
+  box-shadow: 0 8px 15px -3px rgba($cor-primaria, 0.3), 0 4px 5px -2px rgba($cor-primaria, 0.2) !important;
+  border-radius: $radius-btn !important;
+  transition: all $transition-fast !important;
+
+  &:hover {
+    background: darken($cor-primaria, 8%) !important;
+    transform: scale(0.98);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: $break-mobile) {
+    width: 100%;
+    padding: 10px $gap !important;
+  }
+}
+
+// ========================================
+// Mat Stroked Button
+// ========================================
+.mat-mdc-outlined-button {
+  background: transparent !important;
+  color: $cor-primaria !important;
+  font-weight: 500 !important;
+  border: 2px solid $cor-primaria !important;
+  border-radius: $radius-btn !important;
+  transition: all $transition-fast !important;
+
+  &:hover,
+  &:focus {
+    background: $cor-primaria !important;
+    color: white !important;
+    transform: scale(0.98);
+    box-shadow: 0 8px 15px -3px rgba($cor-primaria, 0.3), 0 4px 5px -2px rgba($cor-primaria, 0.2) !important;
+  }
+
+  &.mat-mdc-button-disabled {
+    color: $cor-cinza-medio !important;
+    border-color: $cor-cinza-borda !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    opacity: 0.6 !important;
+  }
+
+  &.mat-warn {
+    @include btn-outline-error();
+  }
 }

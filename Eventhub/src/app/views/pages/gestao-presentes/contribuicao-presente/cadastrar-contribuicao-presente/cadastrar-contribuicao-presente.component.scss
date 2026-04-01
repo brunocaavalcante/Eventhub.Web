@@ -265,9 +265,10 @@
   }
 
   .btn-cancelar {
-    @include btn-primary(none, $cor-primaria);
+    @include btn-secondary;
     padding: 0 24px;
     height: 42px;
+    min-width: auto;
   }
 
   .btn-confirmar {
