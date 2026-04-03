@@ -1,0 +1,181 @@
+<div class="container">
+    <div class="header-voltar">
+        <button mat-button class="btn-voltar" (click)="voltar()">
+            <mat-icon>arrow_back</mat-icon>
+            Voltar para Home
+        </button>
+    </div>
+    <div class="header">
+        <div class="header-content">
+            <h1>Configurações do Evento</h1>
+            <p class="evento-nome">{{ eventoNome() }}</p>
+        </div>
+        <span class="status" [ngClass]="eventoStatus().class">
+            {{ eventoStatus().label }}
+        </span>
+    </div>
+
+    <form [formGroup]="form" class="config-form">
+
+        <!-- Informações Básicas -->
+        <mat-card class="card-secao">
+            <div class="card-header">
+                <mat-icon>info</mat-icon>
+                <h2>Informações Básicas</h2>
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Nome do Evento</mat-label>
+                <input matInput formControlName="nome">
+                @if (form.get('nome')?.hasError('required') && form.get('nome')?.touched) {
+                <mat-error>Nome obrigatório</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput formControlName="descricao" rows="3"></textarea>
+                <mat-hint align="end">{{ form.get('descricao')?.value?.length || 0 }}/500</mat-hint>
+            </mat-form-field>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Tipo de Evento</mat-label>
+                    <mat-select formControlName="idTipoEvento">
+                        @for (tipo of tiposEvento(); track tipo.id) {
+                        <mat-option [value]="tipo.id">{{ tipo.nome }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Máximo de Convidados</mat-label>
+                    <input matInput type="number" formControlName="maxConvidado">
+                </mat-form-field>
+            </div>
+
+            <div class="image-section">
+                <label>Foto de Capa</label>
+                <app-drop-zone-image
+                    [imagens]="form.get('fotoCapaBase64')?.value ? [form.get('fotoCapaBase64')?.value] : []"
+                    (imagensChange)="onImagensSelecionadas($event)">
+                </app-drop-zone-image>
+            </div>
+        </mat-card>
+
+        <!-- Data e Local -->
+        <mat-card class="card-secao">
+            <div class="card-header">
+                <mat-icon>place</mat-icon>
+                <h2>Data e Local</h2>
+            </div>
+
+            <mat-radio-group formControlName="tipoData" class="radio-group">
+                <mat-radio-button value="unica">Data Única</mat-radio-button>
+                <mat-radio-button value="periodo">Período</mat-radio-button>
+            </mat-radio-group>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Data de Início</mat-label>
+                    <input matInput [matDatepicker]="pickerInicio" formControlName="dataInicio">
+                    <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerInicio></mat-datepicker>
+                </mat-form-field>
+
+                @if (form.get('tipoData')?.value === 'periodo') {
+                <mat-form-field appearance="outline">
+                    <mat-label>Data de Término</mat-label>
+                    <input matInput [matDatepicker]="pickerFim" formControlName="dataFim">
+                    <mat-datepicker-toggle matSuffix [for]="pickerFim"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerFim></mat-datepicker>
+                </mat-form-field>
+                }
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label>CEP</mat-label>
+                <input matInput formControlName="cep" mask="00000-000" (blur)="buscarCep()">
+                <button mat-icon-button matSuffix (click)="buscarCep()" type="button">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Logradouro</mat-label>
+                <input matInput formControlName="logradouro">
+            </mat-form-field>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Número</mat-label>
+                    <input matInput formControlName="numero">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Cidade</mat-label>
+                    <input matInput formControlName="cidade">
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Ponto de Referência</mat-label>
+                <input matInput formControlName="pontoReferencia">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Nome do Local</mat-label>
+                <input matInput formControlName="nomeLocal">
+            </mat-form-field>
+        </mat-card>
+
+        <!-- Zona de Perigo -->
+        <mat-card class="card-perigo">
+            <div class="card-header">
+                <mat-icon>warning</mat-icon>
+                <h2>Zona de Alerta</h2>
+            </div>
+
+            <div class="acoes-perigo">
+                <button mat-stroked-button type="button" (click)="arquivar()">
+                    <mat-icon>archive</mat-icon>
+                    FINALIZAR EVENTO
+                </button>
+
+                <button *ngIf="podeReativar(); else cancelarBtn" mat-stroked-button color="accent" type="button"
+                    (click)="reativarEvento()">
+                    <mat-icon>restart_alt</mat-icon>
+                    REATIVAR EVENTO
+                </button>
+
+                <ng-template #cancelarBtn>
+                    <button mat-stroked-button color="warn" type="button" (click)="cancelar()"
+                        [disabled]="eventoCancelado()">
+                        <mat-icon>cancel</mat-icon>
+                        CANCELAR EVENTO
+                    </button>
+                </ng-template>
+
+                <div class="excluir-section">
+                    <button mat-stroked-button color="warn" type="button" (click)="excluir()">
+                        <mat-icon>delete_forever</mat-icon>
+                        EXCLUIR PERMANENTEMENTE
+                    </button>
+                    <p class="excluir-aviso">
+                        <mat-icon>info</mat-icon>
+                        <span>A exclusão só é permitida se o evento não iniciou, não está concluído e não possui
+                            contribuições confirmadas ou em análise.</span>
+                    </p>
+                </div>
+            </div>
+        </mat-card>
+
+        <!-- Ações -->
+        <div class="acoes">
+            <button mat-flat-button color="primary" type="button" [disabled]="form.invalid" (click)="salvar()">
+                <mat-icon>save</mat-icon>
+                SALVAR CONFIGURAÇÕES
+            </button>
+        </div>
+    </form>
+</div>

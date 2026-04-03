@@ -5,7 +5,10 @@ import { UsuarioService } from '../../../../core/services/usuario.service';
 import { UsuarioInfoDTO } from '../../../../core/models/usuario.model';
 import { By } from '@angular/platform-browser';
 import { EventEmitter } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { NotificacaoService } from '../../../../core/services/notificacao.service';
+import { of } from 'rxjs';
 
 class MockRouter {
   navigate = jest.fn();
@@ -27,6 +30,11 @@ class MockUsuarioService {
   }
 }
 
+class MockNotificacaoService {
+  obterContadorNaoLidas = jest.fn().mockReturnValue(of({ executouComSucesso: true, data: 0 }));
+  buscarNaoLidas = jest.fn().mockReturnValue(of({ executouComSucesso: true, data: [] }));
+}
+
 describe('MenuSideComponent', () => {
   let component: MenuSideComponent;
   let fixture: ComponentFixture<MenuSideComponent>;
@@ -36,8 +44,11 @@ describe('MenuSideComponent', () => {
       await TestBed.configureTestingModule({
         imports: [MenuSideComponent],
         providers: [
+          provideHttpClient(),
+          provideHttpClientTesting(),
           { provide: Router, useClass: MockRouter },
-          { provide: UsuarioService, useClass: MockUsuarioService }
+          { provide: UsuarioService, useClass: MockUsuarioService },
+          { provide: NotificacaoService, useClass: MockNotificacaoService }
         ]
       }).compileComponents();
     fixture = TestBed.createComponent(MenuSideComponent);

@@ -1,0 +1,153 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// ========================================
+// Customizações de componentes Angular Material
+// ========================================
+
+// ========================================
+// Mat Stepper
+// ========================================
+
+// Estilos gerais (desktop e mobile)
+.mat-stepper-horizontal,
+.mat-stepper-vertical {
+
+  // Ícones dos steps
+  .mat-step-icon {
+    background-color: $cor-primaria;
+  }
+
+  .mat-step-icon-selected {
+    background-color: $cor-primaria-escura;
+  }
+
+  // Labels dos steps
+  .mat-step-label {
+    font-size: $font-body;
+    font-weight: $font-peso-medium;
+  }
+
+  // Ajustes específicos para mobile
+  @media (max-width: $break-mobile) {
+
+    // Header dos steps
+    .mat-step-header {
+      padding: $gap-sm;
+      margin-top: 10px;
+    }
+
+    // ========================================
+    // Stepper Horizontal (Mobile)
+    // ========================================
+    .mat-horizontal-stepper-header {
+      padding: 0 !important;
+      height: auto;
+      min-height: 56px;
+    }
+
+    .mat-horizontal-stepper-header-container {
+      padding: 0 !important;
+    }
+
+    .mat-horizontal-content-container,
+    .mat-horizontal-stepper-content {
+      padding: 0 !important;
+    }
+
+    // ========================================
+    // Stepper Vertical (Mobile)
+    // ========================================
+    .mat-vertical-stepper-header {
+      padding: 0 !important;
+      height: auto;
+    }
+
+    .mat-vertical-content,
+    .mat-vertical-stepper-content {
+      padding: 0 !important;
+    }
+
+    .mat-vertical-content-container {
+      margin-left: 0;
+    }
+
+    // Remove linha vertical do stepper
+    .mat-stepper-vertical-line::before {
+      display: none !important;
+    }
+  }
+}
+
+// ========================================
+// Mat Card
+// ========================================
+.mat-mdc-card-content {
+  margin-top: 11px;
+}
+
+// ========================================
+// Mat Dialog
+// ========================================
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-width: 90vw !important; // Permite modais maiores, limitado a 90% da viewport
+}
+
+// ========================================
+// Mat Raised Button
+// ========================================
+.mat-mdc-raised-button {
+  padding: $gap-sm $padding !important;
+  background: $cor-primaria !important;
+  color: white !important;
+  font-weight: 500 !important;
+  box-shadow: 0 8px 15px -3px rgba($cor-primaria, 0.3), 0 4px 5px -2px rgba($cor-primaria, 0.2) !important;
+  border-radius: $radius-btn !important;
+  transition: all $transition-fast !important;
+
+  &:hover {
+    background: darken($cor-primaria, 8%) !important;
+    transform: scale(0.98);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: $break-mobile) {
+    width: 100%;
+    padding: 10px $gap !important;
+  }
+}
+
+// ========================================
+// Mat Stroked Button
+// ========================================
+.mat-mdc-outlined-button {
+  background: transparent !important;
+  color: $cor-primaria !important;
+  font-weight: 500 !important;
+  border: 2px solid $cor-primaria !important;
+  border-radius: $radius-btn !important;
+  transition: all $transition-fast !important;
+
+  &:hover,
+  &:focus {
+    background: $cor-primaria !important;
+    color: white !important;
+    transform: scale(0.98);
+    box-shadow: 0 8px 15px -3px rgba($cor-primaria, 0.3), 0 4px 5px -2px rgba($cor-primaria, 0.2) !important;
+  }
+
+  &.mat-mdc-button-disabled {
+    color: $cor-cinza-medio !important;
+    border-color: $cor-cinza-borda !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    opacity: 0.6 !important;
+  }
+
+  &.mat-warn {
+    @include btn-outline-error();
+  }
+}

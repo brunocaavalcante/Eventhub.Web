@@ -1,0 +1,416 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.programacao-main {
+ @include container;
+}
+
+// ============================================================================
+// PAGE HEADER
+// ============================================================================
+.page-header {
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  @media (min-width: $break-tablet) {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .page-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    .page-title {
+      font-size: 1rem;
+      font-weight: 800;
+      margin: 0;
+      color: $cor-preto;
+    }
+
+    .page-subtitle {
+      font-size: 1rem;
+      font-weight: 500;
+      color: $cor-cinza-medio;
+      margin: 0;
+    }
+  }
+
+  @media (max-width: $break-mobile) {
+    .page-header-info {
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .page-subtitle {
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// TIMELINE
+// ============================================================================
+.programacao-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+
+  @media (max-width: $break-mobile) {
+    gap: 1rem;
+  }
+
+  .timeline-icon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .timeline-icon {
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 3rem;
+      width: 3rem;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: $cor-branco;
+      border: 4px solid $cor-primaria-clara-2;
+      color: $cor-primaria;
+      box-shadow: $sombra-card-leve;
+
+      @media (max-width: $break-mobile) {
+        height: 2.5rem;
+        width: 2.5rem;
+        border-width: 3px;
+      }
+
+      mat-icon {
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+
+        @media (max-width: $break-mobile) {
+          font-size: 1.25rem;
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+      }
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 1.5rem;
+      top: 3rem;
+      bottom: -1.5rem;
+      width: 2px;
+      background: linear-gradient(to bottom, rgba($cor-primaria, 0.27) 0%, transparent 100%);
+
+      @media (max-width: $break-mobile) {
+        left: 1.25rem;
+        top: 2.5rem;
+        bottom: -1rem;
+      }
+    }
+  }
+
+  &.last-item .timeline-line {
+    display: none;
+  }
+
+  .timeline-card {
+    @include card;
+    flex: 1;
+    padding: 0;
+    box-shadow: 0 4px 20px -4px rgba($cor-primaria, 0.08), 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px -4px rgba($cor-primaria, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+    }
+
+    &.card-destaque {
+      border-left: 4px solid $cor-primaria;
+    }
+
+    mat-card-content {
+      padding: 1.25rem 1.5rem;
+
+      @media (max-width: $break-mobile) {
+        padding: 1rem;
+      }
+    }
+  }
+
+  .card-data-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background: $cor-primaria-clara-2;
+    color: $cor-primaria;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    width: fit-content;
+    margin-bottom: 1rem;
+
+    @media (max-width: $break-mobile) {
+      margin-bottom: 0.75rem;
+      font-size: 0.625rem;
+      padding: 0.1875rem 0.625rem;
+    }
+
+    mat-icon {
+      font-size: 0.875rem;
+      width: 0.875rem;
+      height: 0.875rem;
+
+      @media (max-width: $break-mobile) {
+        font-size: 0.75rem;
+        width: 0.75rem;
+        height: 0.75rem;
+      }
+    }
+  }
+
+  .card-layout {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    @media (max-width: $break-mobile) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.875rem;
+      position: relative;
+    }
+  }
+
+  .card-horario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    padding: 0.25rem 0;
+
+    @media (max-width: $break-mobile) {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.5rem;
+      min-width: auto;
+      width: 100%;
+      padding: 0;
+    }
+
+    .horario-label {
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: rgba($cor-primaria, 0.5);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.125rem;
+
+      @media (max-width: $break-mobile) {
+        margin-bottom: 0;
+      }
+    }
+
+    .horario-valor {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: $cor-preto;
+      line-height: 1;
+
+      @media (max-width: $break-mobile) {
+        font-size: 1.375rem;
+      }
+    }
+  }
+
+  .card-info {
+    flex: 1;
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .info-titulo {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: $cor-preto;
+      margin: 0;
+      transition: color $transition-fast;
+
+      &:hover {
+        color: $cor-primaria;
+      }
+    }
+
+    .badge-principal {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.125rem 0.5rem;
+      border-radius: $radius-btn;
+      font-size: 0.625rem;
+      font-weight: 700;
+      background: $cor-primaria-clara;
+      color: $cor-primaria;
+    }
+
+    .info-descricao {
+      @include font-size(0.875rem);
+      color: $cor-cinza-medio;
+      margin: 0.25rem 0 0.75rem 0;
+      line-height: 1.5;
+    }
+
+    .info-detalhes {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+
+      .detalhe-item {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        font-size: 0.8125rem;
+        color: $cor-cinza-medio;
+
+        mat-icon {
+          font-size: 1rem;
+          width: 1rem;
+          height: 1rem;
+          color: $cor-primaria;
+        }
+      }
+    }
+  }
+
+  .card-acoes {
+    display: flex;
+    align-items: flex-start;
+
+    @media (max-width: $break-mobile) {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    .btn-acoes {
+      color: rgba($cor-cinza-medio, 0.5);
+      transition: all $transition-fast;
+
+      &:hover {
+        background: $cor-cinza-claro;
+        color: $cor-primaria;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// BOTÃO ADICIONAR NOVO MOMENTO
+// ============================================================================
+.timeline-add-button {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px dashed $cor-primaria-clara;
+  display: flex;
+  justify-content: center;
+}
+
+// ============================================================================
+// ESTADO VAZIO
+// ============================================================================
+.programacao-vazia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  .vazia-icone {
+    @include font-size(5rem);
+    width: 5rem;
+    height: 5rem;
+    color: $cor-primaria-clara;
+    margin-bottom: 1.5rem;
+  }
+
+  .vazia-titulo {
+    @include font-size(1.5rem);
+    font-weight: 700;
+    color: $cor-preto;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .vazia-descricao {
+    @include font-size(1rem);
+    color: $cor-cinza-medio;
+    margin: 0 0 2rem 0;
+  }
+
+  .btn-adicionar-vazio {
+    @include btn-primary;
+    gap: 0.5rem;
+  }
+}
+
+// ============================================================================
+// FAB MOBILE
+// ============================================================================
+.btn-fab-mobile {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  width: 45px !important;
+  height: 45px !important;
+  padding: 0 !important;
+  background-color: $cor-primaria !important;
+  color: $cor-branco;
+  box-shadow: 0 8px 24px rgba($cor-primaria, 0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &:hover {
+    background-color: $cor-secundaria !important;
+  }
+
+  mat-icon {
+    font-size: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (min-width: $break-mobile) {
+    display: none !important;
+  }
+}

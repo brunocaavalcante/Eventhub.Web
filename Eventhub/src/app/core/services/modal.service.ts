@@ -41,7 +41,7 @@ export class ModalService {
     return this.openErrorModal({
       title: 'Erro na Operação',
       message
-    });
+    }, { width: '500px' });
   }
 
   openValidationErrorModal(message: string): Observable<DialogResult> {
@@ -49,21 +49,21 @@ export class ModalService {
       title: 'Erro de Validação',
       message,
       okLabel: 'OK'
-    });
+    }, { width: '500px' });
   }
 
   openAccessDeniedModal(): Observable<DialogResult> {
     return this.openErrorModal({
       title: 'Acesso Negado',
       message: 'Você não tem permissão para acessar este recurso.'
-    });
+    }, { width: '500px' });
   }
 
   openNotFoundModal(recurso: string = 'recurso'): Observable<DialogResult> {
     return this.openErrorModal({
       title: 'Não Encontrado',
       message: `O ${recurso} solicitado não foi encontrado.`
-    });
+    }, { width: '500px' });
   }
 
   openConnectionErrorModal(url?: string): Observable<DialogResult> {
@@ -78,7 +78,7 @@ export class ModalService {
   }
 
   openCustomErrorModal(title: string, message: string, okLabel = 'OK'): Observable<DialogResult> {
-    return this.openErrorModal({ title, message, okLabel });
+    return this.openErrorModal({ title, message, okLabel }, { width: '500px' });
   }
 
   openSessionExpiredModal(): Observable<DialogResult> {
@@ -89,7 +89,7 @@ export class ModalService {
   }
 
   openSuccessModal(
-    data?: ModalSucessData,
+    data: ModalSucessData,
     config?: MatDialogConfig<ModalSucessData>
   ): Observable<DialogResult> {
     return this.openDialog(ModalSucessComponent, data, config);

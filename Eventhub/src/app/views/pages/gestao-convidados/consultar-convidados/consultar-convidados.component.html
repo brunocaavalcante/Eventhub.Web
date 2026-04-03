@@ -1,20 +1,14 @@
 <div class="container">
-    <div class="hd-group-btns">
-        <div class="btn-convidados" [ngClass]="{active: tabAtiva === 'convidados'}" (click)="tabAtiva = 'convidados'">
-            <mat-icon>people</mat-icon>
-            Convidados
-        </div>
-        <div class="btn-convite" [ngClass]="{active: tabAtiva === 'convite'}" (click)="tabAtiva = 'convite'">
-            <mat-icon>email</mat-icon>
-            Enviar Convite
-        </div>
+    <div class="header-voltar">
+        <button mat-button class="btn-voltar" (click)="voltar()">
+            <mat-icon>arrow_back</mat-icon>
+            Voltar para Home
+        </button>
     </div>
-
-    <div *ngIf="tabAtiva === 'convidados'">
-        <div class="convidados-header">
-            <div class="convidados-header-titles">
-                <h1 class="convidados-title">Lista de Convidados</h1>
-                <div class="convidados-subtitle">Acompanhe as respostas dos seus convidados.</div>
+    <div class="convidados-header">
+        <div class="convidados-header-titles">
+            <h1 class="convidados-title">Participantes Confirmados</h1>
+            <div class="convidados-subtitle">Acompanhe quem se cadastrou no evento através do link compartilhado.</div>
             </div>
             <div class="convidados-actions">
                 <mat-form-field appearance="outline" class="convidados-search">
@@ -34,9 +28,9 @@
                         <mat-option value="PendenteEnvio">Pendente envio convite</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <button mat-flat-button color="accent" class="novo-convidado-btn"
-                    routerLink="/convidados/cadastrar/{{eventoId}}">
-                    <mat-icon>add</mat-icon> Adicionar Convidado
+                <button mat-raised-button color="primary" class="btn-adicionar" (click)="adicionarConvidado()">
+                    <mat-icon>person_add</mat-icon>
+                    Adicionar Convidado
                 </button>
             </div>
         </div>
@@ -48,7 +42,7 @@
                 </div>
                 <div class="convidado-card" *ngFor="let convidado of confirmados()">
                     <ng-container *ngIf="convidado?.foto; else userIcon1">
-                        <img [src]="convidado?.foto" class="convidado-avatar">
+                        <img [src]="convidado?.foto" alt="{{convidado.nome}}" class="convidado-avatar">
                     </ng-container>
                     <ng-template #userIcon1>
                         <mat-icon class="convidado-avatar">person</mat-icon>
@@ -59,9 +53,19 @@
                             +{{convidado.quantidadeAcompanhantes}}
                             acompanhante{{convidado.quantidadeAcompanhantes > 1 ? 's' : ''}}</div>
                     </div>
-                    <button mat-icon-button>
+                    <button mat-icon-button [matMenuTriggerFor]="menuConfirmado">
                         <mat-icon>more_vert</mat-icon>
                     </button>
+                    <mat-menu #menuConfirmado="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remover</span>
+                        </button>
+                    </mat-menu>
                 </div>
             </div>
             <div class="convidados-col">
@@ -70,7 +74,7 @@
                 </div>
                 <div class="convidado-card" *ngFor="let convidado of pendentes()">
                     <ng-container *ngIf="convidado.foto; else userIcon2">
-                        <img [src]="convidado.foto" class="convidado-avatar">
+                        <img [src]="convidado.foto" alt="{{convidado.nome}}" class="convidado-avatar">
                     </ng-container>
                     <ng-template #userIcon2>
                         <mat-icon class="convidado-avatar">person</mat-icon>
@@ -79,9 +83,19 @@
                         <div class="convidado-nome">{{convidado.nome}}</div>
                         <div class="convidado-extra">Nenhuma resposta</div>
                     </div>
-                    <button mat-icon-button>
+                    <button mat-icon-button [matMenuTriggerFor]="menuPendente">
                         <mat-icon>more_vert</mat-icon>
                     </button>
+                    <mat-menu #menuPendente="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remover</span>
+                        </button>
+                    </mat-menu>
                 </div>
             </div>
             <div class="convidados-col">
@@ -90,7 +104,7 @@
                 </div>
                 <div class="convidado-card" *ngFor="let convidado of ausentes()">
                     <ng-container *ngIf="convidado.foto; else userIcon3">
-                        <img [src]="convidado.foto" class="convidado-avatar">
+                        <img [src]="convidado.foto" alt="{{convidado.nome}}" class="convidado-avatar">
                     </ng-container>
                     <ng-template #userIcon3>
                         <mat-icon class="convidado-avatar">person</mat-icon>
@@ -98,9 +112,19 @@
                     <div class="convidado-info">
                         <div class="convidado-nome">{{convidado.nome}}</div>
                     </div>
-                    <button mat-icon-button>
+                    <button mat-icon-button [matMenuTriggerFor]="menuAusente">
                         <mat-icon>more_vert</mat-icon>
                     </button>
+                    <mat-menu #menuAusente="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remover</span>
+                        </button>
+                    </mat-menu>
                 </div>
             </div>
             <div class="convidados-col">
@@ -109,18 +133,36 @@
                 </div>
                 <div class="convidado-card" *ngFor="let convidado of pendenteEnvio()">
                     <ng-container *ngIf="convidado.foto; else userIcon4">
-                        <img [src]="convidado.foto" class="convidado-avatar">
+                        <img [src]="convidado.foto" alt="{{convidado.nome}}" class="convidado-avatar">
                     </ng-container>
                     <ng-template #userIcon4>
                         <mat-icon class="convidado-avatar">person</mat-icon>
                     </ng-template>
                     <div class="convidado-info">
                         <div class="convidado-nome">{{convidado.nome}}</div>
+                        <div class="convidado-telefone" *ngIf="convidado.telefone">
+                            <mat-icon>phone</mat-icon>
+                            {{convidado.telefone}}
+                        </div>
                         <div class="convidado-extra">Aguardando envio</div>
                     </div>
-                    <button mat-icon-button>
+                    <button mat-icon-button [matMenuTriggerFor]="menuPendenteEnvio">
                         <mat-icon>more_vert</mat-icon>
                     </button>
+                    <mat-menu #menuPendenteEnvio="matMenu">
+                        <button mat-menu-item (click)="enviarConvite(convidado)">
+                            <mat-icon>send</mat-icon>
+                            <span>Enviar convite</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remover</span>
+                        </button>
+                    </mat-menu>
                 </div>
             </div>
             <!-- Mensagem quando nenhuma lista tem resultados -->
@@ -131,13 +173,13 @@
                         <mat-icon>search_off</mat-icon>
                     </div>
                     <div class="nenhum-resultado-titulo">Nenhum resultado encontrado</div>
-                    <div class="nenhum-resultado-sub">Nenhum convidado encontrado com os critérios de pesquisa.</div>
+                    <div class="nenhum-resultado-sub">Nenhum participante encontrado com os critérios de pesquisa.</div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div *ngIf="tabAtiva === 'convite'">
-        <app-enviar-convite></app-enviar-convite>
-    </div>
 </div>
+
+<!-- FAB Mobile -->
+<button mat-fab class="btn-fab-mobile" (click)="adicionarConvidado()">
+    <mat-icon>person_add</mat-icon>
+</button>

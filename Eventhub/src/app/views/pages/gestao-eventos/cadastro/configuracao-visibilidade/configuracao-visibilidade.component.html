@@ -1,0 +1,28 @@
+<div class="visibilidade-container">
+
+  <div class="visibilidade-features" [formGroup]="formGroup()">
+    @for (feature of features; track feature.id) {
+      <div class="feature-item">
+        <mat-icon class="feature-icon">{{ feature.icon }}</mat-icon>
+        <div class="feature-content">
+          <h4 class="feature-title">{{ feature.titulo }}</h4>
+          <p class="feature-description">{{ feature.descricao }}</p>
+        </div>
+        <mat-slide-toggle
+          color="primary"
+          [checked]="obterValor(feature.id)"
+          [formControlName]="feature.id"
+          (change)="alternarConfiguracao(feature.id)"
+          class="feature-toggle">
+        </mat-slide-toggle>
+      </div>
+    }
+  </div>
+
+  <div class="visibilidade-info">
+    <mat-icon class="info-icon">info</mat-icon>
+    <p class="info-text">
+      Você pode alterar essas configurações a qualquer momento após criar o evento pelo painel de gerenciamento.
+    </p>
+  </div>
+</div>

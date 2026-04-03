@@ -17,8 +17,15 @@
 			</button>
 		</div>
 		<nav class="side-nav">
-			<a *ngFor="let item of menuItems()" class="side-nav-item" (click)="item.route && navegarPara(item.route)">
-				<mat-icon>{{ item.icon }}</mat-icon>
+			<a *ngFor="let item of menuItems()" 
+			   class="side-nav-item" 
+			   (click)="item.route && navegarPara(item.route)">
+				<mat-icon [matBadge]="item.route === '/notificacoes' && contadorNotificacoes() > 0 ? contadorNotificacoes() : null"
+				          [matBadgeHidden]="item.route !== '/notificacoes' || contadorNotificacoes() === 0"
+				          matBadgeColor="warn"
+				          matBadgeSize="small">
+					{{ item.icon }}
+				</mat-icon>
 				<span>{{ item.label }}</span>
 			</a>
 		</nav>

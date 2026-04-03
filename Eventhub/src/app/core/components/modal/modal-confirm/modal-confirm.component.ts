@@ -1,10 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
 
 export interface ModalConfirmData {
   title?: string;
@@ -16,7 +13,7 @@ export interface ModalConfirmData {
 @Component({
   selector: 'app-modal-confirm',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, MatCardModule, MatDividerModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule],
   templateUrl: './modal-confirm.component.html',
   styleUrls: ['./modal-confirm.component.scss']
 })

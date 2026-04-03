@@ -61,10 +61,10 @@
         <app-drop-zone-image (imagensChange)="onImagensChange($event)"></app-drop-zone-image>
 
         <div class="actions">
-            <button mat-button class="secundary" type="button" (click)="cancelar()">
+            <button mat-stroked-button class="secundary" type="button" (click)="cancelar()">
                 Cancelar
             </button>
-            <button mat-button class="primary" type="submit" [disabled]="form.invalid">
+            <button mat-raised-button class="primary" type="submit" [disabled]="form.invalid">
                 Salvar
             </button>
         </div>

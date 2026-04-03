@@ -6,6 +6,42 @@
     padding: 32px 16px 0 16px;
 }
 
+.header-voltar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    .status {
+        font-weight: $font-peso-medium;
+        padding: 6px 16px;
+        border-radius: $radius-btn;
+        font-size: 0.95rem;
+        white-space: nowrap;
+
+        &.status-ativo {
+            background: $cor-sucesso;
+            color: $cor-branco;
+        }
+
+        &.status-rascunho {
+            background: $cor-atencao;
+            color: $cor-branco;
+        }
+
+        &.status-finalizado {
+            background: $cor-cinza-medio;
+            color: $cor-branco;
+        }
+
+        &.status-cancelado {
+            background: $cor-erro;
+            color: $cor-branco;
+        }
+    }
+}
+
 .evento-banner {
     position: relative;
     border-radius: 18px;
@@ -148,6 +184,48 @@ a {
     color: $cor-cinza-medio;
 }
 
+.compartilhar-section {
+    margin: 32px 0;
+    padding: 0;
+}
+
+.compartilhar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+
+    mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: $cor-primaria;
+    }
+}
+
+.compartilhar-title {
+    font-size: 1.25rem;
+    font-weight: $font-peso-bold;
+    color: $cor-preto;
+}
+
+.compartilhar-desc {
+    margin: 0 0 16px 0;
+    color: $cor-cinza-medio;
+    line-height: 1.6;
+    font-size: 0.98rem;
+}
+
+.compartilhar-link-field {
+    width: 100%;
+    font-family: 'Courier New', monospace;
+    
+    input {
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+    }
+}
+
 .evento-data {
     .periodo-mobile {
         .data-inicio {
@@ -181,6 +259,16 @@ a {
 @media (max-width: $break-mobile) {
     .home-evento-container {
         padding: 12px 2px 0 2px;
+    }
+
+    .header-voltar {
+        flex-wrap: wrap;
+        gap: 8px;
+
+        .status {
+            padding: 4px 12px;
+            font-size: 0.85rem;
+        }
     }
 
     .evento-banner-info {
@@ -223,6 +311,23 @@ a {
             display: block;
             margin-left: 0;
             margin-top: 2px;
+        }
+    }
+
+    .card-compartilhar {
+        padding: 18px 12px;
+
+        &-link {
+            flex-direction: column;
+
+            .input-link {
+                font-size: 0.8rem;
+                padding: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     }
 }

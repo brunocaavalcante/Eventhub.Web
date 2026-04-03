@@ -404,8 +404,6 @@ export class DetalharPresenteComponent extends BaseComponent implements OnInit {
         return 'status-confirmado';
       case EnumStatusPresente.EmArrecadacao:
         return 'status-em-arrecadacao';
-      case EnumStatusPresente.Cancelado:
-        return 'status-cancelado';
       default:
         return '';
     }

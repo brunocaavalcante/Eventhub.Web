@@ -1,0 +1,72 @@
+<div class="cadastro-container">
+  <div class="cadastro-header">
+    <h1 class="cadastro-titulo">Editar Programação</h1>
+    <p class="cadastro-subtitulo">Atualize as informações da atividade</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="cadastro-form">
+    <mat-form-field appearance="outline" class="form-field-full">
+      <mat-label>Título *</mat-label>
+      <input matInput formControlName="titulo" placeholder="Ex: Palestra de Abertura">
+      <mat-icon matPrefix>title</mat-icon>
+      <mat-error *ngFor="let error of displayMessage['titulo']">{{ error }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field-full">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="descricao" placeholder="Descreva a atividade" rows="4"></textarea>
+      <mat-icon matPrefix>description</mat-icon>
+      <mat-error *ngFor="let error of displayMessage['descricao']">{{ error }}</mat-error>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field-half">
+        <mat-label>Data *</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="data">
+        <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngFor="let error of displayMessage['data']">{{ error }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field-quarter">
+        <mat-label>Hora *</mat-label>
+        <input matInput formControlName="hora" placeholder="14:00" type="time">
+        <mat-icon matPrefix>schedule</mat-icon>
+        <mat-error *ngFor="let error of displayMessage['hora']">{{ error }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field-quarter">
+        <mat-label>Duração</mat-label>
+        <input matInput formControlName="duracao" placeholder="01:30">
+        <mat-icon matPrefix>timer</mat-icon>
+        <mat-hint>HH:MM</mat-hint>
+        <mat-error *ngFor="let error of displayMessage['duracao']">{{ error }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="form-field-full">
+      <mat-label>Local *</mat-label>
+      <input matInput formControlName="local" placeholder="Ex: Auditório Principal">
+      <mat-icon matPrefix>place</mat-icon>
+      <mat-error *ngFor="let error of displayMessage['local']">{{ error }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field-full">
+      <mat-label>Responsável *</mat-label>
+      <input matInput formControlName="responsavel" placeholder="Ex: João Silva">
+      <mat-icon matPrefix>person</mat-icon>
+      <mat-error *ngFor="let error of displayMessage['responsavel']">{{ error }}</mat-error>
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-stroked-button type="button" class="btn-cancelar" (click)="cancelar()">
+        <mat-icon>close</mat-icon>
+        Cancelar
+      </button>
+      <button mat-raised-button type="submit" class="btn-salvar" [disabled]="form.invalid">
+        <mat-icon>save</mat-icon>
+        Salvar Alterações
+      </button>
+    </div>
+  </form>
+</div>

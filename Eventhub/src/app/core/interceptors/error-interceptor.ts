@@ -10,41 +10,42 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
 
   return next(req).pipe(
-    catchError((error: HttpErrorResponse) => {
-      console.error('Erro no serviço:', error);
+    catchError((response: HttpErrorResponse) => {
+      console.error('Erro no serviço:', response);
 
       // Extração do recurso da URL para mensagens mais específicas
       const urlSegments = req.url.split('/');
       const recurso = getRecursoFromUrl(urlSegments);
 
-      switch (error.status) {          
+      switch (response.status) {
         case 401:
           authService.refreshToken().subscribe();
           break;
-          
+
         case 403:
           modalService.openAccessDeniedModal();
           break;
-          
+
         case 404:
           //TODO: Verificar necessidade deve exibir em rotas não encontradas
           //modalService.openNotFoundModal(recurso);
           break;
-          
+
         case 408:
         case 0:
           modalService.openConnectionErrorModal(req.url);
           break;
-          
+
         case 424:
+        case 400:
           // Erro específico do serviço
-          if (error.error?.erros && error.error.erros.length > 0 && error.error.erros[0]?.showErro) {
-            modalService.openServiceErrorModal(error.error.erros[0].mensagem);
+          if (response.error?.erros && response.error.erros.length > 0 && response.error.erros[0]?.exibirMsg) {
+            modalService.openValidationErrorModal(response.error.erros[0].mensagem);
           } else {
             modalService.openErrorModal();
           }
           break;
-          
+
         case 429:
           modalService.openCustomErrorModal(
             'Limite Excedido',
@@ -52,23 +53,24 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             'alerta.svg'
           );
           break;
-          
+
         default:
           // Erros de servidor (5xx) ou outros erros não mapeados
-          if (error.status >= 500) {
+          if (response.status >= 500) {
             modalService.openErrorModal();
-          } else if (error.error?.message) {
-            modalService.openServiceErrorModal(error.error.message);
-          } else if (error.status >= 400 && error.status < 500) {
-            // Outros erros 4xx não tratados especificamente
-            modalService.openValidationErrorModal('Erro na requisição. Verifique os dados informados.');
-          } else {
-            modalService.openErrorModal();
+          } else if (response.error?.message) {
+            modalService.openServiceErrorModal(response.error.message);
+          } else if (response.status >= 400 && response.status < 500) {
+            if (response.error?.erros && response.error.erros.length > 0 && response.error.erros[0].exibirMsg) {
+              modalService.openValidationErrorModal(response.error.erros[0].mensagem);
+            } else {
+              modalService.openErrorModal();
+            }
           }
           break;
       }
 
-      return throwError(() => error);
+      return throwError(() => response);
     })
   );
 };

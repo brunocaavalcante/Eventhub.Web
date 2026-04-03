@@ -7,8 +7,8 @@
     <mat-card class="cadastro-evento-card">
         <div class="cadastro-evento-progress">
             <span>Progresso da Configuração</span>
-            <span class="cadastro-evento-step">Passo {{ etapa + 1 }} de 3</span>
-            <mat-progress-bar color="primary" mode="determinate" [value]="(etapa + 1) * 34"></mat-progress-bar>
+            <span class="cadastro-evento-step">Passo {{ etapa + 1 }} de 4</span>
+            <mat-progress-bar color="primary" mode="determinate" [value]="(etapa + 1) * 25"></mat-progress-bar>
         </div>
         <form [formGroup]="form">
             <!-- Etapa 1 -->
@@ -130,10 +130,22 @@
                 <app-drop-zone-image [imagens]="imagens" (imagensChange)="imagens = $event"></app-drop-zone-image>
             </section>
 
-            <!-- ...etapa 3... -->
-            <section *ngIf="etapa === 2" class="cadastro-evento-section">
+            <!-- Etapa 3: Configuração de Visibilidade -->
+            <section *ngIf="etapa === 2" class="cadastro-evento-section" formGroupName="step3">
                 <div class="cadastro-evento-section-title">
                     <span class="cadastro-evento-section-number">3</span>
+                    <span>Visibilidade para Convidados</span>
+                </div>
+                <p class="cadastro-evento-section-desc">
+                    Configure o que seus convidados podem ver e interagir durante o evento.
+                </p>
+                <app-configuracao-visibilidade [formGroup]="step3FormGroup"></app-configuracao-visibilidade>
+            </section>
+
+            <!-- Etapa 4: Organizadores -->
+            <section *ngIf="etapa === 3" class="cadastro-evento-section">
+                <div class="cadastro-evento-section-title">
+                    <span class="cadastro-evento-section-number">4</span>
                     <span>Detalhes do Organizador</span>
                 </div>
                 <p class="cadastro-evento-section-desc">
@@ -152,7 +164,7 @@
         </button>
         <button mat-flat-button color="primary" class="cadastro-evento-next-btn" (click)="proximo()"
             [disabled]="habilitarBotaoProximo() === false">
-            {{ etapa < 2 ? 'Próximo' : 'Salvar' }} <mat-icon>arrow_forward</mat-icon>
+            {{ etapa < 3 ? 'Próximo' : 'Salvar' }} <mat-icon>arrow_forward</mat-icon>
         </button>
     </div>
 </div>

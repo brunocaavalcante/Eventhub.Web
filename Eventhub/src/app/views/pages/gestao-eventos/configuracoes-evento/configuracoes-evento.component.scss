@@ -1,0 +1,260 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.container {
+  @include container(1200px);
+  padding-top: 10px !important;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  background: $cor-branco;
+  border-radius: $radius-card;
+  box-shadow: $sombra-card;
+  margin-bottom: 10px;
+
+  .header-content {
+    flex: 1;
+    min-width: 0;
+
+    h1 {
+      margin: 0;
+      font-size: $font-titulo;
+      font-weight: $font-peso-bold;
+      color: $cor-texto;
+
+      @media (max-width: $break-mobile) {
+        font-size: $font-titulo-mobile;
+      }
+    }
+
+    .evento-nome {
+      margin: 4px 0 0;
+      font-size: $font-desc;
+      color: $cor-texto-secundario;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .status {
+    font-weight: $font-peso-medium;
+    padding: 2px 10px;
+    border-radius: $radius-btn;
+    @include font-size(14px);
+
+    &.status-ativo {
+      background: $cor-sucesso;
+      color: $cor-branco;
+    }
+
+    &.status-rascunho {
+      background: $cor-atencao;
+      color: $cor-branco;
+    }
+
+    &.status-finalizado {
+      background: $cor-cinza-medio;
+      color: $cor-branco;
+    }
+
+    &.status-cancelado {
+      background: $cor-erro;
+      color: $cor-branco;
+    }
+  }
+}
+
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card-secao {
+  background: $cor-branco;
+  border-radius: $radius-card;
+  box-shadow: $sombra-card;
+  padding: 24px;
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid $cor-cinza-borda;
+
+    mat-icon {
+      color: $cor-primaria;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: $font-peso-bold;
+      color: $cor-texto;
+    }
+  }
+
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    @media (max-width: $break-mobile) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .radio-group {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .image-section {
+    margin-top: 16px;
+
+    label {
+      display: block;
+      font-size: $font-body;
+      font-weight: $font-peso-medium;
+      color: $cor-texto-secundario;
+      margin-bottom: 12px;
+    }
+  }
+}
+
+.acoes {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 0;
+
+  button {
+    @include btn-primary();
+    height: auto;
+    padding: 12px 32px;
+    top: 0;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  @media (max-width: $break-mobile) {
+    justify-content: stretch;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.card-perigo {
+  background: $cor-vermelho-claro;
+  border: 2px solid $cor-erro;
+  border-radius: $radius-card;
+  padding: 24px;
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+
+    mat-icon {
+      color: $cor-erro;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: $font-peso-bold;
+      color: $cor-erro;
+    }
+  }
+
+  .acoes-perigo {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    button {
+      width: 100%;
+      height: 48px;
+      font-weight: $font-peso-medium;
+      border-radius: $radius-btn;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+
+      &[color="warn"] {
+        border-color: $cor-erro;
+        color: $cor-erro;
+
+        &:hover {
+          background: $cor-erro;
+          color: $cor-branco;
+        }
+      }
+    }
+
+    .excluir-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid rgba($cor-erro, 0.3);
+
+      button {
+        margin-bottom: 0;
+      }
+
+      .excluir-aviso {
+        @include texto-alert($cor-atencao);
+      }
+    }
+  }
+}
+
+@media (max-width: $break-mobile) {
+  .header {
+    gap: 12px;
+    padding: 0px;
+
+    .btn-voltar {
+      padding: 8px;
+    }
+  }
+
+  .card-secao {
+    padding: 5px;
+
+    .card-header {
+      h2 {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .card-perigo {
+    padding: 16px;
+  }
+}

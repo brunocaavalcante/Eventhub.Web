@@ -1,0 +1,15 @@
+@use "../variables" as *;
+
+@mixin card {
+  border-radius: $radius-card;
+  box-shadow: $sombra-card;
+  transition: box-shadow $transition-normal;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba($cor-primaria, 0.12);
+  }
+
+  @media (max-width: $break-mobile) {
+    padding: 0px;
+  }
+}

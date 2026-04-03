@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="header-voltar">
+    <button mat-button class="btn-voltar" (click)="cancelar()">
+      <mat-icon>arrow_back</mat-icon>
+      Voltar
+    </button>
+  </div>
+
+  <div class="page-header">
+    <h1 class="page-title">Adicionar Convidado</h1>
+    <p class="page-subtitle">Informe os dados do convidado para enviar o convite do evento</p>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form [formGroup]="formulario" (ngSubmit)="salvar()">
+        <div class="form-grid">
+          <!-- Nome -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nome completo</mat-label>
+            <input matInput formControlName="nome" placeholder="Digite o nome do convidado">
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error>{{ getErrorMessage('nome') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Telefone -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Telefone (WhatsApp)</mat-label>
+            <input matInput formControlName="telefone" placeholder="(11) 99999-9999">
+            <mat-icon matPrefix>phone</mat-icon>
+            <mat-error>{{ getErrorMessage('telefone') }}</mat-error>
+            <mat-hint>Formato: (DD) 9XXXX-XXXX</mat-hint>
+          </mat-form-field>
+
+          <!-- Email (opcional) -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>E-mail (opcional)</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="exemplo@email.com">
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error>{{ getErrorMessage('email') }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="cancelar()">
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="submit">
+            <mat-icon>person_add</mat-icon>
+            Adicionar Convidado
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -25,9 +25,25 @@ export const TipoEventoDescricaoImagem: Record<number, { descricao: string; imag
     [TipoEventoEnum.ANIVERSARIO]: {
         descricao: 'Aniversário',
         imagem: 'assets/imagens/aniversario.png'
+    },
+    [TipoEventoEnum.FORMATURA]: {
+        descricao: 'Formatura',
+        imagem: 'assets/imagens/cp-formatura.png'
+    },
+    [TipoEventoEnum.NETWORKING]: {
+        descricao: 'Networking',
+        imagem: 'assets/imagens/networking.png'
+    },
+    [TipoEventoEnum.COORPORATIVO]: {
+        descricao: 'Corporativo',
+        imagem: 'assets/imagens/corporativo.png'
+    },
+    [TipoEventoEnum.OUTROS]: {
+        descricao: 'Outros',
+        imagem: 'assets/imagens/cp_evento_outros.png'
     }
 };
 
 export function getTipoEventoInfo(tipo: number): { descricao: string; imagem: string } {
-    return TipoEventoDescricaoImagem[tipo] || { descricao: 'Evento', imagem: 'assets/imagens/casa-nova.png' };
+    return TipoEventoDescricaoImagem[tipo] || { descricao: 'Evento', imagem: 'assets/imagens/cp_evento_outros.png' };
 }

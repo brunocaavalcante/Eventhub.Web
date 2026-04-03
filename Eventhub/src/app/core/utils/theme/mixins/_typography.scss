@@ -1,0 +1,57 @@
+@use "../variables" as *;
+
+@mixin titulo-pagina {
+  font-size: $font-titulo;
+  font-weight: $font-peso-bold;
+  color: $cor-texto;
+  margin: 0;
+  padding: 0;
+
+  @media (max-width: 600px) {
+    font-size: $font-titulo-mobile;
+  }
+}
+
+@mixin texto-secundario {
+  font-size: $font-texto-secundario;
+  color: $cor-texto-secundario;
+
+  @media (max-width: 600px) {
+    font-size: $font-texto-secundario-mobile;
+  }
+}
+
+@mixin texto-alert($cor: $cor-texto) {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  background: rgba($cor, 0.1);
+  border-left: 3px solid $cor;
+  border-radius: 4px;
+  @include font-size(14px);
+  line-height: 1.5;
+  color: darken($cor, 10%);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: $cor;
+  }
+
+  span {
+    flex: 1;
+  }
+}
+
+@mixin font-size($size) {
+  font-size: $size;
+
+  @media (max-width: 600px) {
+    font-size: $size * 0.85;
+  }
+}

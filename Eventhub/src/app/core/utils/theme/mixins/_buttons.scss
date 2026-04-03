@@ -1,0 +1,103 @@
+@use "../variables" as *;
+
+@mixin btn-base-layout {
+  font-size: $font-btn;
+  font-weight: $font-peso-bold;
+  border-radius: $radius-btn;
+  padding: $gap-sm $padding !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  @media (max-width: 600px) {
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    gap: 6px;
+  }
+}
+
+@mixin btn-outline-variant($border-color, $text-color, $hover-bg, $active-bg) {
+  @include btn-base-layout;
+
+  background: transparent;
+  color: $text-color !important;
+  border: 1.5px solid $border-color;
+  box-shadow: none !important;
+  top: 0;
+
+  &:hover,
+  &:focus {
+    background: $hover-bg;
+    color: $text-color !important;
+    outline: none;
+    transform: none;
+  }
+
+  &:active {
+    background: $active-bg;
+    color: $text-color !important;
+    transform: none;
+    box-shadow: none;
+  }
+
+  &:disabled {
+    background: transparent;
+    color: $cor-cinza-medio !important;
+    border-color: $cor-cinza-borda;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.6;
+  }
+}
+
+@mixin btn-primary($bg-color: $cor-primaria, $color: $cor-branco) {
+  @include btn-base-layout;
+
+  background: $bg-color !important;
+  color: $color !important;
+  box-shadow: 0 10px 15px -3px rgba($color, 0.3), 0 4px 6px -2px rgba($color, 0.2) !important;
+  border: 1.5px solid $cor-primaria;
+
+  &:hover,
+  &:focus {
+    background: darken($cor-secundaria, 8%);
+    color: $cor-branco !important;
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    background: darken($cor-secundaria, 15%);
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  &:disabled {
+    background: $cor-cinza-medio;
+    color: $cor-cinza-claro;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.6;
+  }
+}
+
+@mixin btn-secondary {
+  @include btn-outline-variant(
+    $cor-primaria,
+    $cor-primaria,
+    $cor-primaria-clara-2,
+    $cor-primaria-clara
+  );
+}
+
+@mixin btn-outline-error {
+  @include btn-outline-variant(
+    $cor-erro,
+    $cor-erro,
+    $cor-vermelho-claro,
+    lighten($cor-erro, 38%)
+  );
+}

@@ -19,4 +19,8 @@ export class UsuarioService extends BaseService {
         return sessionStorage.getItem('usuarioLogado') ?
             JSON.parse(sessionStorage.getItem('usuarioLogado') as string)?.usuario as UsuarioInfoDTO : null;
     }
+
+    verificarEmailExiste(email: string): Observable<RetornoAPI<UsuarioInfoDTO>> {
+        return this.http.get<RetornoAPI<UsuarioInfoDTO>>(`${this.urlApi}/usuarios/email/${encodeURIComponent(email)}`);
+    }
 }

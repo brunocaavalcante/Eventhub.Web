@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin, finalize } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +15,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BaseComponent } from '../../../../core/components/base.component';
-import { Presente } from '../../../../core/models/presente.model';
+import { Presente, StatusPresenteDto } from '../../../../core/models/presente.model';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { CardPresenteComponent } from './card-presente/card-presente.component';
 import { ModalService } from '../../../../core/services/modal.service';
@@ -55,6 +56,7 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
 
   presentes = signal<Presente[]>([]);
   pix = signal<PixEventoDto | null>(null);
+  statusPresente = signal<StatusPresenteDto[]>([]);
   busca = signal('');
   filtroStatus = signal<string>('');
   filtroCategoria = signal<string>('');
@@ -98,52 +100,59 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
     this.presentesFiltrados().filter(p => p.status?.id === 3)
   );
 
-
-
   ngOnInit(): void {
     this.eventoId = this.acRoute.snapshot.paramMap.get('idEvento') || '0';
-    this.carregarPresentes();
-    this.carregarPixPresente();
     const usuarioLogado = this.obterUsuarioLogado();
     if (usuarioLogado) {
       this.idParticipanteLogado.set(usuarioLogado.id);
     }
+    this.carregarDados();
+  }
+
+  carregarDados(): void {
+    this.spinner.show();
+    forkJoin({
+      presentes: this.presenteService.obterPresentesPorEvento(this.eventoId),
+      status: this.presenteService.obterStatusPresente(),
+      pix: this.pixEventoService.buscarPixEventoFinalidade(Number(this.eventoId), FinalidadePix.Presentes)
+    })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.spinner.hide())
+      )
+      .subscribe({
+        next: ({ presentes, status, pix }) => {
+          if (presentes.executouComSucesso) {
+            this.presentes.set(presentes.data || []);
+          }
+          if (status.executouComSucesso) {
+            this.statusPresente.set(status.data || []);
+          }
+          if (pix.executouComSucesso) {
+            this.pix.set(pix.data || null);
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao carregar dados dos presentes:', error);
+        }
+      });
   }
 
   carregarPresentes(): void {
     this.spinner.show();
     this.presenteService.obterPresentesPorEvento(this.eventoId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.spinner.hide())
+      )
       .subscribe({
         next: (response) => {
           if (response.executouComSucesso) {
-            console.log('Presentes carregados:', response.data);
             this.presentes.set(response.data || []);
           }
-
-          this.spinner.hide();
         },
         error: (error) => {
           console.error('Erro ao carregar presentes:', error);
-          this.spinner.hide();
-        }
-      });
-  }
-
-  carregarPixPresente(): void {
-    this.spinner.show();
-    this.pixEventoService.buscarPixEventoFinalidade(Number(this.eventoId), FinalidadePix.Presentes)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response) => {
-          if (response.executouComSucesso) {
-            this.pix.set(response.data || null);
-          }
-          this.spinner.hide();
-        },
-        error: (error) => {
-          console.error('Erro ao carregar PIX do presente:', error);
-          this.spinner.hide();
         }
       });
   }
@@ -192,11 +201,6 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
     else {
       this.router.navigate([`presentes/cadastrar/${this.eventoId}`]);
     }
-  }
-
-  editarPresente(presente: Presente): void {
-    // TODO: Navegar para tela de edição
-    console.log('Editar presente:', presente);
   }
 
   excluirPresente(presente: Presente): void {
@@ -259,11 +263,6 @@ export class ConsultarPresentesComponent extends BaseComponent implements OnInit
       return false;
     }
     return true;
-  }
-
-  verContribuicoes(presente: Presente): void {
-    // TODO: Abrir modal com lista de contribuições
-    console.log('Ver contribuições:', presente);
   }
 
   get filtroStatusModel() {

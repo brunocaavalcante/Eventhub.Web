@@ -12,7 +12,7 @@ export class PerfilService extends BaseService {
         return this.http.get<RetornoAPI<PerfilDto[]>>(`${this.urlApi}/perfis/ativos`);
     }
     
-    obterModulosPerfil(idPerfil: number): Observable<RetornoAPI<ModuloDto[]>> {
-        return this.http.get<RetornoAPI<ModuloDto[]>>(`${this.urlApi}/perfis/${idPerfil}/modulos`);
+    obterModulosPerfil(idEvento: number, idPerfil: number): Observable<RetornoAPI<ModuloDto[]>> {
+        return this.http.get<RetornoAPI<ModuloDto[]>>(`${this.urlApi}/perfis/${idEvento}/${idPerfil}/modulos`);
     }
 }

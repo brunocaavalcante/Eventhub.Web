@@ -8,16 +8,19 @@ export enum StatusEvento {
     Cancelado = 4
 }
 
-export interface EventoDto{
+export interface EventoDto {
     id: number;
     idTipoEvento: number;
+    status?: EventoStatusDto;
     nome: string;
+    tokenConvite: string;
     descricao?: string;
     dataInicio?: Date | null;
     dataFim?: Date | null;
     maxConvidado?: number;
     tipoData: 'unica' | 'periodo';
     endereco?: EnderecoEventoDto;
+    fotoCapaBase64?: string;
 }
 
 export interface EventoStatusDto {
@@ -37,6 +40,7 @@ export interface EventoUserDto {
     dataInicio: Date;
     dataFim: Date;
     fotoCapaBase64: string;
+    endereco?: EnderecoEventoDto;
     tipoData: 'unica' | 'periodo';
 }
 
@@ -51,6 +55,15 @@ export interface CadastroEventoDto {
     endereco: EnderecoEventoDto;
     imagens: Imagem[];
     participantes: Participante[];
+    configuracaoVisibilidade?: ConfiguracaoVisibilidadeDto;
+}
+
+export interface ConfiguracaoVisibilidadeDto {
+    galeriaFotos: boolean;
+    chatConvidados: boolean;
+    listaPresentes: boolean;
+    listaConvidados: boolean;
+    agendaEvento: boolean;
 }
 
 export interface TipoEvento {
@@ -59,6 +72,29 @@ export interface TipoEvento {
     icon: string;
     descricao?: string;
     idFoto?: string;
+}
+
+export interface UpdateEventoDto {
+    id: number;
+    nome: string;
+    descricao?: string;
+    idTipoEvento: number;
+    maxConvidado?: number;
+    dataInicio: Date;
+    dataFim: Date | null;
+    tipoData: 'unica' | 'periodo';
+    endereco: EnderecoEventoDto;
+    fotoCapaBase64?: string;
+}
+
+export interface CancelarEventoDto {
+    id: number;
+    justificativa: string;
+}
+
+export interface ComunicarAlteracoesEventoDto {
+    idEvento: number;
+    mensagem: string;
 }
 
 export interface EnderecoEventoDto {

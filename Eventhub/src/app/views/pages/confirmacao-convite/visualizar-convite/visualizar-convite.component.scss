@@ -1,0 +1,238 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.convite-container {
+  @include container(800px);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.convite-card {
+  @include card;
+  width: 100%;
+  max-width: 800px;
+  overflow: hidden;
+  padding: 0 !important;
+  box-shadow: 0 8px 32px rgba($cor-primaria, 0.15);
+
+  @media (max-width: $break-mobile) {
+    border-radius: $radius;
+  }
+}
+
+.convite-imagem-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+
+  @media (max-width: $break-mobile) {
+    height: 200px;
+  }
+}
+
+.convite-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.convite-overlay {
+  position: absolute;
+  top: $gap;
+  right: $gap;
+  background: rgba($cor-branco, 0.95);
+  padding: $gap-sm $gap;
+  border-radius: $radius-btn;
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
+  box-shadow: $sombra-card-leve;
+}
+
+.convite-icon {
+  color: $cor-primaria;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.convite-badge {
+  color: $cor-primaria;
+  font-weight: $font-peso-bold;
+  font-size: $font-small;
+  text-transform: uppercase;
+}
+
+.convite-content {
+  padding: $padding-lg 0px !important;
+
+  @media (max-width: $break-mobile) {
+    padding: $gap !important;
+  }
+}
+
+.convite-header {
+  margin-bottom: $gap-lg;
+}
+
+.evento-titulo {
+  font-size: $font-titulo;
+  font-weight: $font-peso-bold;
+  color: $cor-primaria;
+  margin: 0 0 $gap-sm 0;
+
+  @media (max-width: $break-mobile) {
+    font-size: $font-titulo-mobile;
+  }
+}
+
+.evento-descricao {
+  font-size: $font-body;
+  color: $cor-texto-secundario;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.evento-detalhes {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+  margin-bottom: $gap-lg;
+  padding: $gap;
+  background: $cor-cinza-claro;
+  border-radius: $radius;
+}
+
+.detalhe-item {
+  display: flex;
+  align-items: flex-start;
+  gap: $gap;
+
+  mat-icon {
+    color: $cor-primaria;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+}
+
+.detalhe-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.detalhe-label {
+  font-size: $font-small;
+  color: $cor-texto-secundario;
+  font-weight: $font-peso-medium;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detalhe-valor {
+  font-size: $font-body;
+  color: $cor-texto;
+  font-weight: $font-peso-normal;
+  line-height: 1.5;
+}
+
+.convite-mensagem {
+  display: flex;
+  gap: $gap;
+  padding: $gap;
+  border-left: 4px solid $cor-primaria;
+  border-radius: $radius-btn;
+  margin-bottom: $gap-lg;
+
+  .mensagem-icon {
+    color: $cor-primaria;
+    flex-shrink: 0;
+  }
+
+  p {
+    margin: 0;
+    @include font-size($font-body);
+    color: $cor-texto-secundario;
+    line-height: 1.6;
+  }
+}
+
+.convite-acoes {
+  display: flex;
+  justify-content: end;
+}
+
+.btn-responder {
+  @include btn-primary;
+  font-size: 1.1rem;
+  padding: 14px 32px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: $break-mobile) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+// Card de erro
+.erro-card {
+  @include card;
+  text-align: center;
+  padding: $padding-lg !important;
+  max-width: 500px;
+
+  .erro-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: $gap;
+  }
+
+  .erro-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: $cor-erro;
+  }
+
+  h2 {
+    font-size: 50px;
+    color: $cor-erro;
+    font-family: "Titan One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+    @media (max-width: $break-mobile) {
+      font-size: $font-titulo-mobile;
+    }
+  }
+
+  p {
+    font-size: $font-body;
+    color: $cor-texto-secundario;
+    margin: 0 0 $gap-lg 0;
+    line-height: 1.6;
+  }
+
+  button {
+    @include btn-primary;
+  }
+}

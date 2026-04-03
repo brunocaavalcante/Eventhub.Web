@@ -1,0 +1,104 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.visibilidade-container {
+  padding: $padding 0;
+}
+
+.visibilidade-features {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+  padding: $padding;
+  background: $cor-branco;
+  border: 1px solid $cor-cinza-claro;
+  border-radius: $radius;
+  transition: all $transition-normal;
+
+  &:hover {
+    border-color: $cor-primaria;
+    box-shadow: $sombra-card-leve;
+  }
+
+  @media (max-width: $break-mobile) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $gap-sm;
+  }
+}
+
+.feature-icon {
+  @include flex-center;
+  width: 48px;
+  height: 48px;
+  border-radius: $radius;
+  font-size: 30px;
+  flex-shrink: 0;
+  color: $cor-primaria;
+
+  @media (max-width: $break-mobile) {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}
+
+.feature-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.feature-title {
+  font-size: $font-body;
+  font-weight: $font-peso-bold;
+  color: $cor-texto;
+  margin: 0 0 4px 0;
+}
+
+.feature-description {
+  font-size: $font-small;
+  color: $cor-texto-secundario;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.feature-toggle {
+  flex-shrink: 0;
+
+  @media (max-width: $break-mobile) {
+    align-self: flex-end;
+  }
+}
+
+.visibilidade-info {
+  display: flex;
+  align-items: flex-start;
+  gap: $gap-sm;
+  margin-top: $gap-lg;
+  padding: $gap;
+  background: $cor-cinza-claro;
+  border-radius: $radius-input;
+  border-left: 4px solid $cor-primaria;
+}
+
+.info-icon {
+  color: $cor-primaria;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-text {
+  font-size: $font-small;
+  color: $cor-texto-secundario;
+  margin: 0;
+  line-height: 1.5;
+}

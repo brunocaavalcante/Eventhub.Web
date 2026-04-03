@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 
 export interface ModalSucessData {
-  title?: string;
+  title: string;
   message?: string;
   okLabel?: string;
   showIcon?: boolean;

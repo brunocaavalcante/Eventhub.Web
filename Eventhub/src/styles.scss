@@ -1,6 +1,8 @@
 @use '@angular/material' as mat;
 @use 'variables' as *;
 @use 'mixins' as *;
+@use 'app/core/utils/theme/material-overrides';
+@import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
 
 html {
   @include mat.theme((color: (primary: mat.$rose-palette,
