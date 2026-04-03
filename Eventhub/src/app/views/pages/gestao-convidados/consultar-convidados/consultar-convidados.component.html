@@ -28,6 +28,10 @@
                         <mat-option value="PendenteEnvio">Pendente envio convite</mat-option>
                     </mat-select>
                 </mat-form-field>
+                <button mat-raised-button color="primary" class="btn-adicionar" (click)="adicionarConvidado()">
+                    <mat-icon>person_add</mat-icon>
+                    Adicionar Convidado
+                </button>
             </div>
         </div>
 
@@ -49,9 +53,19 @@
                             +{{convidado.quantidadeAcompanhantes}}
                             acompanhante{{convidado.quantidadeAcompanhantes > 1 ? 's' : ''}}</div>
                     </div>
-                    <button mat-icon-button>
+                    <button mat-icon-button [matMenuTriggerFor]="menuConfirmado">
                         <mat-icon>more_vert</mat-icon>
                     </button>
+                    <mat-menu #menuConfirmado="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remover</span>
+                        </button>
+                    </mat-menu>
                 </div>
             </div>
             <div class="convidados-col">
@@ -69,9 +83,19 @@
                         <div class="convidado-nome">{{convidado.nome}}</div>
                         <div class="convidado-extra">Nenhuma resposta</div>
                     </div>
-                    <button mat-icon-button>
+                    <button mat-icon-button [matMenuTriggerFor]="menuPendente">
                         <mat-icon>more_vert</mat-icon>
                     </button>
+                    <mat-menu #menuPendente="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remover</span>
+                        </button>
+                    </mat-menu>
                 </div>
             </div>
             <div class="convidados-col">
@@ -88,9 +112,19 @@
                     <div class="convidado-info">
                         <div class="convidado-nome">{{convidado.nome}}</div>
                     </div>
-                    <button mat-icon-button>
+                    <button mat-icon-button [matMenuTriggerFor]="menuAusente">
                         <mat-icon>more_vert</mat-icon>
                     </button>
+                    <mat-menu #menuAusente="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remover</span>
+                        </button>
+                    </mat-menu>
                 </div>
             </div>
             <div class="convidados-col">
@@ -106,11 +140,29 @@
                     </ng-template>
                     <div class="convidado-info">
                         <div class="convidado-nome">{{convidado.nome}}</div>
+                        <div class="convidado-telefone" *ngIf="convidado.telefone">
+                            <mat-icon>phone</mat-icon>
+                            {{convidado.telefone}}
+                        </div>
                         <div class="convidado-extra">Aguardando envio</div>
                     </div>
-                    <button mat-icon-button>
+                    <button mat-icon-button [matMenuTriggerFor]="menuPendenteEnvio">
                         <mat-icon>more_vert</mat-icon>
                     </button>
+                    <mat-menu #menuPendenteEnvio="matMenu">
+                        <button mat-menu-item (click)="enviarConvite(convidado)">
+                            <mat-icon>send</mat-icon>
+                            <span>Enviar convite</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Remover</span>
+                        </button>
+                    </mat-menu>
                 </div>
             </div>
             <!-- Mensagem quando nenhuma lista tem resultados -->
@@ -126,3 +178,8 @@
             </div>
         </div>
 </div>
+
+<!-- FAB Mobile -->
+<button mat-fab class="btn-fab-mobile" (click)="adicionarConvidado()">
+    <mat-icon>person_add</mat-icon>
+</button>

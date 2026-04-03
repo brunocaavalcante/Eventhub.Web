@@ -89,7 +89,7 @@ export class ModalService {
   }
 
   openSuccessModal(
-    data?: ModalSucessData,
+    data: ModalSucessData,
     config?: MatDialogConfig<ModalSucessData>
   ): Observable<DialogResult> {
     return this.openDialog(ModalSucessComponent, data, config);

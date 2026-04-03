@@ -52,6 +52,14 @@ For end-to-end (e2e) testing, run:
 ng e2e
 ```
 
+## Remove o cache do angular
+
+```bash
+rm -rf .angular/cache
+```
+
+
+
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
 ## Additional Resources

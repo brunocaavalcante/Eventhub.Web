@@ -33,7 +33,7 @@ export class ParticipanteService extends BaseService {
         return this.http.get<RetornoAPI<ListarConvidadosDto[]>>(`${this.urlApi}/participantes/evento/${idEvento}/convidados`);
     }
 
-    cadastroConvidado(convidado: CadastroConvidadoDto): Observable<RetornoAPI<ParticipanteDto>> {
+    cadastrarConvidado(convidado: CadastroConvidadoDto): Observable<RetornoAPI<ParticipanteDto>> {
         return this.http.post<RetornoAPI<ParticipanteDto>>(`${this.urlApi}/participantes/convidado`, convidado);
     }
 
@@ -43,5 +43,24 @@ export class ParticipanteService extends BaseService {
 
     recusarConvite(dto: RecusarConviteDto): Observable<RetornoAPI<void>> {
         return this.http.post<RetornoAPI<void>>(`${this.urlApi}/participantes/recusar-convite`, dto);
+    }
+
+    enviarConviteWhatsApp(convidado: ListarConvidadosDto, eventoId: number): void {
+        const linkEvento = `${window.location.origin}/convite/${eventoId}`;
+        
+        const mensagem = `Olá ${convidado.nome}! 🎉\n\n` +
+            `Você está convidado(a) para nosso evento especial!\n\n` +
+            `Confirme sua presença através do link:\n\n` +
+            `${linkEvento}\n\n` +
+            `Nos vemos lá! 💕`;
+        
+        // Remove caracteres não numéricos do telefone
+        const telefone = convidado.telefone.replace(/\D/g, '');
+        
+        // Formato: https://wa.me/5511999999999?text=mensagem
+        const whatsappUrl = `https://wa.me/55${telefone}?text=${encodeURIComponent(mensagem)}`;
+        
+        // Abre WhatsApp em nova aba
+        window.open(whatsappUrl, '_blank');
     }
 }

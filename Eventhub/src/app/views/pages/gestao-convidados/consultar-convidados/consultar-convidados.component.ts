@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../../../../core/components/base.component';
 import { ParticipanteService } from '../../../../core/services/participante.service';
@@ -16,7 +17,7 @@ import { EnumStatusEnvioConvite } from '../../../../core/utils/enums/status-envi
 @Component({
   selector: 'app-consultar-convidados',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, MatMenuModule],
   templateUrl: './consultar-convidados.component.html',
   styleUrls: ['./consultar-convidados.component.scss']
 })
@@ -39,6 +40,7 @@ export class ConsultarConvidadosComponent extends BaseComponent implements OnIni
   obterConvidados() {
     this.participanteService.obterConvidadosPorIdEvento(Number(this.eventoId)).subscribe({
       next: (result) => {
+        console.log('Convidados obtidos:', result);
         if (result.executouComSucesso && result.data) {
           this.convidados.set(result.data);
         }
@@ -81,6 +83,14 @@ export class ConsultarConvidadosComponent extends BaseComponent implements OnIni
   }
 
   voltar() {
-    this.router.navigate([`/eventos/home/${this.eventoId}`]);
+    this.router.navigate(['/eventos/home', this.eventoId]);
+  }
+
+  adicionarConvidado() {
+    this.router.navigate([`/convidados/cadastrar/${this.eventoId}`]);
+  }
+
+  enviarConvite(convidado: ListarConvidadosDto) {
+    this.participanteService.enviarConviteWhatsApp(convidado, Number(this.eventoId));
   }
 }
